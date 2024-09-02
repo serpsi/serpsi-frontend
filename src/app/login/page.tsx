@@ -1,13 +1,14 @@
 export default function LoginPage() {
     return (
-        <main className="bg-zinc-400 flex md:items-center md:justify-center w-screen h-screen p-10">
-            <section className="h-full border border-cyan-500 p-3 rounded-md flex justify-around flex-col-reverse sm:flex-row sm:items-center sm:h-1/2">
-                <section className="sm:w-1/2">
+        <main className="bg-cover flex md:items-center md:justify-center w-screen h-screen p-10"
+        style={{backgroundImage: "url('/img/login-bg.jpg')"}}>
+            <section className="h-full w-4/5 borderborder-primary-500 p-9 rounded-md flex justify-around flex-col-reverse sm:flex-row sm:items-center sm:h-4/5 bg-gradiente-vidro">
+                <section className="text-primary-950">
                     <h2 className="text-3xl">Gerencie o seu consultório de psicologia</h2>
                     <p className="text-xl">Horários, pacientes, documentos, tudo num só lugar.</p>
                     <button>Saiba Mais</button>
                 </section>
-                <section className="sm:w-1/2">
+                <section className="text-primary-950">
                     <h1 className="text-3xl text-center mb-2">Login</h1>
                     <form>
                         <label className="w-full">
