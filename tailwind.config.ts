@@ -22,7 +22,9 @@ const config: Config = {
       colors: {
         vidro: "#E0F3FE",
         "primary-950": "#07324A",
+        "primary-900": "#0B4F6F",
         "primary-800": "#065F86",
+        "primary-700": "#0171A3",
         "primary-600": "#0099D8",
         "primary-500": "#0CB1EB",
         "primary-50": "#F0FAFF",
