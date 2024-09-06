@@ -1,30 +1,47 @@
+import { InputText } from "@/components/form/input";
+
 export default function LoginPage() {
-    return (
-        <main className="bg-cover flex md:items-center md:justify-center w-screen h-screen p-10"
-        style={{backgroundImage: "url('/img/login-bg.jpg')"}}>
-            <section className="h-full w-4/5 borderborder-primary-500 p-9 rounded-[30px] flex justify-around flex-col-reverse sm:flex-row sm:items-center bg-gradiente-vidro">
-                <section className="text-primary-950 w-2/5">
-                    <h2 className="text-3xl">Gerencie o seu consultório de psicologia</h2>
-                    <p className="text-xl">Horários, pacientes, documentos, tudo num só lugar.</p>
-                    <button className="w-full bg-primary-600 mt-2 p-3 text-primary-50 rounded-md text-sm">Saiba Mais</button>
-                </section>
-                <section className="text-primary-950 w-2/5">
-                    <h1 className="text-3xl text-center mb-2">Login</h1>
-                    <form>
-                        <label className="w-full">
-                            Insira seu email
-                            <input type="text" className="w-full" />
-                        </label>
-                        <br />
-                        <label className="w-full">
-                            Insira sua senha
-                            <input type="password" className="w-full" />
-                        </label>
-                        <br />
-                        <button type="submit" className="w-full bg-primary-50 text-primary-950 mt-2">Entrar</button>
-                    </form>
-                </section>
-            </section>
-        </main >
-    )
+  return (
+    <main
+      className="flex h-screen w-screen bg-cover p-10 md:items-center md:justify-center"
+      style={{ backgroundImage: "url('/img/login-bg.jpg')" }}
+    >
+      <section className="borderborder-primary-500 flex h-full w-4/5 flex-col-reverse justify-around rounded-[30px] bg-gradiente-vidro p-9 sm:flex-row sm:items-center">
+        <section className="w-2/5 text-primary-950">
+          <h2 className="text-3xl">Gerencie o seu consultório de psicologia</h2>
+          <p className="text-xl">
+            Horários, pacientes, documentos, tudo num só lugar.
+          </p>
+          <button className="mt-2 w-full rounded-md bg-primary-600 p-3 text-sm text-primary-50">
+            Saiba Mais
+          </button>
+        </section>
+        <section className="w-2/5 text-primary-950">
+          <h1 className="mb-2 text-center text-3xl">Login</h1>
+          <form>
+            <InputText
+              type="text"
+              label="Insira seu E-mail"
+              id="email"
+              placeholder="Email"
+            />
+            <br />
+            <InputText
+              type="password"
+              label="Insira sua Senha"
+              id="password"
+              placeholder="Senha"
+            />
+            <br />
+            <button
+              type="submit"
+              className="mt-2 w-full bg-primary-50 text-primary-950"
+            >
+              Entrar
+            </button>
+          </form>
+        </section>
+      </section>
+    </main>
+  );
 }
