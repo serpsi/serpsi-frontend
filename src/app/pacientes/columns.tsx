@@ -14,7 +14,7 @@ export type Payment = {
 export const columns: ColumnDef<Payment>[] = [
 	{
 		accessorKey: "editar",
-		header: () => <div className="flex justify-center w-full">Editar</div>,
+		header: () => <div className="flex justify-center w-[70px]">Editar</div>,
 		size: 70,
 		cell: () => (
 			<Link href="" className="flex justify-center">
