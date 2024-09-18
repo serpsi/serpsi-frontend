@@ -34,10 +34,13 @@ export function DataTable<TData, TValue>({
 	});
 	return (
 		<section>
-			<Table>
+			<Table className="rounded-3xl">
 				<TableHeader className="bg-primary-100 h-[80px] text-lg font-bold">
 					{table.getHeaderGroups().map((headerGroup) => (
-						<TableRow key={headerGroup.id}>
+						<TableRow
+							key={headerGroup.id}
+							className="hover:bg-primary-100"
+						>
 							{headerGroup.headers.map((header) => {
 								return (
 									<TableHead
@@ -65,9 +68,7 @@ export function DataTable<TData, TValue>({
 								data-state={row.getIsSelected() && "selected"}
 							>
 								{row.getVisibleCells().map((cell) => (
-									<TableCell
-										key={cell.id}
-									>
+									<TableCell key={cell.id}>
 										{flexRender(
 											cell.column.columnDef.cell,
 											cell.getContext()
@@ -88,7 +89,7 @@ export function DataTable<TData, TValue>({
 					)}
 				</TableBody>
 				<TableFooter>
-					<TableRow>
+					<TableRow className="hover:bg-primary-50">
 						<TableCell colSpan={columns.length - 1} />
 						<TableCell className="text-right">
 							<div>
