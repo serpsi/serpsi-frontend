@@ -4,14 +4,14 @@ import Image from "next/image";
 import pencilSquare from "@/assets/pencil-square.svg";
 import Link from "next/link";
 
-export type Payment = {
+export type Patient = {
 	id: string;
-	amount: string;
-	status: "Pending" | "processing" | "Paid" | "Unpaid";
+	name: string;
+	paymentPlan: "Mensal" | "Bimestral" | "Trimestral" | "Avulso";
 	documento: string;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Patient>[] = [
 	{
 		accessorKey: "editar",
 		header: () => <div className="flex justify-center w-[70px]">Editar</div>,
@@ -28,96 +28,99 @@ export const columns: ColumnDef<Payment>[] = [
 		)
 	},
 	{
-		accessorKey: "status",
-		header: "Status"
-	},
-	{
-		accessorKey: "amount",
-		header: "Amount"
+		accessorKey: "name",
+		header: "Paciente",
+		size: 250,
 	},
 	{
 		accessorKey: "documento",
-		header: "Documento"
+		header: "Documento",
+		size: 250,
+	},
+	{
+		accessorKey: "paymentPlan",
+		header: "Plano de pagamento",
+		size: 250,
 	}
 ];
 
-export const invoices: Payment[] = [
+export const data: Patient[] = [
 	{
 		id: "INV001",
-		status: "Paid",
-		amount: "$250.00",
-		documento: "aaaa134;docm"
+		paymentPlan: "Mensal",
+		name: "Aurora",
+		documento: "000.000.000-00"
 	},
 	{
 		id: "INV002",
-		status: "Pending",
-		amount: "$150.00",
-		documento: "aaaa134;docm"
+		paymentPlan: "Bimestral",
+		name: "Antonio",
+		documento: "000.000.000-00"
 	},
 	{
 		id: "INV003",
-		status: "Unpaid",
-		amount: "$350.00",
-		documento: "aaaa134;docm"
+		paymentPlan: "Mensal",
+		name: "Daniel",
+		documento: "000.000.000-00"
 	},
 	{
 		id: "INV004",
-		status: "Paid",
-		amount: "$450.00",
-		documento: "aaaa134;docm"
+		paymentPlan: "Trimestral",
+		name: "Marcelo",
+		documento: "000.000.000-00"
 	},
 	{
 		id: "INV005",
-		status: "Paid",
-		amount: "$550.00",
-		documento: "aaaa134;docm"
+		paymentPlan: "Avulso",
+		name: "danillo",
+		documento: "000.000.000-00"
 	},
 	{
 		id: "INV006",
-		status: "Pending",
-		amount: "$200.00",
-		documento: "aaaa134;docm"
+		paymentPlan: "Avulso",
+		name: "Iara",
+		documento: "000.000.000-00"
 	},
 	{
 		id: "INV007",
-		status: "Unpaid",
-		amount: "$300.00",
-		documento: "aaaa134;docm"
+		paymentPlan: "Bimestral",
+		name: "Roberto Santos",
+		documento: "000.000.000-00"
 	},
 	{
 		id: "INV008",
-		status: "Paid",
-		amount: "$550.00",
-		documento: "aaaa134;docm"
+		paymentPlan: "Mensal",
+		name: "Roberto Santos",
+		documento: "000.000.000-00"
 	},
 	{
 		id: "INV009",
-		status: "Pending",
-		amount: "$200.00",
-		documento: "aaaa134;docm"
+		paymentPlan: "Trimestral",
+		name: "Roberto Santos",
+		documento: "000.000.000-00"
 	},
 	{
 		id: "INV010",
-		status: "Unpaid",
-		amount: "$300.00",
-		documento: "aaaa134;docm"
+		paymentPlan: "Avulso",
+		name: "Roberto Santos",
+		documento: "000.000.000-00"
 	},
 	{
 		id: "INV011",
-		status: "Paid",
-		amount: "$550.00",
-		documento: "aaaa134;docm"
+		paymentPlan: "Mensal",
+		name: "Roberto Santos",
+		documento: "000.000.000-00"
 	},
 	{
 		id: "INV012",
-		status: "Pending",
-		amount: "$200.00",
-		documento: "aaaa134;docm"
+		paymentPlan: "Avulso",
+		name: "Roberto Santos",
+		documento: "000.000.000-00"
 	},
 	{
 		id: "INV013",
-		status: "Unpaid",
-		amount: "$300.00",
-		documento: "aaaa134;docm"
+		paymentPlan: "Mensal",
+		name: "Roberto Santos",
+		documento: "000.000.000-00"
 	}
 ];
