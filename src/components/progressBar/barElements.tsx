@@ -38,17 +38,17 @@ Bar.displayName = "Bar";
 
 interface stepProps {
 	variant: "inactive" | "active";
-	last?: boolean;
+	first?: boolean;
 }
 
-const Step = React.forwardRef<null, stepProps>(({ variant, last }) => (
+const Step = React.forwardRef<null, stepProps>(({ variant, first }) => (
 	<>
-		{last ? (
+		{first ? (
 				<Ball variant={variant} />
 		) : (
 			<>
-				<Ball variant={variant} />
 				<Bar variant={variant} />
+				<Ball variant={variant} />
 			</>
 		)}
 	</>

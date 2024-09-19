@@ -17,9 +17,9 @@ export function ProgressBar({
 				length: steps
 			}).map((it, index) =>
 				index < currentStep ? (
-					<Step variant="active" last={index === steps - 1} key={index} />
+					<Step variant="active" first={index === 0} key={index} />
 				) : (
-					<Step variant="inactive" last={index === steps - 1} key={index} />
+					<Step variant="inactive" first={index === 0} key={index} />
 				)
 			)}
 		</section>
