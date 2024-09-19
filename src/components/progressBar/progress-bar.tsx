@@ -12,14 +12,14 @@ export function ProgressBar({
 	className
 }: ProgressBarProps) {
 	return (
-		<section className={`flex ${className} justify-between items-center p-5 `}>
+		<section className={`flex ${className} justify-between items-center p-5`}>
 			{Array.from({
 				length: steps
 			}).map((it, index) =>
 				index < currentStep ? (
-					<Step variant="active" first={index === 0} key={index} />
+					<Step variant="active" first={index === 0} current={index === currentStep-1} key={index} />
 				) : (
-					<Step variant="inactive" first={index === 0} key={index} />
+					<Step variant="inactive" first={index === 0} current={index === currentStep-1} key={index} />
 				)
 			)}
 		</section>
