@@ -66,9 +66,6 @@ export default async function MyPatient() {
         {/* Informações do Paciente */}
         <Square>
           <SquareHeader titulo="Informações do paciente" />
-          <h3 className="text-lg text-primary-600 mb-4">
-            Informações do paciente:
-          </h3>
           <p>Nascimento: 31/12/2000</p>
           <p>CPF: 000.000.000-00</p>
           <p>RG: 000000000</p>
@@ -107,7 +104,6 @@ export default async function MyPatient() {
         {/* Escola */}
         <Square variant="DoubleColumn">
           <SquareHeader titulo="Escola" />
-          <h3 className="text-lg text-primary-600 mb-4">Escola:</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex-col space-y-3">
               <p>Nome: Escola Escola</p>
