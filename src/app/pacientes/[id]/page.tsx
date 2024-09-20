@@ -11,22 +11,21 @@ export default async function MyPatient() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Card do Perfil */}
         <Square className="flex flex-col items-center text-center">
-          {/* <Image
+          <Image
             className="rounded-full w-24 h-24 mb-4"
-            src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fbr.freepik.com%2Ffotos%2Fpessoas&psig=AOvVaw2l-Bgh-HUpuNg6a2yKgxqO&ust=1726927937051000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCKDk3oPa0YgDFQAAAAAdAAAAABAE" // Imagem do perfil
+            src=
+            "http://res.cloudinary.com/djlmqetmd/image/upload/v1726842410/nlzeqgi3igz2nk33mmpa.jpg"
             width={100}
             height={100}
             alt="Profile"
-          /> */}
-          <img className="rounded-full w-24 h-24 mb-4"
-            src="http://res.cloudinary.com/djlmqetmd/image/upload/v1726842410/nlzeqgi3igz2nk33mmpa.jpg" />
+          />
           <h2 className="text-xl font-semibold">Roberto Santos</h2>
           <div className="flex items-center gap-2">
             <a href="#" className="text-primary-700  text-sm mt-2 no-underline">
               Visualizar Documentos
             </a>
-              <DocumentMagnifyingGlassIcon className="h-6 w-6 text-primary-700 underline text-sm mt-2 hover:cursor-pointer" />
-          
+            <DocumentMagnifyingGlassIcon className="h-6 w-6 text-primary-700 underline text-sm mt-2 hover:cursor-pointer" />
+
           </div>
         </Square>
 
@@ -129,16 +128,17 @@ export default async function MyPatient() {
           <ul>
             <li className="mb-1  border-y-2 border-blue-500 p-1">
               <a href="#" className="flex justify-between text-gray-900">
-                Sessão_Roberto.pdf 
-                <ArrowDownTrayIcon className="h-6 w-6"/>
+                Sessão_Roberto.pdf
+                <ArrowDownTrayIcon className="h-6 w-6" />
               </a>
             </li>
             <li className="mb-1 border-b-2 border-blue-500 p-1">
               <a href="#" className="flex justify-between text-gray-900">
                 Sessão_Roberto.pdf
-                <ArrowDownTrayIcon className="h-6 w-6"/>
+                <ArrowDownTrayIcon className="h-6 w-6" />
               </a>
             </li>
+
           </ul>
         </Square>
 

@@ -7,7 +7,7 @@ interface Props{
 
 const Square = ({children, className}: Props) => {
   return (
-    <div className={`border p-6 rounded-lg border-primary-500 ${className}`}>
+    <div className={`border p-6 rounded-lg border-primary-500 ${className} text-gray-900`}>
       {children}
     </div>
   )
