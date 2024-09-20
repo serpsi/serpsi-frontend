@@ -11,7 +11,7 @@ export default async function MyPatient() {
     <main className="p-10 flex  items-center justify-center bg-cover">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Card do Perfil */}
-        <Square className="flex flex-col items-center  justify-center text-center">
+        <Square variant="WithImage">
           <Image
             className="rounded-full w-24 h-24 mb-4"
             src=
@@ -25,7 +25,8 @@ export default async function MyPatient() {
             <a href="#" className="text-primary-700  text-sm mt-2 no-underline">
               Visualizar Documentos
             </a>
-            <DocumentMagnifyingGlassIcon className="h-6 w-6 text-primary-700 underline text-sm mt-2 hover:cursor-pointer" />
+            <DocumentMagnifyingGlassIcon 
+            className="h-6 w-6 text-primary-700 underline text-sm mt-2 hover:cursor-pointer" />
 
           </div>
         </Square>
@@ -72,7 +73,7 @@ export default async function MyPatient() {
         </Square>
 
         {/* Escola */}
-        <Square className="md:col-span-2">
+        <Square variant="DoubleColumn">
           <SquareHeader titulo="Escola" />
           <h3 className="text-lg text-primary-600 mb-4">Escola:</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -109,7 +110,7 @@ export default async function MyPatient() {
         </Square>
 
         {/* Endereço */}
-        <Square className="md:col-span-2" >
+        <Square variant="DoubleColumn">
           <SquareHeader titulo="Endereço" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex-col space-y-3">
@@ -147,7 +148,7 @@ export default async function MyPatient() {
         </Square>
 
         {/* Histórico de Sessões */}
-        <Square className="flex flex-col items-center justify-center">
+        <Square variant="WithButton">
           <SquareHeader titulo="Histórico de Sessões" />
           <Button
             className=" bg-primary-600 hover:bg-primary-700"
