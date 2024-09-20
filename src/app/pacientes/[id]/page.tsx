@@ -3,8 +3,40 @@ import { Square, SquareHeader } from "./Sqaure";
 import { Button } from "@/components/ui/button";
 import { DocumentMagnifyingGlassIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { ComorbidityTag } from "./comorbidityTag";
+import { ListComponent } from "./listComponent";
+
 
 export default async function MyPatient() {
+
+  const followUpsData = [
+    {
+      titulo: 'Sessão_Roberto1.pdf',
+      id: 'c23576d0-f33b-4437-980b-e2e7baa63702'
+    },
+    {
+      titulo: 'Sessão_Roberto2.pdf',
+      id: 'cc8d6c68-b152-4a30-86be-aec6342156d8'
+    },
+    {
+      titulo: 'Sessão_Roberto3.pdf',
+      id: 'f642735d-6944-4568-b167-6e809fd3d420'
+    },
+  ];
+
+  const comorbidityData = [
+    {
+      name: 'Anemia Falciforme',
+      id: '0b81e3f2-cefb-4916-9a73-4423068f2d5b'
+    },
+    {
+      name: 'Asma',
+      id: 'aa3c4acb-ca74-4f9c-90b8-e833a7eed82d'
+    },
+    {
+      name: 'Diabetes',
+      id: '7011df37-f8fd-437e-ad4f-99218072ab2e'
+    }
+  ];
 
   return (
 
@@ -25,8 +57,8 @@ export default async function MyPatient() {
             <a href="#" className="text-primary-700  text-sm mt-2 no-underline">
               Visualizar Documentos
             </a>
-            <DocumentMagnifyingGlassIcon 
-            className="h-6 w-6 text-primary-700 underline text-sm mt-2 hover:cursor-pointer" />
+            <DocumentMagnifyingGlassIcon
+              className="h-6 w-6 text-primary-700 underline text-sm mt-2 hover:cursor-pointer" />
 
           </div>
         </Square>
@@ -41,18 +73,18 @@ export default async function MyPatient() {
           <p>CPF: 000.000.000-00</p>
           <p>RG: 000000000</p>
           <p>Tel: (00) 00000 - 0000</p>
-          <p>Comorbidades:</p>
-          <div className="flex flex-col  flex-wrap mt-2 gap-2 md:flex-row">
-            <ComorbidityTag>
-              Anemia falciforme
-            </ComorbidityTag>
-            <ComorbidityTag>
-              Asma
-            </ComorbidityTag>
-            <ComorbidityTag>
-              Diabetes
-            </ComorbidityTag>
-          </div>
+          {comorbidityData.length > 0 && (
+            <>
+              <p>Comorbidades:</p>
+              <div className="flex flex-col  flex-wrap mt-2 gap-2 md:flex-row">
+                {comorbidityData.map((comorbidity) => (
+                  <ComorbidityTag name={comorbidity.name} key={comorbidity.id} />
+                ))}
+              </div>
+            </>
+          )
+          }
+
         </Square>
 
         {/* Informações dos Responsáveis */}
@@ -131,18 +163,14 @@ export default async function MyPatient() {
         <Square>
           <SquareHeader titulo="Arquivos de acompanhamentos anteriores" />
           <ul>
-            <li className="mb-1  border-y-2 border-blue-500 p-1">
-              <a href="#" className="flex justify-between text-gray-900">
-                Sessão_Roberto.pdf
-                <ArrowDownTrayIcon className="h-6 w-6" />
-              </a>
-            </li>
-            <li className="mb-1 border-b-2 border-blue-500 p-1">
-              <a href="#" className="flex justify-between text-gray-900">
-                Sessão_Roberto.pdf
-                <ArrowDownTrayIcon className="h-6 w-6" />
-              </a>
-            </li>
+            {followUpsData.length > 0 ?   followUpsData.map((followUp, index) => (
+              <ListComponent
+                content={followUp.titulo}
+                id={followUp.id}
+                key={followUp.id}
+                variant={index === 0 ? 'IsFirst' : 'NotFirst'}
+              />
+            )) : <p className="text-center">Nenhum Acompanhamento anterior</p>}
 
           </ul>
         </Square>
