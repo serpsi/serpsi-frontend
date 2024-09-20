@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Square } from "./Sqaure";
+import { Square, SquareHeader } from "./Sqaure";
 import { Button } from "@/components/ui/button";
 import { DocumentMagnifyingGlassIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { ComorbidityTag } from "./comorbidityTag";
@@ -11,7 +11,7 @@ export default async function MyPatient() {
     <main className="p-10 flex  items-center justify-center bg-cover">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Card do Perfil */}
-        <Square className="flex flex-col items-center text-center">
+        <Square className="flex flex-col items-center  justify-center text-center">
           <Image
             className="rounded-full w-24 h-24 mb-4"
             src=
@@ -32,6 +32,7 @@ export default async function MyPatient() {
 
         {/* Informações do Paciente */}
         <Square>
+          <SquareHeader titulo="Informações do paciente" />
           <h3 className="text-lg text-primary-600 mb-4">
             Informações do paciente:
           </h3>
@@ -55,9 +56,7 @@ export default async function MyPatient() {
 
         {/* Informações dos Responsáveis */}
         <Square>
-          <h3 className="text-lg text-primary-600 mb-4">
-            Informações do responsável 1:
-          </h3>
+          <SquareHeader titulo="Informações do responsável 1" />
           <p>Nome: Roberta Mãe</p>
           <p>CPF: 000.000.000-00</p>
           <p>RG: 000000000</p>
@@ -65,9 +64,7 @@ export default async function MyPatient() {
         </Square>
 
         <Square>
-          <h3 className="text-lg text-primary-600 mb-4">
-            Informações do responsável 2:
-          </h3>
+          <SquareHeader titulo="Informações do responsável 2" />
           <p>Nome: Roberto Pai</p>
           <p>CPF: 000.000.000-00</p>
           <p>RG: 000000000</p>
@@ -76,6 +73,7 @@ export default async function MyPatient() {
 
         {/* Escola */}
         <Square className="md:col-span-2">
+          <SquareHeader titulo="Escola" />
           <h3 className="text-lg text-primary-600 mb-4">Escola:</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex-col space-y-3">
@@ -95,9 +93,7 @@ export default async function MyPatient() {
 
         {/* Medicamento */}
         <Square>
-          <h3 className="text-lg text-primary-600 mb-4">
-            Medicamento Nome:
-          </h3>
+          <SquareHeader titulo="Medicamento Nome" />
           <p>Dosagem: 5mg</p>
           <p>Frequência: 8:00 / 20:00</p>
           <p>Data de início: dd/mm/aaaa</p>
@@ -105,9 +101,7 @@ export default async function MyPatient() {
         </Square>
 
         <Square>
-          <h3 className="text-lg text-primary-600 mb-4">
-            Medicamento Nome 2:
-          </h3>
+          <SquareHeader titulo="Medicamento Nome 2" />
           <p>Dosagem: 5mg</p>
           <p>Frequência: 8:00 / 20:00</p>
           <p>Data de início: dd/mm/aaaa</p>
@@ -115,8 +109,8 @@ export default async function MyPatient() {
         </Square>
 
         {/* Endereço */}
-        <Square className="md:col-span-2">
-          <h3 className="text-lg text-primary-600 mb-4">Endereço:</h3>
+        <Square className="md:col-span-2" >
+          <SquareHeader titulo="Endereço" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex-col space-y-3">
               <p>CEP: 00000-000</p>
@@ -126,7 +120,7 @@ export default async function MyPatient() {
             </div>
             <div className="flex-col space-y-3">
               <p>Bairro: Bairro dos babos</p>
-              <p>Cidade: Cidade dos Bobos, Estado: Bahia</p>
+              <p>Cidade: Cidade dos Bobos</p>
               <p>Estado: Bahia</p>
             </div>
           </div>
@@ -134,9 +128,7 @@ export default async function MyPatient() {
 
         {/* Arquivos */}
         <Square>
-          <h3 className="text-lg text-primary-600 mb-4">
-            Arquivos de acompanhamentos anteriores:
-          </h3>
+          <SquareHeader titulo="Arquivos de acompanhamentos anteriores" />
           <ul>
             <li className="mb-1  border-y-2 border-blue-500 p-1">
               <a href="#" className="flex justify-between text-gray-900">
@@ -156,9 +148,7 @@ export default async function MyPatient() {
 
         {/* Histórico de Sessões */}
         <Square className="flex flex-col items-center justify-center">
-          <h3 className="text-lg text-primary-600 mb-4">
-            Histórico de Sessões
-          </h3>
+          <SquareHeader titulo="Histórico de Sessões" />
           <Button
             className=" bg-primary-600 hover:bg-primary-700"
           >
