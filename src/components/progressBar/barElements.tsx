@@ -38,7 +38,7 @@ const barVariants = cva("h-0.5 min-w-5 w-full mx-5 hidden lg:block", {
 });
 
 const Bar = React.forwardRef<null, VariantProps<typeof barVariants>>(
-	({ variant }) => <section className={cn(barVariants({ variant }))} />
+	({ variant }) => <div className={cn(barVariants({ variant }))} />
 );
 Bar.displayName = "Bar";
 
