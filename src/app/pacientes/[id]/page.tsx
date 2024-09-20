@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Square } from "./Sqaure";
-
+import { Button } from "@/components/ui/button";
+import { DocumentMagnifyingGlassIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 
 export default async function MyPatient() {
 
@@ -20,14 +21,18 @@ export default async function MyPatient() {
           <img className="rounded-full w-24 h-24 mb-4"
             src="http://res.cloudinary.com/djlmqetmd/image/upload/v1726842410/nlzeqgi3igz2nk33mmpa.jpg" />
           <h2 className="text-xl font-semibold">Roberto Santos</h2>
-          <a href="#" className="text-blue-600 underline text-sm mt-2">
-            Visualizar Documentos
-          </a>
+          <div className="flex items-center gap-2">
+            <a href="#" className="text-primary-700  text-sm mt-2 no-underline">
+              Visualizar Documentos
+            </a>
+              <DocumentMagnifyingGlassIcon className="h-6 w-6 text-primary-700 underline text-sm mt-2 hover:cursor-pointer" />
+          
+          </div>
         </Square>
 
         {/* Informações do Paciente */}
         <Square>
-          <h3 className="text-lg font-semibold text-blue-500 mb-4">
+          <h3 className="text-lg text-primary-600 mb-4">
             Informações do paciente:
           </h3>
           <p>Nascimento: 31/12/2000</p>
@@ -39,7 +44,7 @@ export default async function MyPatient() {
 
         {/* Informações dos Responsáveis */}
         <Square>
-          <h3 className="text-lg font-semibold text-blue-500 mb-4">
+          <h3 className="text-lg text-primary-600 mb-4">
             Informações do responsável 1:
           </h3>
           <p>Nome: Roberta Mãe</p>
@@ -49,7 +54,7 @@ export default async function MyPatient() {
         </Square>
 
         <Square>
-          <h3 className="text-lg font-semibold text-blue-500 mb-4">
+          <h3 className="text-lg text-primary-600 mb-4">
             Informações do responsável 2:
           </h3>
           <p>Nome: Roberto Pai</p>
@@ -60,7 +65,7 @@ export default async function MyPatient() {
 
         {/* Escola */}
         <Square className="md:col-span-2">
-          <h3 className="text-lg font-semibold text-blue-500 mb-4">Escola:</h3>
+          <h3 className="text-lg text-primary-600 mb-4">Escola:</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex-col space-y-3">
               <p>Nome: Escola Escola</p>
@@ -79,7 +84,7 @@ export default async function MyPatient() {
 
         {/* Medicamento */}
         <Square>
-          <h3 className="text-lg font-semibold text-blue-500 mb-4">
+          <h3 className="text-lg text-primary-600 mb-4">
             Medicamento Nome:
           </h3>
           <p>Dosagem: 5mg</p>
@@ -89,7 +94,7 @@ export default async function MyPatient() {
         </Square>
 
         <Square>
-          <h3 className="text-lg font-semibold text-blue-500 mb-4">
+          <h3 className="text-lg text-primary-600 mb-4">
             Medicamento Nome 2:
           </h3>
           <p>Dosagem: 5mg</p>
@@ -100,7 +105,7 @@ export default async function MyPatient() {
 
         {/* Endereço */}
         <Square className="md:col-span-2">
-          <h3 className="text-lg font-semibold text-blue-500 mb-4">Endereço:</h3>
+          <h3 className="text-lg text-primary-600 mb-4">Endereço:</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex-col space-y-3">
               <p>CEP: 00000-000</p>
@@ -118,20 +123,20 @@ export default async function MyPatient() {
 
         {/* Arquivos */}
         <Square>
-          <h3 className="text-lg font-semibold text-blue-500 mb-4">
+          <h3 className="text-lg text-primary-600 mb-4">
             Arquivos de acompanhamentos anteriores:
           </h3>
           <ul>
-            <li>
-              <a href="#" className="flex justify-between text-blue-600">
-                Sessão_Roberto.pdf
-                <span className="material-icons">download</span>
+            <li className="mb-1  border-y-2 border-blue-500 p-1">
+              <a href="#" className="flex justify-between text-gray-900">
+                Sessão_Roberto.pdf 
+                <ArrowDownTrayIcon className="h-6 w-6"/>
               </a>
             </li>
-            <li>
-              <a href="#" className="flex justify-between text-blue-600">
+            <li className="mb-1 border-b-2 border-blue-500 p-1">
+              <a href="#" className="flex justify-between text-gray-900">
                 Sessão_Roberto.pdf
-                <span className="material-icons">download</span>
+                <ArrowDownTrayIcon className="h-6 w-6"/>
               </a>
             </li>
           </ul>
@@ -139,15 +144,14 @@ export default async function MyPatient() {
 
         {/* Histórico de Sessões */}
         <Square className="flex flex-col items-center justify-center">
-          <h3 className="text-lg font-semibold text-blue-500 mb-4">
+          <h3 className="text-lg text-primary-600 mb-4">
             Histórico de Sessões
           </h3>
-          <a
-            href="#"
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          <Button
+            className=" bg-primary-600 hover:bg-primary-700"
           >
             Ver Histórico de Sessões
-          </a>
+          </Button>
         </Square>
       </div>
     </main>
