@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Square } from "./Sqaure";
 import { Button } from "@/components/ui/button";
 import { DocumentMagnifyingGlassIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import { ComorbidityTag } from "./comorbidityTag";
 
 export default async function MyPatient() {
 
@@ -38,7 +39,18 @@ export default async function MyPatient() {
           <p>CPF: 000.000.000-00</p>
           <p>RG: 000000000</p>
           <p>Tel: (00) 00000 - 0000</p>
-          <p className="mt-4">Tags de comorbidade...</p>
+          <p>Comorbidades:</p>
+          <div className="flex flex-col  flex-wrap mt-2 gap-2 md:flex-row">
+            <ComorbidityTag>
+              Anemia falciforme
+            </ComorbidityTag>
+            <ComorbidityTag>
+              Asma
+            </ComorbidityTag>
+            <ComorbidityTag>
+              Diabetes
+            </ComorbidityTag>
+          </div>
         </Square>
 
         {/* Informações dos Responsáveis */}
