@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Square, SquareHeader } from "./Sqaure";
+import { Square, SquareHeader } from "./Square";
 import { Button } from "@/components/ui/button";
 import { DocumentMagnifyingGlassIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { ComorbidityTag } from "./comorbidityTag";
@@ -73,11 +73,11 @@ export default async function MyPatient() {
           {comorbidityData.length > 0 && (
             <>
               <p>Comorbidades:</p>
-              <div className="flex flex-col  flex-wrap mt-2 gap-2 md:flex-row">
+              <ul className="flex flex-col  flex-wrap mt-2 gap-2 md:flex-row">
                 {comorbidityData.map((comorbidity) => (
                   <ComorbidityTag name={comorbidity.name} key={comorbidity.id} />
                 ))}
-              </div>
+              </ul>
             </>
           )
           }
