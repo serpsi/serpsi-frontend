@@ -22,7 +22,8 @@ export default function NavigationLink({
 	const linkClassName = classNames(
 		"flex w-full items-center justify-start p-2",
 		{
-			"bg-primary-200": urlpath.includes(link)
+			"bg-primary-200": urlpath.includes(link),
+			"min-w-48": !collapsed
 		}
 	);
 

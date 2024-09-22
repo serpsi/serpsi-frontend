@@ -43,39 +43,38 @@ export default function RootLayout({
 						<Navigation.Breadcrumb />
 					</div>
 					{/* User Profile */}
-					<div className="flex flex-row flex-nowrap">
-						<Navigation.User></Navigation.User>
-					</div>
+					<Navigation.User name="Iara Lima" img="/avatar-teste.jpg" />
 				</Navigation.Header>
 
-				<div className="flex flex-row">
-					<Navigation.SideBar>
-						<Navigation.Link
-							link="/home"
-							title="Minhas Consultas"
-							Icon={ClipboardListIcon}
-							collapsed={collapsedLink}
-						/>
-						<Navigation.Link
-							link="/teste"
-							title="Meus Pacientes"
-							Icon={UserGroupIcon}
-							collapsed={collapsedLink}
-						/>
-						<Navigation.Link
-							link="/home"
-							title="Documentos"
-							Icon={InboxIcon}
-							collapsed={collapsedLink}
-						/>
-						<Navigation.Link
-							link="/home"
-							title="Financeiro"
-							Icon={CurrencyDollarIcon}
-							collapsed={collapsedLink}
-						/>
-					</Navigation.SideBar>
-					<div className="flex-1">{children}</div>
+				<Navigation.SideBar isHidden={collapsedLink}>
+					<Navigation.Link
+						link="/home"
+						title="Minhas Consultas"
+						Icon={ClipboardListIcon}
+						collapsed={collapsedLink}
+					/>
+					<Navigation.Link
+						link="/patients"
+						title="Meus Pacientes"
+						Icon={UserGroupIcon}
+						collapsed={collapsedLink}
+					/>
+					<Navigation.Link
+						link="/documents"
+						title="Documentos"
+						Icon={InboxIcon}
+						collapsed={collapsedLink}
+					/>
+					<Navigation.Link
+						link="/bills"
+						title="Financeiro"
+						Icon={CurrencyDollarIcon}
+						collapsed={collapsedLink}
+					/>
+				</Navigation.SideBar>
+
+				<div className={collapsedLink ? "sm:ml-[4.5rem]" : "sm:ml-48"}>
+					{children}
 				</div>
 			</Navigation.Root>
 		</>
