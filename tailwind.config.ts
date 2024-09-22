@@ -39,7 +39,7 @@ const config: Config = {
     			'secondary-pink-200': '#F9C6FF',
     			'secondary-pink-100': '#FCE3FF',
     			'secondary-pink-50' : '#FDF2FF',
-    			'primary-50': '#F0FAFF',
+    			// 'primary-50': '#F0FAFF',
     			background: 'hsl(var(--background))',
     			foreground: 'hsl(var(--foreground))',
     			card: {
