@@ -25,6 +25,7 @@ const config: Config = {
 				"primary-700": "#0171A3",
 				"primary-600": "#0099D8",
 				"primary-500": "#0CB1EB",
+				"primary-200": "#B9E9FE",
 				"primary-50": "#F0FAFF",
 
 				background: "hsl(var(--background))",
