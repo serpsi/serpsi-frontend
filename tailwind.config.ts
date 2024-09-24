@@ -1,8 +1,8 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-    darkMode: ["class"],
-    content: [
+	darkMode: ["class"],
+	content: [
 		"./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
 		"./src/components/**/*.{js,ts,jsx,tsx,mdx}",
 		"./src/app/**/*.{js,ts,jsx,tsx,mdx}"
@@ -14,7 +14,7 @@ const config: Config = {
     			'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
     			'login': 'url(\'/src/app/login/login-bg.png\')',
     			'gradiente-vidro': 'linear-gradient(90.14deg, rgba(0, 153, 216, 0.22) 32.76%, rgba(224, 243, 254, 0.2) 61.12%)'
-    		},
+    		},        
     		colors: {
     			vidro: '#E0F3FE',
     			'primary-950': '#07324A',

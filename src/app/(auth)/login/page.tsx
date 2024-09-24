@@ -1,5 +1,5 @@
-import { Button } from "@/components/form/button";
-import { InputText } from "@/components/form/input";
+import { Button } from "@/components/Form/button";
+import { InputText } from "@/components/Form/input";
 
 export default function LoginPage() {
 	return (
