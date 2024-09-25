@@ -70,7 +70,7 @@ export function DataTable<TData, TValue>({
 			{linkTop ? (
 				<section>
 					<Link
-						href=""
+						href="/patients/register"
 						className="text-sm font-medium text-primary-600 underline"
 					>
 						Cadastrar novo paciente
