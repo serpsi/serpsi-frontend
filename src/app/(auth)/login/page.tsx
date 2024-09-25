@@ -1,7 +1,9 @@
-import { Button } from "@/components/Form/button";
-import { InputText } from "@/components/Form/input";
+import { Button } from "@/components/form/button";
+import { InputText } from "@/components/form/input";
+import { login } from "@/services/authService";
 
 export default function LoginPage() {
+
 	return (
 		<main
 			className="flex h-screen w-screen items-center justify-center bg-cover p-5 md:p-10"
@@ -22,8 +24,9 @@ export default function LoginPage() {
 					<h1 className="mb-8 text-center text-5xl font-medium text-primary-900">
 						Login
 					</h1>
-					<form className="flex h-2/5 flex-col justify-around">
+					<form className="flex h-2/5 flex-col justify-around" action={login}>
 						<InputText
+							name="email"
 							type="text"
 							label="Insira seu E-mail"
 							id="email"
@@ -31,6 +34,7 @@ export default function LoginPage() {
 						/>
 						<br />
 						<InputText
+							name="password"
 							type="password"
 							label="Insira sua Senha"
 							id="password"

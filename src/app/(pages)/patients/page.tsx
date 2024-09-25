@@ -1,10 +1,6 @@
 import { DataTable } from "@/components/table/data-table";
-import { Patient, columns, data } from "./columns";
-
-async function getData(): Promise<Patient[]> {
-	const response = data;
-	return response;
-}
+import { columns } from "./columns";
+import { getData } from "@/services/patientsService";
 
 export default async function PatientsPage() {
 	const data = await getData();
