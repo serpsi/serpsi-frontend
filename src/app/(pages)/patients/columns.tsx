@@ -1,8 +1,7 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import Image from "next/image";
-import pencilSquare from "@/assets/pencil-square.svg";
 import Link from "next/link";
+import { PencilAltIcon } from "@heroicons/react/outline";
 
 export type Patient = {
 	id: string;
@@ -14,33 +13,30 @@ export type Patient = {
 export const columns: ColumnDef<Patient>[] = [
 	{
 		accessorKey: "editar",
-		header: () => <div className="flex justify-center w-[70px]">Editar</div>,
+		header: () => (
+			<div className="flex w-[70px] justify-center">Editar</div>
+		),
 		size: 70,
 		cell: () => (
 			<Link href="" className="flex justify-center">
-				<Image
-					src={pencilSquare}
-					alt="pencil-square"
-					width={24}
-					height={24}
-				/>
+				<PencilAltIcon width={24} height={24} />
 			</Link>
 		)
 	},
 	{
 		accessorKey: "name",
 		header: "Paciente",
-		size: 250,
+		size: 250
 	},
 	{
 		accessorKey: "documento",
 		header: "Documento",
-		size: 250,
+		size: 250
 	},
 	{
 		accessorKey: "paymentPlan",
 		header: "Plano de pagamento",
-		size: 250,
+		size: 250
 	}
 ];
 

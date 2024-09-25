@@ -16,12 +16,12 @@ import {
 	getPaginationRowModel,
 	getFilteredRowModel
 } from "@tanstack/react-table";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Input } from "../ui/input";
 import Link from "next/link";
 import { PaginationTable } from "./pagination-table";
 import { HeaderTable } from "./header-table";
 import { BodyTable } from "./body-table";
+import { SearchIcon } from "@heroicons/react/outline";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -48,7 +48,7 @@ export function DataTable<TData, TValue>({
 			{/* seção de filtros para a tabela */}
 			<section className="flex w-full items-center gap-4">
 				<section className="border-1 flex max-w-[300px] items-center rounded-lg border px-2">
-					<MagnifyingGlassIcon className="h-6 w-6" />
+					<SearchIcon className="h-6 w-6" />
 					<Input
 						id="busca"
 						className="border-0 text-start focus-visible:ring-0"
@@ -79,7 +79,7 @@ export function DataTable<TData, TValue>({
 			) : null}
 			<Table className="rounded-3xl">
 				<HeaderTable table={table} />
-				<BodyTable table={table} columns={columns}/>
+				<BodyTable table={table} columns={columns} />
 				<TableFooter>
 					<TableRow className="hover:bg-primary-50">
 						<TableCell
