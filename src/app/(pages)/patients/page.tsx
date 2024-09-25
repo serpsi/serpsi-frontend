@@ -9,8 +9,13 @@ async function getData(): Promise<Patient[]> {
 export default async function PatientsPage() {
 	const data = await getData();
 	return (
-		<main className="flex h-screen w-screen items-center justify-center bg-primary-50 p-5 md:p-10">
-				<DataTable columns={columns} data={data} linkTop={true} filteringColumn="name" />
+		<main className="flex h-full w-full items-center justify-center bg-white p-5 md:p-10">
+			<DataTable
+				columns={columns}
+				data={data}
+				linkTop={true}
+				filteringColumn="name"
+			/>
 		</main>
 	);
 }
