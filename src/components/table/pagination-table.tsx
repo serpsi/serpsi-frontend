@@ -1,16 +1,19 @@
-
-import { Pagination, PaginationContent, PaginationItem } from "../ui/pagination";
+import {
+	Pagination,
+	PaginationContent,
+	PaginationItem
+} from "../ui/pagination";
 
 import { Button } from "../ui/button";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { Table } from "@tanstack/react-table";
 interface paginationTableProps<TData> {
-    table: Table<TData>;
+	table: Table<TData>;
 }
-export function PaginationTable<TData>({table}: paginationTableProps<TData>) {
-    const [pageIndex, setPageIndex] = useState(1);
+export function PaginationTable<TData>({ table }: paginationTableProps<TData>) {
+	const [pageIndex, setPageIndex] = useState(1);
 	const changePage = (newPage: number) => {
 		setPageIndex(newPage);
 		table.setPageIndex(newPage - 1);

@@ -1,7 +1,21 @@
-export default function Teste() {
+import { DataTable } from "@/components/table/data-table";
+import { Patient, columns, data } from "./columns";
+
+async function getData(): Promise<Patient[]> {
+	const response = data;
+	return response;
+}
+
+export default async function PatientsPage() {
+	const data = await getData();
 	return (
-		<main className="flex min-h-screen flex-col items-start justify-between p-24">
-			<h1>Pagina de Pacientes!</h1>
+		<main className="flex h-full w-full items-center justify-center bg-white p-5 md:p-10">
+			<DataTable
+				columns={columns}
+				data={data}
+				linkTop={true}
+				filteringColumn="name"
+			/>
 		</main>
 	);
 }

@@ -8,54 +8,54 @@ import {
 } from "@/components/ui/breadcrumb";
 import { ChevronRightIcon } from "@heroicons/react/outline";
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
+import React from "react";
 
 type TRoute = {
 	title: string;
 	link: string;
 };
 
-type TDictonaryRoutes = {
-	[dict_key: string]: TRoute[];
+// Title of the route that will appear in the BreadCrumb
+const routeTitles: { [key: string]: string } = {
+	home: "Início",
+	patients: "Meus Pacientes",
+	schedule: "Agenda",
+	register: "Cadastro",
+	documents: "Documentos",
+	bills: "Financeiro"
 };
 
-const dictonaryRoutes: TDictonaryRoutes = {
-	"/home": [
-		{ title: "Início", link: "/home" },
-		{ title: "Nome 2", link: "/home" },
-		{ title: "Nome 3", link: "/home" }
-	],
-	"/patients": [
-		{ title: "Início", link: "/home" },
-		{ title: "Meus Pacientes", link: "/patients" }
-	],
-	"/documents": [
-		{ title: "Início", link: "/home" },
-		{ title: "Documentos", link: "/documents" }
-	],
-	"/bills": [
-		{ title: "Início", link: "/home" },
-		{ title: "Financeiro", link: "/bills" }
-	],
-	"/home/schedule": [
-		{ title: "Início", link: "/home" },
-		{ title: "Nome 2", link: "/home" }
-	]
-};
-
-export default function NavigationBreadcumb() {
+export default function NavigationBreadcrumb() {
 	const urlpath: string = usePathname();
 
 	const getCrumbs = (): TRoute[] => {
-		return dictonaryRoutes[urlpath];
+		const parts = urlpath.split("/").filter(Boolean);
+
+		var crumbs: TRoute[] = parts.map((part, index) => {
+			const link = "/" + parts.slice(0, index + 1).join("/");
+			const title = routeTitles[part] || part;
+			return { title, link };
+		});
+
+		if (
+			!crumbs.some(
+				(crumb) => crumb.title === "Início" && crumb.link === "/home"
+			)
+		) {
+			crumbs = [{ title: "Início", link: "/home" }, ...crumbs];
+		}
+
+		return crumbs;
 	};
+
+	const crumbs = getCrumbs();
 
 	return (
 		<>
 			<Breadcrumb>
 				<BreadcrumbList className="font-medium text-gray-600">
-					{getCrumbs().map((value, key) => (
-						<>
+					{crumbs.map((value, key) => (
+						<React.Fragment key={key}>
 							<BreadcrumbItem>
 								{key < getCrumbs().length - 1 ? (
 									<BreadcrumbLink href={value.link}>
@@ -72,7 +72,7 @@ export default function NavigationBreadcumb() {
 									<ChevronRightIcon />
 								</BreadcrumbSeparator>
 							) : null}
-						</>
+						</React.Fragment>
 					))}
 				</BreadcrumbList>
 			</Breadcrumb>
