@@ -1,4 +1,4 @@
-import { EntityBase } from "../EntityBase";
+import { EntityBase } from "..";
 import { School } from "./School";
 import { MedicamentInfo } from "./MedicamentInfo";
 import { Comorbidity } from "./Comorbidity";
