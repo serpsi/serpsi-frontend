@@ -1,9 +1,10 @@
 import Image from "next/image";
 import { Square, SquareHeader } from "./Square";
 import { Button } from "@/components/ui/button";
-import { DocumentSearchIcon } from "@heroicons/react/outline";
+import { ChevronLeftIcon, DocumentSearchIcon } from "@heroicons/react/outline";
 import { ComorbidityTag } from "./comorbidityTag";
 import { ListComponent } from "./listComponent";
+import Link from "next/link";
 
 export default async function MyPatient() {
 	const followUpsData = [
@@ -37,7 +38,18 @@ export default async function MyPatient() {
 	];
 
 	return (
-		<main className="flex items-center justify-center bg-cover p-10">
+		<main className="flex flex-col items-center justify-center bg-cover px-10 py-5">
+			<div className="mb-2 flex w-full">
+				<Link href={"/patients"} className="flex">
+					<ChevronLeftIcon
+						width={24}
+						height={24}
+						className="text-gray-500"
+					/>
+					&nbsp;
+					<span className="text-gray-900">Roberto Santos</span>
+				</Link>
+			</div>
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 				{/* Card do Perfil */}
 				<Square variant="WithImage">
