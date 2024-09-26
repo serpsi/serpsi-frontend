@@ -5,11 +5,11 @@ import React from "react";
 const ballVariants = cva("h-5 min-w-5 rounded-full", {
 	variants: {
 		variant: {
-			inactive: "bg-gray-500 shadow",
+			inactive: "bg-gray-600 shadow",
 			active: "bg-primary-500 shadow"
 		},
 		current: {
-			true: "bg-secondary-pink-200 ring-4 ring-secondary-pink-200 shadow"
+			true: "bg-primary-300 shadow"
 		}
 	},
 	defaultVariants: {
@@ -25,7 +25,7 @@ const Ball = React.forwardRef<null, VariantProps<typeof ballVariants>>(
 );
 Ball.displayName = "Ball";
 
-const barVariants = cva("h-0.5 min-w-5 w-full mx-5 hidden lg:block", {
+const barVariants = cva("h-[1px] min-w-5 w-full mx-5 hidden lg:block", {
 	variants: {
 		variant: {
 			inactive: "bg-gray-500 shadow",

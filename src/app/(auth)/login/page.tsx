@@ -1,5 +1,5 @@
-import { Button } from "@/components/Form/button";
-import { InputText } from "@/components/Form/input";
+import { ButtonLogin } from "@/components/form/ButtonLogin";
+import { InputText } from "@/components/form/InputText";
 
 export default function LoginPage() {
 	return (
@@ -16,7 +16,10 @@ export default function LoginPage() {
 						Horários, pacientes, documentos,
 						<br /> tudo num só lugar.
 					</p>
-					<Button className="mt-2 p-3 text-sm" text="Saiba mais" />
+					<ButtonLogin
+						className="mt-2 p-3 text-sm"
+						text="Saiba mais"
+					/>
 				</section>
 				<section className="w-full text-primary-950 lg:w-2/5">
 					<h1 className="mb-8 text-center text-5xl font-medium text-primary-900">
@@ -28,6 +31,7 @@ export default function LoginPage() {
 							label="Insira seu E-mail"
 							id="email"
 							placeholder="Email"
+							variant="secondary"
 						/>
 						<br />
 						<InputText
@@ -35,9 +39,10 @@ export default function LoginPage() {
 							label="Insira sua Senha"
 							id="password"
 							placeholder="Senha"
+							variant="secondary"
 						/>
 						<br />
-						<Button
+						<ButtonLogin
 							text="Entrar"
 							variant="second"
 							className="pb-1 pt-1 text-xl"
