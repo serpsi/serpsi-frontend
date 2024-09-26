@@ -1,27 +1,31 @@
+import { forwardRef } from "react";
+
 interface InputTextProps {
-	id: string;
-	label: string;
-	placeholder: string;
-	name: string;
+  name: string;
 	type: "text" | "password";
+  label: string;
+  id: string;
+  placeholder: string;
+  error?: string;
 }
 
-export function InputText(props: InputTextProps) {
-	return (
-		<>
-			<label
-				htmlFor={props.id}
-				className="mb-1 w-full text-sm font-medium text-primary-950"
-			>
-				{props.label}
-			</label>
-			<input
-				id={props.id}
-				type={props.type}
-				placeholder={props.placeholder}
-				name={props.name}
-				className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
-			/>
-		</>
-	);
-}
+export const InputText = forwardRef<HTMLInputElement, InputTextProps>(
+  ({ name, type, label, id, placeholder, error, ...rest }, ref) => {
+    return (
+      <div>
+        <label htmlFor={id}>{label}</label>
+        <input
+          name={name}
+          type={type}
+          id={id}
+          placeholder={placeholder}
+          ref={ref} 
+          {...rest}
+        className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
+        />
+        {error && <p className="text-red-500">{error}</p>} {/* Exibe o erro */}
+      </div>
+    );
+  }
+);
+InputText.displayName = "InputText";
