@@ -5,6 +5,7 @@ import { ComorbidityTag } from "./comorbidityTag";
 import Link from "next/link";
 import { formatDateToddmmYYYY, formatMedicineSchedule, formatPhone, getData } from "@/services/myPatientService";
 import { Comorbidity, MedicamentInfo, Person } from "@/models";
+import { ListComponent } from "./listComponent";
 
 export default async function MyPatient({
 	params
@@ -197,16 +198,17 @@ export default async function MyPatient({
 				</Square>
 
 				{/* Arquivos */}
-				{/*
-				<Square>
+				
+				<Square variant="DoubleColumn">
 					<SquareHeader titulo="Arquivos de acompanhamentos anteriores" />
 					<ul>
-						{followUpsData.length > 0 ? (
-							followUpsData.map((followUp, index) => (
+						{data._previewFollowUps && data._previewFollowUps.length > 0 ? (
+							data._previewFollowUps.map((followUp, index) => (
 								<ListComponent
-									content={followUp.titulo}
-									id={followUp.id}
-									key={followUp.id}
+									link = {followUp._docLink}
+									content={followUp._title}
+									id={followUp._id._id}
+									key={followUp._id._id}
 									variant={
 										index === 0 ? "IsFirst" : "NotFirst"
 									}
@@ -219,7 +221,7 @@ export default async function MyPatient({
 						)}
 					</ul>
 				</Square>
-        */}
+       
 				{/* Histórico de Sessões */}
 				{/*         
 				<Square variant="WithButton">
