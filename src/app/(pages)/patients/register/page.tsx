@@ -1,11 +1,10 @@
 "use client";
 import { ProgressBar } from "@/components/progressBar/progress-bar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { PlusIcon, TrashIcon, UploadIcon } from "@heroicons/react/outline";
 import Image from "next/image";
 import { ReactNode, useEffect, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { FormSection } from "./FormSection";
 import { InputText } from "@/components/form/InputText";
 import {
@@ -15,7 +14,12 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+import PatientInfoSection from "./PatientInfoSection";
+import AddressInfoSection from "./AddressInfoSection";
+import ParentsInfoSection from "./ParentsInfoSection";
+import SchoolInfoSection from "./SchoolInfoSection";
+import ExtraInfoSection from "./ExtraInfoSection";
+import PatientPictureSection from "./PatientPictureSection";
 
 type FormValues = {
 	image: FileList;
@@ -23,31 +27,16 @@ type FormValues = {
 };
 
 export default function CadastroPage() {
-	const [image, setImage] = useState<string | null>(null);
 	const [progress, setProgress] = useState<number>(1);
-	const [parentNumber, setParentNumber] = useState<number>(1);
-	const [medicineNumber, setMedicineNumber] = useState<number>(1);
 
 	const maxProgress = 5;
 
-	const { register, handleSubmit, watch } = useForm<FormValues>();
+	const methods = useForm<FormValues>();
 
 	const onSubmit: SubmitHandler<FormValues> = (data) => {
-		console.log("Imagem enviada:", data.image[0]);
+		// console.log("Imagem enviada:", data.image[0]);
+		console.log("deu submit");
 	};
-
-	const selectedImage = watch("image");
-
-	useEffect(() => {
-		if (selectedImage && selectedImage.length > 0) {
-			const file = selectedImage[0];
-			const reader = new FileReader();
-			reader.onloadend = () => {
-				setImage(reader.result as string);
-			};
-			reader.readAsDataURL(file);
-		}
-	}, [selectedImage]);
 
 	const advanceProgress = () => {
 		setProgress((prev) => prev + 1);
@@ -57,528 +46,72 @@ export default function CadastroPage() {
 		setProgress((prev) => prev - 1);
 	};
 
-	const addParent = () => {
-		setParentNumber((prev) => prev + 1);
-	};
-
-	const removeParent = () => {
-		setParentNumber((prev) => prev - 1);
-	};
-
-	const addMedicine = () => {
-		setMedicineNumber((prev) => prev + 1);
-	};
-
-	const removeMedicine = () => {
-		setMedicineNumber((prev) => prev - 1);
-	};
-
-	const generateParentsFormSection = () => {
-		var parentsList: ReactNode[] = [];
-		for (let i = 1; i <= parentNumber; i++) {
-			parentsList.push(
-				<>
-					<FormSection
-						currentStep={progress}
-						componentStep={3}
-						title={`Informações do Responsável ${i}`}
-					>
-						<div>
-							<InputText
-								id={`nome-responsavel-${i}`}
-								label="Nome:"
-								placeholder={`Nome do Responsável ${i}`}
-								type="text"
-							/>
-						</div>
-						<div>
-							<InputText
-								id={`cpf-responsavel-${i}`}
-								label="CPF:"
-								placeholder={`CPF do Responsável ${i}`}
-								type="text"
-							/>
-						</div>
-						<div>
-							<InputText
-								id={`data-nasc-responsavel-${i}`}
-								label="Data de Nascimento:"
-								placeholder="dd/mm/aaaa"
-								type="date"
-							/>
-						</div>
-						<div>
-							<InputText
-								id={`rg-responsavel-${i}`}
-								label="RG:"
-								placeholder={`RG do Responsável ${i}`}
-								type="text"
-							/>
-						</div>
-						<div>
-							<InputText
-								id={`telefone-responsavel-${i}`}
-								label="Telefone:"
-								placeholder={`Telefone do Responsável ${i}`}
-								type="text"
-							/>
-						</div>
-						<br />
-						{i === parentNumber && (
-							<Button
-								className="bg-primary-600 text-left hover:bg-primary-400"
-								onClick={addParent}
-								type={"button"}
-							>
-								<PlusIcon width={18} height={18} />
-								&nbsp; Adicionar Outro Responsável
-							</Button>
-						)}
-						{parentNumber > 1 && i === parentNumber && (
-							<Button
-								className="bg-primary-600 text-left hover:bg-primary-400"
-								onClick={removeParent}
-								type={"button"}
-							>
-								<TrashIcon width={18} height={18} />
-								&nbsp; Remover responsável
-							</Button>
-						)}
-					</FormSection>
-					{i != parentNumber && <br />}
-				</>
-			);
-		}
-		return parentsList;
-	};
-
-	const generateMedicinesFormSection = () => {
-		var medicinesList: ReactNode[] = [];
-		for (let i = 1; i <= medicineNumber; i++) {
-			medicinesList.push(
-				<>
-					{i > 1 && <hr className="col-span-2 my-2 border" />}
-					<div>
-						<InputText
-							id={`nome-medicamento-${i}`}
-							label="Nome do Medicamento:"
-							placeholder={`Nome do Medicamento ${i}`}
-							type="text"
-						/>
-					</div>
-					<div>
-						<InputText
-							id={`frq-diaria-${i}`}
-							label="Frequência Diária:"
-							placeholder="Digite a Frequência Diária"
-							type="number"
-						/>
-					</div>
-					<div>
-						<InputText
-							id={`dosagem-medicamento-${i}`}
-							label="Dosagem do Medicamento:"
-							placeholder="Ex: 5"
-							type="number"
-						/>
-					</div>
-					<div>
-						<InputText
-							id={`unidade-dosagem-medicamento-${i}`}
-							label="Unidade de Medida da Dosagem:"
-							placeholder="Ex: mg"
-							type="text"
-						/>
-					</div>
-					<div>
-						<InputText
-							id={`data-inicio-medicamento-${i}`}
-							label="Data de Início do Medicamento:"
-							placeholder=""
-							type="date"
-						/>
-					</div>
-					<div>
-						<InputText
-							id={`data-inicio-medicamento-${i}`}
-							label="Horário da Primeira Dose:"
-							placeholder="Ex: 8"
-							type="time"
-						/>
-					</div>
-					<div>
-						<InputText
-							id={`obs-medicamento-${i}`}
-							label="Observações do Medicamento"
-							placeholder="Digie as observações"
-							type="text"
-						/>
-					</div>
-					<br />
-					{i === medicineNumber && (
-						<Button
-							className="bg-primary-600 text-left hover:bg-primary-400"
-							onClick={addMedicine}
-							type={"button"}
-						>
-							<PlusIcon width={18} height={18} />
-							&nbsp; Adicionar Outro Medicamento
-						</Button>
-					)}
-					{medicineNumber > 1 && i === medicineNumber && (
-						<Button
-							className="text-left"
-							onClick={removeMedicine}
-							type={"button"}
-						>
-							<TrashIcon width={18} height={18} />
-							&nbsp; Remover Medicamento
-						</Button>
-					)}
-				</>
-			);
-		}
-		return medicinesList;
-	};
-
-	const parentsList = generateParentsFormSection();
-	const medicinesList = generateMedicinesFormSection();
-
 	return (
 		<main className="mt-3 flex h-full w-full items-center justify-center bg-white px-5 pb-12 md:px-10">
 			<section className="flex w-3/4 flex-col items-center gap-5">
 				<h1>Cadastrar Novo Paciente</h1>
-				<form onSubmit={handleSubmit(onSubmit)} className="w-full">
-					<div className="flex w-full flex-col items-center justify-center">
-						<input
-							type="file"
-							id="foto-paciente"
-							accept="image/jpeg, image/png"
-							{...register("image")}
-							className="hidden"
+				<FormProvider {...methods}>
+					<form
+						onSubmit={methods.handleSubmit(onSubmit)}
+						className="w-full"
+					>
+						<PatientPictureSection />
+						<ProgressBar
+							steps={maxProgress}
+							currentStep={progress}
+							className="my-3 w-full"
 						/>
-						<label
-							htmlFor="foto-paciente"
-							className="cursor-pointer"
-						>
-							{image ? (
-								<>
-									<Image
-										src={image}
-										alt="Foto Do Paciente"
-										className="h-36 w-36 rounded-full object-cover"
-										width={140}
-										height={140}
-									/>
-								</>
-							) : (
-								<div className="flex h-36 w-36 items-center justify-center rounded-full bg-gray-300 p-5">
-									<UploadIcon width={75} height={75} />
-								</div>
+						<PatientInfoSection
+							progress={progress}
+							componentIndex={1}
+						/>
+						<AddressInfoSection
+							progress={progress}
+							componentIndex={2}
+						/>
+						<ParentsInfoSection
+							progress={progress}
+							componentIndex={3}
+						/>
+
+						<SchoolInfoSection
+							progress={progress}
+							componentIndex={4}
+						/>
+						<ExtraInfoSection
+							progress={progress}
+							componentIndex={5}
+						/>
+
+						<div className="mt-6 flex w-full flex-col-reverse items-center justify-around px-20 md:flex-row">
+							{progress > 1 && (
+								<Button
+									onClick={regressProgress}
+									className="mt-4 w-24 bg-primary-600 hover:bg-primary-400 md:mt-0"
+									type={"button"}
+								>
+									Voltar
+								</Button>
 							)}
-						</label>
-					</div>
-					<ProgressBar
-						steps={maxProgress}
-						currentStep={progress}
-						className="my-3 w-full"
-					/>
-					<FormSection
-						currentStep={progress}
-						componentStep={1}
-						title="Informações do Paciente"
-					>
-						<>
-							<div>
-								<InputText
-									id="nome"
-									label="Nome:"
-									placeholder="Nome do Paciente"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="cpf"
-									label="CPF:"
-									placeholder="CPF do Paciente"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="data-nasc"
-									label="Data de Nascimento:"
-									placeholder="dd/mm/aaaa"
-									type="date"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="rg"
-									label="RG:"
-									placeholder="RG do Paciente"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="telefone"
-									label="Telefone:"
-									placeholder="Telefone do Paciente"
-									type="text"
-								/>
-							</div>
-						</>
-					</FormSection>
-					<FormSection
-						currentStep={progress}
-						componentStep={2}
-						title="Endereço:"
-					>
-						<>
-							<div>
-								<InputText
-									id="cep"
-									label="CEP:"
-									placeholder="CEP"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="cidade"
-									label="Cidade:"
-									placeholder="Digite a Cidade"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="rua"
-									label="Rua:"
-									placeholder="Digite a Rua"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="uf"
-									label="Estado:"
-									placeholder="Digite o Estado"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="bairro"
-									label="Bairro:"
-									placeholder="Digite o Bairro"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="numero"
-									label="Número:"
-									placeholder="Digite o Número"
-									type="number"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="Complemento"
-									label="Complemento:"
-									placeholder="Digite o Complemento"
-									type="text"
-								/>
-							</div>
-						</>
-					</FormSection>
-					{parentsList.map((value, key) => (
-						<div key={key}>{value}</div>
-					))}
-					<FormSection
-						currentStep={progress}
-						componentStep={4}
-						title="Escola:"
-					>
-						<>
-							<div>
-								<InputText
-									id="nome-escola"
-									label="Nome:"
-									placeholder="Nome da Escola"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="cnpj-escola"
-									label="CNPJ:"
-									placeholder="CNPJ da Escola"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="cep-escola"
-									label="CEP:"
-									placeholder="CEP da Escola"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="cidade-escola"
-									label="Cidade:"
-									placeholder="Cidade da Escola"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="rua-escola"
-									label="Rua:"
-									placeholder="Rua da Escola"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="estado-escola"
-									label="Estado:"
-									placeholder="Estado da Escola"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="bairro-escola"
-									label="Bairro:"
-									placeholder="Bairro da Escola"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="numero-escola"
-									label="Número:"
-									placeholder="Número da Escola"
-									type="number"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="complemento-escola"
-									label="Complemento:"
-									placeholder="Complemento da Escola"
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="telefone-escola"
-									label="Telefone:"
-									placeholder="Telefone da Escola"
-									type="text"
-								/>
-							</div>
-						</>
-					</FormSection>
-					<FormSection
-						currentStep={progress}
-						componentStep={5}
-						title="Informações Adicionais"
-					>
-						<>
-							<div>
-								<InputText
-									id="comorbidades"
-									label="Possui Comorbidade? se Sim, Qual(is)?"
-									placeholder="Comorbidade 1, Comorbidade 2, ..."
-									type="text"
-								/>
-							</div>
-							<div>
-								<InputText
-									id="acompanhamentos"
-									label="Acompanhamentos anteriores:"
-									placeholder=""
-									type="file"
-								/>
-							</div>
-							<div>
-								<label htmlFor="plano-pagamento">
-									Plano de Pagamento:
-								</label>
-
-								<Select name="plano-pagamento">
-									<SelectTrigger className="w-full border-primary-400 focus:ring-primary-500">
-										<SelectValue placeholder="Selecione o plano de pagamento..." />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectItem value="AVULSO">
-											Avulso
-										</SelectItem>
-										<SelectItem value="MENSAL">
-											Mensal
-										</SelectItem>
-										<SelectItem value="BIMESTRAL">
-											Bimestral
-										</SelectItem>
-										<SelectItem value="TRIMESTRAL">
-											Trimestral
-										</SelectItem>
-									</SelectContent>
-								</Select>
-							</div>
-							<br />
-
-							<div className="flex w-full items-center justify-start">
-								<input
-									className="mr-2 h-4 w-4 accent-primary-600"
-									id="checkMedicamentos"
-									type="checkbox"
-									{...register("checkMedicamentos")}
-								/>
-								<label htmlFor="checkMedicamentos">
-									Faz uso de medicamentos.
-								</label>
-							</div>
-							<br />
-							{watch("checkMedicamentos") &&
-								medicinesList.map((value, key) => <>{value}</>)}
-						</>
-					</FormSection>
-					<div className="mt-6 flex w-full flex-col-reverse items-center justify-around px-20 md:flex-row">
-						{progress > 1 && (
-							<Button
-								onClick={regressProgress}
-								className="mt-4 w-24 bg-primary-600 hover:bg-primary-400 md:mt-0"
-								type={"button"}
-							>
-								Voltar
-							</Button>
-						)}
-						{progress === maxProgress ? (
-							<Button
-								type="submit"
-								className="rounded-lg bg-primary-600 text-white hover:bg-primary-400"
-							>
-								Cadastrar Paciente
-							</Button>
-						) : (
-							<Button
-								onClick={advanceProgress}
-								className="w-24 bg-primary-600 hover:bg-primary-400"
-								type={"button"}
-							>
-								Próximo
-							</Button>
-						)}
-					</div>
-				</form>
+							{progress === maxProgress ? (
+								<Button
+									type="submit"
+									className="rounded-lg bg-primary-600 text-white hover:bg-primary-400"
+								>
+									Cadastrar Paciente
+								</Button>
+							) : (
+								<Button
+									onClick={advanceProgress}
+									className="w-24 bg-primary-600 hover:bg-primary-400"
+									type={"button"}
+								>
+									Próximo
+								</Button>
+							)}
+						</div>
+					</form>
+				</FormProvider>
 			</section>
 		</main>
 	);
