@@ -8,6 +8,14 @@ import { ReactNode, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FormSection } from "./FormSection";
 import { InputText } from "@/components/form/InputText";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type FormValues = {
 	image: FileList;
@@ -118,7 +126,7 @@ export default function CadastroPage() {
 						<br />
 						{i === parentNumber && (
 							<Button
-								className="text-left"
+								className="bg-primary-600 text-left hover:bg-primary-400"
 								onClick={addParent}
 								type={"button"}
 							>
@@ -128,7 +136,7 @@ export default function CadastroPage() {
 						)}
 						{parentNumber > 1 && i === parentNumber && (
 							<Button
-								className="text-left"
+								className="bg-primary-600 text-left hover:bg-primary-400"
 								onClick={removeParent}
 								type={"button"}
 							>
@@ -209,7 +217,7 @@ export default function CadastroPage() {
 					<br />
 					{i === medicineNumber && (
 						<Button
-							className="text-left"
+							className="bg-primary-600 text-left hover:bg-primary-400"
 							onClick={addMedicine}
 							type={"button"}
 						>
@@ -505,22 +513,31 @@ export default function CadastroPage() {
 									Plano de Pagamento:
 								</label>
 
-								<select
-									name="planoPagamento"
-									id="plano-pagamento"
-								>
-									<option value="AVULSO">Avulso</option>
-									<option value="MENSAL">Mensal</option>
-									<option value="BIMESTRAL">Bimestral</option>
-									<option value="TRIMESTRAL">
-										Trimestral
-									</option>
-								</select>
+								<Select name="plano-pagamento">
+									<SelectTrigger className="w-full border-primary-400 focus:ring-primary-500">
+										<SelectValue placeholder="Selecione o plano de pagamento..." />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="AVULSO">
+											Avulso
+										</SelectItem>
+										<SelectItem value="MENSAL">
+											Mensal
+										</SelectItem>
+										<SelectItem value="BIMESTRAL">
+											Bimestral
+										</SelectItem>
+										<SelectItem value="TRIMESTRAL">
+											Trimestral
+										</SelectItem>
+									</SelectContent>
+								</Select>
 							</div>
 							<br />
 
-							<div>
+							<div className="flex w-full items-center justify-start">
 								<input
+									className="mr-2 h-4 w-4 accent-primary-600"
 									id="checkMedicamentos"
 									type="checkbox"
 									{...register("checkMedicamentos")}
@@ -538,7 +555,7 @@ export default function CadastroPage() {
 						{progress > 1 && (
 							<Button
 								onClick={regressProgress}
-								className="w-24"
+								className="mt-4 w-24 bg-primary-600 hover:bg-primary-400 md:mt-0"
 								type={"button"}
 							>
 								Voltar
@@ -547,14 +564,14 @@ export default function CadastroPage() {
 						{progress === maxProgress ? (
 							<Button
 								type="submit"
-								className="rounded-lg bg-green-500 text-white hover:bg-green-600"
+								className="rounded-lg bg-primary-600 text-white hover:bg-primary-400"
 							>
 								Cadastrar Paciente
 							</Button>
 						) : (
 							<Button
 								onClick={advanceProgress}
-								className="w-24"
+								className="w-24 bg-primary-600 hover:bg-primary-400"
 								type={"button"}
 							>
 								Próximo
