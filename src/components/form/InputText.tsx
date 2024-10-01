@@ -1,15 +1,26 @@
 import classNames from "classnames";
 import { Input } from "../ui/input";
+import { FieldValues, UseFormRegister } from "react-hook-form";
 
 interface InputTextProps {
 	id: string;
 	label: string;
 	placeholder: string;
 	type: string;
+	name?: string;
+	register?: UseFormRegister<FieldValues>;
 	variant?: "primary" | "secondary";
 }
 
-export function InputText({ variant = "primary", ...props }: InputTextProps) {
+export function InputText({
+	id,
+	label,
+	placeholder,
+	type,
+	name,
+	register,
+	variant = "primary"
+}: InputTextProps) {
 	const inputClassNames = classNames("w-full rounded-md  p-2 text-left", {
 		"border border-primary-400 focus-visible:ring-primary-500":
 			variant === "primary",
@@ -20,16 +31,17 @@ export function InputText({ variant = "primary", ...props }: InputTextProps) {
 	return (
 		<>
 			<label
-				htmlFor={props.id}
+				htmlFor={id}
 				className="mb-1 w-full text-sm font-normal text-primary-950"
 			>
-				{props.label}
+				{label}
 			</label>
 			<Input
-				id={props.id}
-				type={props.type}
-				placeholder={props.placeholder}
+				id={id}
+				type={type}
+				placeholder={placeholder}
 				className={inputClassNames}
+				{...(register ? register(name ? name : id) : {})}
 			/>
 		</>
 	);

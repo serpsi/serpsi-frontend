@@ -7,7 +7,7 @@ export default function PatientPictureSection() {
 	const [image, setImage] = useState<string | null>(null);
 	const { register, watch } = useFormContext();
 
-	const selectedImage = watch("image");
+	const selectedImage = watch("profilePicture");
 
 	useEffect(() => {
 		if (selectedImage && selectedImage.length > 0) {
@@ -26,7 +26,7 @@ export default function PatientPictureSection() {
 				type="file"
 				id="foto-paciente"
 				accept="image/jpeg, image/png"
-				{...register("image")}
+				{...register("profilePicture")}
 				className="hidden"
 			/>
 			<label htmlFor="foto-paciente" className="cursor-pointer">

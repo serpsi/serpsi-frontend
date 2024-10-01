@@ -1,8 +1,9 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { FormSection } from "./FormSection";
 import { InputText } from "@/components/form/InputText";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, TrashIcon } from "@heroicons/react/outline";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
 interface ParentsInfoProps {
 	progress: number;
@@ -13,67 +14,81 @@ export default function ParentsInfoSection({
 	progress,
 	componentIndex
 }: ParentsInfoProps) {
-	const [parentNumber, setParentNumber] = useState<number>(1);
+	const { control, register } = useFormContext();
+	const { fields, append, remove } = useFieldArray({
+		control,
+		name: "parents"
+	});
+
 	const addParent = () => {
-		setParentNumber((prev) => prev + 1);
+		append({ name: "", rg: "", birthdate: "", phone: "", cpf: "" });
 	};
 
 	const removeParent = () => {
-		setParentNumber((prev) => prev - 1);
+		remove(fields.length - 1);
 	};
 
-	const generateParentsFormSection = () => {
-		var parentsList: ReactNode[] = [];
-		for (let i = 1; i <= parentNumber; i++) {
-			parentsList.push(
-				<>
+	return (
+		<>
+			{fields.map((value, index) => (
+				<div key={value.id}>
 					<FormSection
 						currentStep={progress}
-						componentStep={3}
-						title={`Informações do Responsável ${i}`}
+						componentStep={componentIndex}
+						title={`Informações do Responsável ${index + 1}`}
 					>
 						<div>
 							<InputText
-								id={`nome-responsavel-${i}`}
+								id={`nome-responsavel-${index + 1}`}
 								label="Nome:"
-								placeholder={`Nome do Responsável ${i}`}
+								placeholder={`Nome do Responsável ${index + 1}`}
 								type="text"
+								name={`parents.${index}.name`}
+								register={register}
 							/>
 						</div>
 						<div>
 							<InputText
-								id={`cpf-responsavel-${i}`}
+								id={`cpf-responsavel-${index + 1}`}
 								label="CPF:"
-								placeholder={`CPF do Responsável ${i}`}
+								placeholder={`CPF do Responsável ${index + 1}`}
 								type="text"
+								name={`parents.${index}.cpf`}
+								register={register}
 							/>
 						</div>
 						<div>
 							<InputText
-								id={`data-nasc-responsavel-${i}`}
+								id={`data-nasc-responsavel-${index + 1}`}
 								label="Data de Nascimento:"
 								placeholder="dd/mm/aaaa"
 								type="date"
+								name={`parents.${index}.birthdate`}
+								register={register}
 							/>
 						</div>
 						<div>
 							<InputText
-								id={`rg-responsavel-${i}`}
+								id={`rg-responsavel-${index + 1}`}
 								label="RG:"
-								placeholder={`RG do Responsável ${i}`}
+								placeholder={`RG do Responsável ${index + 1}`}
 								type="text"
+								name={`parents.${index}.rg`}
+								register={register}
 							/>
 						</div>
 						<div>
 							<InputText
-								id={`telefone-responsavel-${i}`}
+								id={`telefone-responsavel-${index + 1}`}
 								label="Telefone:"
-								placeholder={`Telefone do Responsável ${i}`}
+								placeholder={`Telefone do Responsável ${index + 1}`}
 								type="text"
+								name={`parents.${index}.phone`}
+								register={register}
 							/>
 						</div>
 						<br />
-						{i === parentNumber && (
+						{index === fields.length - 1 && (
 							<Button
 								className="bg-primary-600 text-left hover:bg-primary-400"
 								onClick={addParent}
@@ -83,29 +98,20 @@ export default function ParentsInfoSection({
 								&nbsp; Adicionar Outro Responsável
 							</Button>
 						)}
-						{parentNumber > 1 && i === parentNumber && (
-							<Button
-								className="bg-primary-600 text-left hover:bg-primary-400"
-								onClick={removeParent}
-								type={"button"}
-							>
-								<TrashIcon width={18} height={18} />
-								&nbsp; Remover responsável
-							</Button>
-						)}
+						{fields.length - 1 > 0 &&
+							index === fields.length - 1 && (
+								<Button
+									className="bg-primary-600 text-left hover:bg-primary-400"
+									onClick={removeParent}
+									type={"button"}
+								>
+									<TrashIcon width={18} height={18} />
+									&nbsp; Remover responsável
+								</Button>
+							)}
 					</FormSection>
-					{i != parentNumber && <br />}
-				</>
-			);
-		}
-		return parentsList;
-	};
-
-	const parentsList = generateParentsFormSection();
-	return (
-		<>
-			{parentsList.map((value, key) => (
-				<div key={key}>{value}</div>
+					{index != fields.length - 1 && <br />}
+				</div>
 			))}
 		</>
 	);

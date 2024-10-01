@@ -1,5 +1,6 @@
 import { InputText } from "@/components/form/InputText";
 import { FormSection } from "./FormSection";
+import { useFormContext } from "react-hook-form";
 
 interface AddressInfoProps {
 	progress: number;
@@ -10,6 +11,7 @@ export default function AddressInfoSection({
 	progress,
 	componentIndex
 }: AddressInfoProps) {
+	const { register } = useFormContext();
 	return (
 		<FormSection
 			currentStep={progress}
@@ -23,6 +25,8 @@ export default function AddressInfoSection({
 						label="CEP:"
 						placeholder="CEP"
 						type="text"
+						name="address.zipCode"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -31,6 +35,8 @@ export default function AddressInfoSection({
 						label="Cidade:"
 						placeholder="Digite a Cidade"
 						type="text"
+						name="address.city"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -39,6 +45,8 @@ export default function AddressInfoSection({
 						label="Rua:"
 						placeholder="Digite a Rua"
 						type="text"
+						name="address.street"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -47,6 +55,8 @@ export default function AddressInfoSection({
 						label="Estado:"
 						placeholder="Digite o Estado"
 						type="text"
+						name="address.state"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -55,6 +65,8 @@ export default function AddressInfoSection({
 						label="Bairro:"
 						placeholder="Digite o Bairro"
 						type="text"
+						name="address.district"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -63,6 +75,8 @@ export default function AddressInfoSection({
 						label="Número:"
 						placeholder="Digite o Número"
 						type="number"
+						name="address.houseNumber"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -71,6 +85,8 @@ export default function AddressInfoSection({
 						label="Complemento:"
 						placeholder="Digite o Complemento"
 						type="text"
+						name="address.complement"
+						register={register}
 					/>
 				</div>
 			</>

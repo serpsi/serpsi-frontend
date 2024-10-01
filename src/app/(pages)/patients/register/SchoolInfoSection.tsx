@@ -1,5 +1,6 @@
 import { InputText } from "@/components/form/InputText";
 import { FormSection } from "./FormSection";
+import { useFormContext } from "react-hook-form";
 
 interface SchoolInfoProps {
 	progress: number;
@@ -10,6 +11,7 @@ export default function SchoolInfoSection({
 	progress,
 	componentIndex
 }: SchoolInfoProps) {
+	const { register } = useFormContext();
 	return (
 		<FormSection
 			currentStep={progress}
@@ -23,6 +25,8 @@ export default function SchoolInfoSection({
 						label="Nome:"
 						placeholder="Nome da Escola"
 						type="text"
+						name="school.name"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -31,6 +35,8 @@ export default function SchoolInfoSection({
 						label="CNPJ:"
 						placeholder="CNPJ da Escola"
 						type="text"
+						name="school.cnpj"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -39,6 +45,8 @@ export default function SchoolInfoSection({
 						label="CEP:"
 						placeholder="CEP da Escola"
 						type="text"
+						name="school.zipCode"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -47,6 +55,8 @@ export default function SchoolInfoSection({
 						label="Cidade:"
 						placeholder="Cidade da Escola"
 						type="text"
+						name="school.city"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -55,6 +65,8 @@ export default function SchoolInfoSection({
 						label="Rua:"
 						placeholder="Rua da Escola"
 						type="text"
+						name="school.street"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -63,6 +75,8 @@ export default function SchoolInfoSection({
 						label="Estado:"
 						placeholder="Estado da Escola"
 						type="text"
+						name="school.state"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -71,6 +85,8 @@ export default function SchoolInfoSection({
 						label="Bairro:"
 						placeholder="Bairro da Escola"
 						type="text"
+						name="school.district"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -79,6 +95,8 @@ export default function SchoolInfoSection({
 						label="Número:"
 						placeholder="Número da Escola"
 						type="number"
+						name="school.schoolNumber"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -87,6 +105,8 @@ export default function SchoolInfoSection({
 						label="Complemento:"
 						placeholder="Complemento da Escola"
 						type="text"
+						name="school.complement"
+						register={register}
 					/>
 				</div>
 				<div>
@@ -95,6 +115,8 @@ export default function SchoolInfoSection({
 						label="Telefone:"
 						placeholder="Telefone da Escola"
 						type="text"
+						name="school.phone"
+						register={register}
 					/>
 				</div>
 			</>
