@@ -15,146 +15,117 @@ import { zodResolver } from "@hookform/resolvers/zod";
 export default function RegisterNewPatientPage() {
 	const [progress, setProgress] = useState<number>(1);
 
-	// {
-	// 	"paymentPlan": "TRIMESTRAL",
-	// 	"person": {
-	// 	  "name": "Meu nome de agora teste FILE",
-	// 	  "rg": "98.749.153-5",
-	// 	  "birthdate": "1990-08-25",
-	// 	  "phone": {
-	// 		"ddi": "+55",
-	// 		"ddd": "71",
-	// 		"number": "998085317"
-	// 	  },
-	// 	  "cpf": {
-	// 		"cpf": "473.873.929-75"
-	// 	  },
-	// 	  "address": {
-	// 		"state": "SP",
-	// 		"zipCode": "41796616",
-	// 		"street": "teste de street de refatoração no update",
-	// 		"district": "district de teste de refatoração no update",
-	// 		"city": "São Paulo",
-	// 		"homeNumber": 278,
-	// 		"complement": "complemento de refatoração no update"
-	// 	  }
-	// 	},
-	// "parents": [
-	//   {
-	// 	"name": "Meu nome Pai File",
-	// 	"rg": "12.884.728-1",
-	// 	"birthdate": "1990-08-25",
-	// 	"phone": {
-	// 	  "ddi": "+55",
-	// 	  "ddd": "71",
-	// 	  "number": "998085317"
-	// 	},
-	// 	"cpf": {
-	// 	  "cpf": "423.913.129-09"
-	// 	}
-	//   }
-	// ],
-	// 	"school": {
-	// 	  "name": "ativa idade",
-	// 	  "CNPJ": "00.000.000/0001-00",
-	// 	  "address": {
-	// 		"state": "BA",
-	// 		"zipCode": "4499815760",
-	// 		"street": "rua dos bobos",
-	// 		"district": "bairro bonito",
-	// 		"city": "cidade que ficou faltando",
-	// 		"homeNumber": 1131,
-	// 		"complement": "complemento"
-	// 	  },
-	// 	  "phone": {
-	// 		"ddi": "+55",
-	// 		"ddd": "71",
-	// 		"number": "998085317"
-	// 	  }
-	// 	},
-	// 	"comorbidities": [
-	// 	  {
-	// 		"name": "autismo grau 1"
-	// 	  }
-	// 	],
-	// 	"medicines": [
-	// 	  {
-	// 		"medicine": {
-	// 		  "name": "Buscopan"
-	// 		},
-	// 		"dosage": 250,
-	// 		"dosageUnity": "mg",
-	// 		"frequency": 2,
-	// 		"firstTimeOfTheDay": "2024-01-01T08:00:00.000Z",
-	// 		"startDate": "2024-07-20T00:00:00.000Z",
-	// 		"observation": "Tomar antes de comer"
-	// 	  }
-	// 	]
-	//   }
+	// Validations Regex
+	const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+	const cepRegex = /^\d{5}-\d{3}$/;
+	const phoneRegex = /^\(\d{2}\) \d{4,5}-\d{4}$/;
+	const cnpjRegex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
+
+	const fileListType =
+		typeof window !== "undefined" && typeof FileList !== "undefined"
+			? z.instanceof(FileList)
+			: z.any();
 
 	const createPatientFormSchema = z.object({
 		// PatientPictureSection
-		profilePicture: z.instanceof(FileList),
+		profilePicture: fileListType.optional(),
 
-		//PatientInfoSection
+		// PatientInfoSection
 		person: z.object({
-			name: z.string(),
+			name: z.string().min(1, "Nome é obrigatório"),
 			rg: z.string(),
-			birthdate: z.date(),
-			phone: z.string(),
-			cpf: z.string()
+			birthdate: z.coerce.date(),
+			phone: z
+				.string()
+				.regex(
+					phoneRegex,
+					"O telefone deve seguir o padrão (00) 00000-0000"
+				),
+			cpf: z
+				.string()
+				.regex(cpfRegex, "O CPF deve seguir o padrão 000.000.000-00")
 		}),
 
-		//AddressInfoSection
+		// AddressInfoSection
 		address: z.object({
-			state: z.string(),
-			zipCode: z.string(),
-			street: z.string(),
-			district: z.string(),
-			city: z.string(),
-			homeNumber: z.string(),
-			complement: z.string()
+			state: z.string().min(2, "Estado é obrigatório"),
+			zipCode: z
+				.string()
+				.regex(cepRegex, "O CEP deve seguir o padrão 00000-000"),
+			street: z.string().min(1, "Rua é obrigatória"),
+			district: z.string().min(1, "Bairro é obrigatório"),
+			city: z.string().min(1, "Cidade é obrigatória"),
+			homeNumber: z.string().min(1, "Número residencial é obrigatório"),
+			complement: z.string().optional()
 		}),
 
-		//ParentsInfoSection
+		// ParentsInfoSection
 		parents: z.array(
 			z.object({
-				name: z.string(),
+				name: z.string().min(1, "Nome é obrigatório"),
 				rg: z.string(),
 				birthdate: z.coerce.date(),
-				phone: z.string(),
-				cpf: z.string()
+				phone: z
+					.string()
+					.regex(
+						phoneRegex,
+						"O telefone deve seguir o padrão (00) 00000-0000"
+					),
+				cpf: z
+					.string()
+					.regex(
+						cpfRegex,
+						"O CPF deve seguir o padrão 000.000.000-00"
+					)
 			})
 		),
 
-		//SchoolInfoSection
+		// SchoolInfoSection
 		school: z.object({
-			name: z.string(),
-			cnpj: z.string(),
-			phone: z.string(),
-			state: z.string(),
-			zipCode: z.string(),
-			street: z.string(),
-			district: z.string(),
-			city: z.string(),
-			schoolNumber: z.string(),
-			complement: z.string()
+			name: z.string().min(1, "Nome é obrigatório"),
+			cnpj: z
+				.string()
+				.regex(
+					cnpjRegex,
+					"O CNPJ deve seguir o padrão 00.000.000/0000-00"
+				),
+			phone: z
+				.string()
+				.regex(
+					phoneRegex,
+					"O telefone deve seguir o padrão (00) 00000-0000"
+				),
+			state: z.string().min(2, "Estado é obrigatório"),
+			zipCode: z
+				.string()
+				.regex(cepRegex, "O CEP deve seguir o padrão 00000-000"),
+			street: z.string().min(1, "Rua é obrigatória"),
+			district: z.string().min(1, "Bairro é obrigatório"),
+			city: z.string().min(1, "Cidade é obrigatória"),
+			schoolNumber: z.string().min(1, "Número da escola é obrigatório"),
+			complement: z.string().optional()
 		}),
 
-		//ExtraInfoSection
-		comorbidities: z.string(),
-		previousDocuments: z.instanceof(FileList),
-		paymentPlan: z.string(),
+		// ExtraInfoSection
+		comorbidities: z.string().optional(),
+		previousDocuments: fileListType.optional(),
+		paymentPlan: z.string().min(1, "Plano de pagamento é obrigatório"),
 		checkMedicines: z.boolean(),
 		medicines: z.array(
 			z.object({
-				name: z.string(),
-				dosage: z.number(),
-				dosageUnity: z.string(),
-				frequency: z.number(),
-				firstTimeOfTheDay: z.string(),
-				startDate: z.date(),
-				observation: z.string()
+				name: z.string().min(1, "Nome do medicamento é obrigatório"),
+				dosage: z
+					.number()
+					.positive("A dosagem deve ser maior que zero"),
+				dosageUnity: z
+					.string()
+					.min(1, "Unidade de dosagem é obrigatória"),
+				frequency: z
+					.number()
+					.positive("A frequência deve ser maior que zero"),
+				firstTimeOfTheDay: z.string().min(1, "Horário é obrigatório"),
+				startDate: z.coerce.date(),
+				observation: z.string().optional()
 			})
 		)
 	});
@@ -164,6 +135,23 @@ export default function RegisterNewPatientPage() {
 	const methods = useForm({
 		resolver: zodResolver(createPatientFormSchema),
 		defaultValues: {
+			profilePicture: undefined,
+			person: {
+				name: "",
+				rg: "",
+				birthdate: "",
+				phone: "",
+				cpf: ""
+			},
+			address: {
+				state: "",
+				zipCode: "",
+				street: "",
+				district: "",
+				city: "",
+				homeNumber: "",
+				complement: ""
+			},
 			parents: [
 				{
 					name: "",
@@ -173,12 +161,28 @@ export default function RegisterNewPatientPage() {
 					cpf: ""
 				}
 			],
+			school: {
+				name: "",
+				cnpj: "",
+				phone: "",
+				state: "",
+				zipCode: "",
+				street: "",
+				district: "",
+				city: "",
+				schoolNumber: "",
+				complement: ""
+			},
+			comorbidities: "",
+			previousDocuments: undefined,
+			paymentPlan: "",
+			checkMedicines: false,
 			medicines: [
 				{
 					name: "",
-					dosage: "",
+					dosage: 0,
 					dosageUnity: "",
-					frequency: "",
+					frequency: 0,
 					firstTimeOfTheDay: "",
 					startDate: "",
 					observation: ""
@@ -187,9 +191,10 @@ export default function RegisterNewPatientPage() {
 		}
 	});
 
-	const onSubmit = () => {
-		// console.log("Imagem enviada:", data.image[0]);
-		console.log("deu submit");
+	const onSubmit = (data: any) => {
+		console.log("Erros de validação:", methods.formState.errors);
+		console.log("Dados do formulário:", data);
+		console.log("Estado atual do formulário:", methods.watch());
 	};
 
 	const advanceProgress = () => {
