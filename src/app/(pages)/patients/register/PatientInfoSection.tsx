@@ -36,6 +36,7 @@ export default function PatientInfoSection({
 						placeholder="CPF do Paciente"
 						type="text"
 						name="person.cpf"
+						mask="999.999.999-99"
 						register={register}
 					/>
 				</div>
@@ -66,6 +67,7 @@ export default function PatientInfoSection({
 						placeholder="Telefone do Paciente"
 						type="text"
 						name="person.phone"
+						mask="(99) 99999-9999"
 						register={register}
 					/>
 				</div>

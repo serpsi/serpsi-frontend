@@ -48,7 +48,11 @@ export default function RegisterNewPatientPage() {
 
 		// AddressInfoSection
 		address: z.object({
-			state: z.string().min(2, "Estado é obrigatório"),
+			state: z
+				.string()
+				.min(2, "Estado é obrigatório")
+				.max(2, "Estado deve ter exatamente 2 caracteres")
+				.transform((val) => val.toUpperCase()),
 			zipCode: z
 				.string()
 				.regex(cepRegex, "O CEP deve seguir o padrão 00000-000"),
@@ -111,23 +115,29 @@ export default function RegisterNewPatientPage() {
 		previousDocuments: fileListType.optional(),
 		paymentPlan: z.string().min(1, "Plano de pagamento é obrigatório"),
 		checkMedicines: z.boolean(),
-		medicines: z.array(
-			z.object({
-				name: z.string().min(1, "Nome do medicamento é obrigatório"),
-				dosage: z
-					.number()
-					.positive("A dosagem deve ser maior que zero"),
-				dosageUnity: z
-					.string()
-					.min(1, "Unidade de dosagem é obrigatória"),
-				frequency: z
-					.number()
-					.positive("A frequência deve ser maior que zero"),
-				firstTimeOfTheDay: z.string().min(1, "Horário é obrigatório"),
-				startDate: z.coerce.date(),
-				observation: z.string().optional()
-			})
-		)
+		medicines: z
+			.array(
+				z.object({
+					name: z
+						.string()
+						.min(1, "Nome do medicamento é obrigatório"),
+					dosage: z
+						.number()
+						.positive("A dosagem deve ser maior que zero"),
+					dosageUnity: z
+						.string()
+						.min(1, "Unidade de dosagem é obrigatória"),
+					frequency: z
+						.number()
+						.positive("A frequência deve ser maior que zero"),
+					firstTimeOfTheDay: z
+						.string()
+						.min(1, "Horário é obrigatório"),
+					startDate: z.coerce.date(),
+					observation: z.string().optional()
+				})
+			)
+			.optional()
 	});
 
 	const maxProgress = 5;
@@ -192,6 +202,7 @@ export default function RegisterNewPatientPage() {
 	});
 
 	const onSubmit = (data: any) => {
+		console.log("TESTE!!");
 		console.log("Erros de validação:", methods.formState.errors);
 		console.log("Dados do formulário:", data);
 		console.log("Estado atual do formulário:", methods.watch());

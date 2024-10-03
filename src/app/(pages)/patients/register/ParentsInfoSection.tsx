@@ -54,6 +54,7 @@ export default function ParentsInfoSection({
 								placeholder={`CPF do Responsável ${index + 1}`}
 								type="text"
 								name={`parents.${index}.cpf`}
+								mask="999.999.999-99"
 								register={register}
 							/>
 						</div>
@@ -85,6 +86,7 @@ export default function ParentsInfoSection({
 								type="text"
 								name={`parents.${index}.phone`}
 								register={register}
+								mask="(99) 99999-9999"
 							/>
 						</div>
 						<br />

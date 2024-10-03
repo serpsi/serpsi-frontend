@@ -37,6 +37,7 @@ export default function SchoolInfoSection({
 						type="text"
 						name="school.cnpj"
 						register={register}
+						mask="99.999.999/9999-99"
 					/>
 				</div>
 				<div>
@@ -47,6 +48,7 @@ export default function SchoolInfoSection({
 						type="text"
 						name="school.zipCode"
 						register={register}
+						mask="99999-999"
 					/>
 				</div>
 				<div>
@@ -77,6 +79,7 @@ export default function SchoolInfoSection({
 						type="text"
 						name="school.state"
 						register={register}
+						mask="aa"
 					/>
 				</div>
 				<div>
@@ -117,6 +120,7 @@ export default function SchoolInfoSection({
 						type="text"
 						name="school.phone"
 						register={register}
+						mask="(99) 99999-9999"
 					/>
 				</div>
 			</>

@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { Input } from "../ui/input";
 import { FieldValues, UseFormRegister } from "react-hook-form";
+import InputMask from "react-input-mask-next";
 
 interface InputTextProps {
 	id: string;
@@ -10,6 +11,7 @@ interface InputTextProps {
 	name?: string;
 	register?: UseFormRegister<FieldValues>;
 	variant?: "primary" | "secondary";
+	mask?: string;
 }
 
 export function InputText({
@@ -19,10 +21,11 @@ export function InputText({
 	type,
 	name,
 	register,
-	variant = "primary"
+	variant = "primary",
+	mask
 }: InputTextProps) {
 	const inputClassNames = classNames("w-full rounded-md  p-2 text-left", {
-		"border border-primary-400 focus-visible:ring-primary-500":
+		"border border-primary-400 focus-visible:ring-primary-500 placeholder:text-gray-500 outline-primary-500":
 			variant === "primary",
 		"border border-primary-500 bg-vidro text-primary-800":
 			variant === "secondary"
@@ -36,13 +39,24 @@ export function InputText({
 			>
 				{label}
 			</label>
-			<Input
-				id={id}
-				type={type}
-				placeholder={placeholder}
-				className={inputClassNames}
-				{...(register ? register(name ? name : id) : {})}
-			/>
+			{mask ? (
+				<InputMask
+					id={id}
+					type={type}
+					mask={mask}
+					placeholder={placeholder}
+					className={inputClassNames}
+					{...(register ? register(name ? name : id) : {})}
+				/>
+			) : (
+				<Input
+					id={id}
+					type={type}
+					placeholder={placeholder}
+					className={inputClassNames}
+					{...(register ? register(name ? name : id) : {})}
+				/>
+			)}
 		</>
 	);
 }

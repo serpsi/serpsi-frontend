@@ -26,6 +26,7 @@ export default function AddressInfoSection({
 						placeholder="CEP"
 						type="text"
 						name="address.zipCode"
+						mask="99999-999"
 						register={register}
 					/>
 				</div>
@@ -56,6 +57,7 @@ export default function AddressInfoSection({
 						placeholder="Digite o Estado"
 						type="text"
 						name="address.state"
+						mask="aa"
 						register={register}
 					/>
 				</div>
