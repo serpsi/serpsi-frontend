@@ -18,11 +18,12 @@ const ballVariants = cva("h-5 min-w-5 rounded-full", {
 	}
 });
 
-const Ball = React.forwardRef<null, VariantProps<typeof ballVariants>>(
-	({ variant, current }) => (
-		<div className={cn(ballVariants({ variant, current }))} />
-	)
-);
+const Ball = React.forwardRef<
+	HTMLDivElement,
+	VariantProps<typeof ballVariants>
+>(({ variant, current }, ref) => (
+	<div ref={ref} className={cn(ballVariants({ variant, current }))} />
+));
 Ball.displayName = "Ball";
 
 const barVariants = cva("h-[1px] min-w-5 w-full mx-5 hidden lg:block", {
@@ -37,8 +38,10 @@ const barVariants = cva("h-[1px] min-w-5 w-full mx-5 hidden lg:block", {
 	}
 });
 
-const Bar = React.forwardRef<null, VariantProps<typeof barVariants>>(
-	({ variant }) => <div className={cn(barVariants({ variant }))} />
+const Bar = React.forwardRef<HTMLDivElement, VariantProps<typeof barVariants>>(
+	({ variant }, ref) => (
+		<div ref={ref} className={cn(barVariants({ variant }))} />
+	)
 );
 Bar.displayName = "Bar";
 
@@ -48,15 +51,15 @@ interface stepProps {
 	first?: boolean;
 }
 
-const Step = React.forwardRef<null, stepProps>(
-	({ variant, current = false, first = false }) => (
+const Step = React.forwardRef<HTMLDivElement, stepProps>(
+	({ variant, current = false, first = false }, ref) => (
 		<>
 			{first ? (
-				<Ball variant={variant} current={current} />
+				<Ball ref={ref} variant={variant} current={current} />
 			) : (
 				<>
 					<Bar variant={variant} />
-					<Ball variant={variant} current={current} />
+					<Ball ref={ref} variant={variant} current={current} />
 				</>
 			)}
 		</>
