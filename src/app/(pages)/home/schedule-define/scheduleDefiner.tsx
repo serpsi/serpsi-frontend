@@ -41,15 +41,6 @@ const week = [
 		checked: false
 	}
 ];
-type defaultValues = {
-	agendas: [
-		{
-			key: number;
-			dayType: dayTypes;
-			avaliableTimes: { key: number, startTime: string; endTime: string }[];
-		}
-	];
-};
 
 export function ScheduleDefiner() {
 	const { register } = useFormContext();
