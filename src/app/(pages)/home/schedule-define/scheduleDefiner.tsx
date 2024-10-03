@@ -1,154 +1,162 @@
 import { Input } from "@/components/ui/input";
 import { DefineLine } from "./defineLine";
-import { FormProvider, useFieldArray, useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { useState } from "react";
+import { AvaliableTime, dayTypes, Agenda, ScheduleAgendas } from "./dayTypes";
+
 const week = [
 	{
-		id: "Sunday",
-		name: "Dom.",
+		key: 0,
+		name: dayTypes.Sunday,
 		checked: false
 	},
 	{
-		id: "Monday",
-		name: "Seg.",
+		key: 1,
+		name: dayTypes.Monday,
 		checked: true
 	},
 	{
-		id: "Tuesday",
-		name: "Ter.",
+		key: 2,
+		name: dayTypes.Tuesday,
 		checked: true
 	},
 	{
-		id: "Wednesday",
-		name: "Qua.",
+		key: 3,
+		name: dayTypes.Wednesday,
 		checked: true
 	},
 	{
-		id: "Thursday",
-		name: "Qui.",
+		key: 4,
+		name: dayTypes.Thursday,
 		checked: true
 	},
 	{
-		id: "Friday",
-		name: "Sex.",
+		key: 5,
+		name: dayTypes.Friday,
 		checked: true
 	},
 	{
-		id: "Saturday",
-		name: "Sab.",
+		key: 6,
+		name: dayTypes.Saturday,
 		checked: false
 	}
 ];
-type AvaliableTime = {
-	startTime: string;
-	endTime: string;
-};
-export type Agenda = {
-	dayType: string;
-	avaliableTimes: AvaliableTime[];
-};
-
-type ScheduleAgendas = {
-	meetValue: number;
-	duration: number;
-	agendas: Agenda[];
+type defaultValues = {
+	agendas: [
+		{
+			key: number;
+			dayType: dayTypes;
+			avaliableTimes: { key: number, startTime: string; endTime: string }[];
+		}
+	];
 };
 
 export function ScheduleDefiner() {
-	const methods = useForm<ScheduleAgendas>();
-	const { fields, append, remove } = useFieldArray({
-		name: "agendas",
+	const { register } = useFormContext();
+	const { fields, insert, remove } = useFieldArray<ScheduleAgendas>({
+		name: "agendas"
 	});
+
+	const addAgenda = (dayType: dayTypes, index: number) => {
+		insert(index, {
+			key: index,
+			dayType,
+			avaliableTimes: []
+		});
+	};
+	const removeAgenda = (idx: number) => {
+		fields.map((value, index) => {
+			if (value.key == idx) {
+				remove(index);
+			}
+		});
+	};
+
+	const [checkboxes, setCheckboxes] = useState(
+		week.map((value) => value.checked)
+	);
+	const handleClickCheckbox = (index: number) => {
+		const updatedCheckBoxes = checkboxes.map((value, idx) => {
+			let newValue = value;
+			if (index === idx) {
+				newValue = !value;
+				if (newValue) addAgenda(week[index].name, index);
+				else removeAgenda(index);
+			}
+			return newValue;
+		});
+		setCheckboxes(updatedCheckBoxes);
+	};
+
 	const [meetValue, setMeetValue] = useState(Number);
 	const [duration, setDuration] = useState(Number);
 	return (
-		<section className="w-fit text-black">
-			<FormProvider {...methods}>
-				<form
-					onSubmit={methods.handleSubmit(
-						() => console.log(methods.getValues()),
-						(erro) => console.log(erro)
-					)}
-					onReset={() => console.log("reset")}
-				>
-					<div className="flex items-center justify-center gap-2">
-						<label htmlFor="valor">Valor:</label>
-						<Input
-							id="valor"
-							type="number"
-							step="0.01"
-							min={0}
-							className="w-fit border border-primary-400"
-							{...methods.register("meetValue", {
-								valueAsNumber: true,
-								setValueAs: setMeetValue,
-								value: meetValue
-							})}
-						/>
-						<label htmlFor="duracao">Duração:</label>
-						<Input
-							id="duracao"
-							type="number"
-							className="w-fit border border-primary-400"
-							min={0}
-							max={600}
-							{...methods.register("duration", {
-								valueAsNumber: true,
-								setValueAs: setDuration,
-								value: duration
-							})}
-						/>
-						<label htmlFor="duracao">minutos</label>
-					</div>
-					<div className="flex items-center justify-center gap-2 py-2">
-						{week.map((value) => {
-							return (
-								<>
-									<input
-										id={value.id}
-										type="checkbox"
-										value=""
-										className="h-4 w-4"
-										defaultChecked={value.checked}
-									/>
-									<label htmlFor="checkbox">
-										{value.name}
-									</label>
-								</>
-							);
-						})}
-					</div>
-					<div>
-						{week.map((value, index) => {
-							if (value.checked) {
-								return (
-									<DefineLine
-										key={index}
-										day={value.id}
-										label={value.name}
-									/>
-								);
-							}
-						})}
-					</div>
-					<div className="mt-3 flex justify-around">
-						<Button
-							type="reset"
-							variant="ghost"
-							className="text-primary-600 hover:bg-primary-100/70 hover:text-primary-600"
+		<>
+			{/* duração e valor */}
+			<div className="flex items-center justify-center gap-2">
+				<label htmlFor="valor">Valor:</label>
+				<Input
+					id="valor"
+					type="number"
+					step="0.01"
+					min={0}
+					className="w-fit border border-primary-400"
+					{...register("meetValue", {
+						valueAsNumber: true,
+						setValueAs: setMeetValue,
+						value: meetValue
+					})}
+				/>
+				<label htmlFor="duracao">Duração:</label>
+				<Input
+					id="duracao"
+					type="number"
+					className="w-fit border border-primary-400"
+					min={0}
+					max={600}
+					{...register("duration", {
+						valueAsNumber: true,
+						setValueAs: setDuration,
+						value: duration
+					})}
+				/>
+				<label htmlFor="duracao">minutos</label>
+			</div>
+			{/* array de checkbox */}
+			<div className="flex justify-center gap-2 py-2">
+				{week.map((value, index) => {
+					return (
+						<div
+							key={value.key}
+							className="flex items-center justify-center gap-2"
 						>
-							Descartar
-						</Button>
-						<Button
-							type="submit"
-							className="bg-primary-600 hover:bg-primary-800"
-						>
-							Salvar horários
-						</Button>
-					</div>
-				</form>
-			</FormProvider>
-		</section>
+							<input
+								id={"check" + value.name}
+								type="checkbox"
+								checked={checkboxes[index]}
+								onChange={() => handleClickCheckbox(index)}
+								className="h-4 w-4"
+							/>
+							<label htmlFor={"check" + value.name}>
+								{value.name}
+							</label>
+						</div>
+					);
+				})}
+			</div>
+			<ul>
+				{fields.map((value, index) => {
+					return (
+						checkboxes[value.key] && (
+							<DefineLine
+								key={value.id}
+								id={index}
+								label={week[value.key].name}
+							/>
+						)
+					);
+				})}
+			</ul>
+		</>
 	);
 }
