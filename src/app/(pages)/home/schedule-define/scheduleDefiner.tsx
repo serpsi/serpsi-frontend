@@ -49,12 +49,25 @@ export function ScheduleDefiner() {
 	});
 
 	const addAgenda = (dayType: dayTypes, index: number) => {
+		let iterator = 0;
+		for(const value of fields){
+			if(value.key > index){
+				insert(iterator, {
+					key: index,
+					dayType,
+					avaliableTimes: []
+				});
+				return;
+			}
+			iterator++;
+		}
 		insert(index, {
 			key: index,
 			dayType,
 			avaliableTimes: []
 		});
 	};
+	
 	const removeAgenda = (idx: number) => {
 		fields.map((value, index) => {
 			if (value.key == idx) {
