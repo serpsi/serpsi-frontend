@@ -3,7 +3,6 @@ import { DefineLine } from "./defineLine";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useState } from "react";
 import { dayTypes, ScheduleAgendas } from "./dayTypes";
-
 const week = [
 	{
 		key: 0,
@@ -43,7 +42,7 @@ const week = [
 ];
 
 export function ScheduleDefiner() {
-	const { register } = useFormContext();
+	const { register, setValue } = useFormContext();
 	const { fields, insert, remove } = useFieldArray<ScheduleAgendas>({
 		name: "agendas"
 	});
@@ -106,28 +105,35 @@ export function ScheduleDefiner() {
 
 	const [meetValue, setMeetValue] = useState(Number);
 	const [duration, setDuration] = useState(Number);
+
+	const changeMeetValue = (value: string) => {
+		let number = +value.slice(2).replaceAll(".","").replaceAll(",",".");
+		setValue("meetValue", number);
+		console.log(`valor ${number}`)
+		setMeetValue(number)
+		return number;
+	}
 	return (
 		<>
 			{/* duração e valor */}
-			<div className="flex flex-col md:flex-row lg:items-center justify-center gap-2">
+			<div className="flex flex-col justify-center gap-2 md:flex-row lg:items-center">
 				<label htmlFor="valor">Valor:</label>
 				<Input
 					id="valor"
-					type="number"
-					step="0.01"
-					min={0}
-					className="lg:w-fit w-auto border border-primary-400"
+					type="numeric"
+					mask={"R$ 999,99"}
+					className="w-auto border border-primary-400 lg:w-fit"
+					defaultValue={120.50}
 					{...register("meetValue", {
 						valueAsNumber: true,
-						setValueAs: setMeetValue,
-						value: meetValue
+						onChange: (e) => changeMeetValue(e.target.value)
 					})}
 				/>
 				<label htmlFor="duracao">Duração:</label>
 				<Input
 					id="duracao"
 					type="number"
-					className="lg:w-fit w-auto border border-primary-400"
+					className="w-auto border border-primary-400 lg:w-fit"
 					min={0}
 					max={600}
 					{...register("duration", {
@@ -144,7 +150,7 @@ export function ScheduleDefiner() {
 					return (
 						<div
 							key={value.key}
-							className="flex flex-col-reverse lg:flex-row items-center justify-center gap-2"
+							className="flex flex-col-reverse items-center justify-center gap-2 lg:flex-row"
 						>
 							<input
 								id={"check" + value.name}

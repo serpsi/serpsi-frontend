@@ -45,6 +45,7 @@ export function DefineLine({ id, label, aditional = false }: defineLineProps) {
 									className="w-20 border-primary-400 lg:w-fit"
 									placeholder="hora inicial"
 									defaultValue="08:00"
+									mask="99:99"
 									{...register(
 										`agendas.${id}.avaliableTimes.${index}.startTime`
 										// 	, {
@@ -59,6 +60,7 @@ export function DefineLine({ id, label, aditional = false }: defineLineProps) {
 									className="w-20 border-primary-400 lg:w-fit"
 									placeholder="hora final"
 									defaultValue="12:00"
+									mask="99:99"
 									{...register(
 										`agendas.${id}.avaliableTimes.${index}.endTime`
 										// 	, {
@@ -69,7 +71,7 @@ export function DefineLine({ id, label, aditional = false }: defineLineProps) {
 								/>
 							</div>
 							<div className="flex items-center justify-center lg:justify-start ml-2">
-								<span className="w-9 md:w-0"> </span>
+								<span className="w-8 md:w-0"> </span>
 								{index == fields.length - 1 ? (
 									<Button
 										type="button"

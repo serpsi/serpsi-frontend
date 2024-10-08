@@ -4,13 +4,13 @@ import { ScheduleDefiner } from "./scheduleDefiner";
 import { FormProvider, useForm } from "react-hook-form";
 import { dayTypes, ScheduleAgendas } from "./dayTypes";
 import { Button } from "@/components/ui/button";
-
+import psiImage from "/public/img/psi_calendar.svg";
 import Image from "next/image";
 
 export default function ScheduleDefinePage() {
 	const methods = useForm<ScheduleAgendas>({
 		defaultValues: {
-			meetValue: 120,
+			meetValue: 120.50,
 			duration: 50,
 			agendas: [
 				{
@@ -102,7 +102,7 @@ export default function ScheduleDefinePage() {
 				</FormProvider>
 			</section>
 			<aside className="hidden lg:block">
-				<Image src="/img/psi_calendar.svg" width={400} height="1" alt="psicóloga arrumando um calendário" />
+				<Image src={psiImage} alt="psicóloga arrumando um calendário" className="w-[400px] h-auto" />
 			</aside>
 		</main>
 	);
