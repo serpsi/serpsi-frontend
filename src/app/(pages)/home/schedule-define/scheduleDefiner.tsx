@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { DefineLine } from "./defineLine";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useState } from "react";
-import { AvaliableTime, dayTypes, Agenda, ScheduleAgendas } from "./dayTypes";
+import { dayTypes, ScheduleAgendas } from "./dayTypes";
 
 const week = [
 	{
@@ -50,12 +50,18 @@ export function ScheduleDefiner() {
 
 	const addAgenda = (dayType: dayTypes, index: number) => {
 		let iterator = 0;
-		for(const value of fields){
-			if(value.key > index){
+		for (const value of fields) {
+			if (value.key > index) {
 				insert(iterator, {
 					key: index,
 					dayType,
-					avaliableTimes: []
+					avaliableTimes: [
+						{
+							key: index,
+							startTime: "8:00",
+							endTime: "18:00"
+						}
+					]
 				});
 				return;
 			}
@@ -64,10 +70,16 @@ export function ScheduleDefiner() {
 		insert(index, {
 			key: index,
 			dayType,
-			avaliableTimes: []
+			avaliableTimes: [
+				{
+					key: index,
+					startTime: "8:00",
+					endTime: "18:00"
+				}
+			]
 		});
 	};
-	
+
 	const removeAgenda = (idx: number) => {
 		fields.map((value, index) => {
 			if (value.key == idx) {
@@ -97,14 +109,14 @@ export function ScheduleDefiner() {
 	return (
 		<>
 			{/* duração e valor */}
-			<div className="flex items-center justify-center gap-2">
+			<div className="flex flex-col md:flex-row lg:items-center justify-center gap-2">
 				<label htmlFor="valor">Valor:</label>
 				<Input
 					id="valor"
 					type="number"
 					step="0.01"
 					min={0}
-					className="w-fit border border-primary-400"
+					className="lg:w-fit w-auto border border-primary-400"
 					{...register("meetValue", {
 						valueAsNumber: true,
 						setValueAs: setMeetValue,
@@ -115,7 +127,7 @@ export function ScheduleDefiner() {
 				<Input
 					id="duracao"
 					type="number"
-					className="w-fit border border-primary-400"
+					className="lg:w-fit w-auto border border-primary-400"
 					min={0}
 					max={600}
 					{...register("duration", {
@@ -132,7 +144,7 @@ export function ScheduleDefiner() {
 					return (
 						<div
 							key={value.key}
-							className="flex items-center justify-center gap-2"
+							className="flex flex-col-reverse lg:flex-row items-center justify-center gap-2"
 						>
 							<input
 								id={"check" + value.name}
