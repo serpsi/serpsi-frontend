@@ -51,7 +51,7 @@ export function DefineLine({ id, label }: defineLineProps) {
 									defaultValue={watch(
 										`agendas.${id}._avaliableTimes.${index}._startTime`
 									)}
-									//error={errors.agendas?._avaliableTimes._startTime.message}
+									error={errors.agendas?.[id]?._avaliableTimes?.[index]._startTime.message}
 									mask="99:99"
 									{...register(
 										`agendas.${id}._avaliableTimes.${index}._startTime`,
