@@ -107,12 +107,11 @@ export function ScheduleDefiner() {
 	const [duration, setDuration] = useState(Number);
 
 	const changeMeetValue = (value: string) => {
-		let number = +value.slice(2).replaceAll(".","").replaceAll(",",".");
+		let number = +value.slice(2).replaceAll(".", "").replaceAll(",", ".");
 		setValue("meetValue", number);
-		console.log(`valor ${number}`)
-		setMeetValue(number)
+		setMeetValue(number);
 		return number;
-	}
+	};
 	return (
 		<>
 			{/* duração e valor */}
@@ -121,9 +120,22 @@ export function ScheduleDefiner() {
 				<Input
 					id="valor"
 					type="numeric"
-					mask={"R$ 999,99"}
+					mask={"R$ 999.999.999,99"}
 					className="w-auto border border-primary-400 lg:w-fit"
-					defaultValue={120.50}
+					defaultValue={120.5}
+					beforeMaskedStateChange={({ nextState }) => {
+						let number = nextState.value.replace("R$ ", "");
+						if (number.replaceAll(".", "").length < 9) {
+							number = number.trim().split(".").join();
+							nextState.value = "R$ " + number;
+							if(number.split(",").length > 2)
+								nextState.value = "R$ " + number.replace(",", ".");
+						}
+
+						if(nextState.value.endsWith(",") || nextState.value.endsWith("."))
+							nextState.value = nextState.value.slice(0, -1);
+						return nextState;
+					}}
 					{...register("meetValue", {
 						valueAsNumber: true,
 						onChange: (e) => changeMeetValue(e.target.value)
