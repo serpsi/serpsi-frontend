@@ -2,82 +2,120 @@
 import React from "react";
 import { ScheduleDefiner } from "./scheduleDefiner";
 import { FormProvider, useForm } from "react-hook-form";
-import { dayTypes, ScheduleAgendas } from "./dayTypes";
+import { dayTypes, dayTypesResolve, ScheduleAgendas } from "./dayTypes";
 import { Button } from "@/components/ui/button";
 import psiImage from "/public/img/psi_calendar.svg";
 import Image from "next/image";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function ScheduleDefinePage() {
+	const horarioRegex = /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
+	const scheduleSchema = z.object({
+		psychologistId: z.string(),
+		_meetValue: z.number().positive("O valor deve ser maior que 0"),
+		_duration: z
+			.number()
+			.positive("a duração deve ser maior que 0"),
+		agendas: z.array(
+			z.object({
+				_day: z.nativeEnum(dayTypesResolve, {
+					required_error: "necessitas passar um dia"
+				}),
+				_avaliableTimes: z.array(
+					z.object({
+						_startTime: z
+							.string()
+							.min(1, "horário de inicio é obrigatório")
+							.regex(
+								horarioRegex,
+								"horários devem estar entre 00:00 e 23:59"
+							),
+						_endTime: z
+							.string()
+							.min(1, "horário de finalização é obrigatório")
+							.regex(
+								horarioRegex,
+								"horários devem estar entre 00:00 e 23:59"
+							)
+					})
+				)
+			})
+		)
+	});
 	const methods = useForm<ScheduleAgendas>({
+		resolver: zodResolver(scheduleSchema),
 		defaultValues: {
-			meetValue: 120.50,
-			duration: 50,
+			psychologistId: "",
+			_meetValue: 120.5,
+			_duration: 50,
 			agendas: [
 				{
 					key: 1,
-					dayType: dayTypes.Monday,
-					avaliableTimes: [
+					_day: dayTypesResolve.Monday,
+					_avaliableTimes: [
 						{
 							key: 1,
-							startTime: "8:00",
-							endTime: "18:00"
+							_startTime: "08:00",
+							_endTime: "18:00"
 						}
 					]
 				},
 				{
 					key: 2,
-					dayType: dayTypes.Tuesday,
-					avaliableTimes: [
+					_day: dayTypesResolve.Tuesday,
+					_avaliableTimes: [
 						{
 							key: 2,
-							startTime: "8:00",
-							endTime: "18:00"
+							_startTime: "08:00",
+							_endTime: "18:00"
 						}
 					]
 				},
 				{
 					key: 3,
-					dayType: dayTypes.Wednesday,
-					avaliableTimes: [
+					_day: dayTypesResolve.Wednesday,
+					_avaliableTimes: [
 						{
 							key: 3,
-							startTime: "8:00",
-							endTime: "18:00"
+							_startTime: "08:00",
+							_endTime: "18:00"
 						}
 					]
 				},
 				{
 					key: 4,
-					dayType: dayTypes.Thursday,
-					avaliableTimes: [
+					_day: dayTypesResolve.Thursday,
+					_avaliableTimes: [
 						{
 							key: 4,
-							startTime: "8:00",
-							endTime: "18:00"
+							_startTime: "08:00",
+							_endTime: "18:00"
 						}
 					]
 				},
 				{
 					key: 5,
-					dayType: dayTypes.Friday,
-					avaliableTimes: [
+					_day: dayTypesResolve.Friday,
+					_avaliableTimes: [
 						{
 							key: 5,
-							startTime: "8:00",
-							endTime: "18:00"
+							_startTime: "08:00",
+							_endTime: "18:00"
 						}
 					]
 				}
 			]
-		}
+		},
+		
 	});
 	return (
-		<main className="flex items-start justify-around mx-10 my-5">
+		<main className="mx-10 my-5 flex items-start justify-around">
 			<section className="w-fit text-black">
 				<FormProvider {...methods}>
 					<form
 						onSubmit={methods.handleSubmit(
-							() => console.log(methods.getValues()),
+							(data) => console.log(data),
 							(erro) => console.log(erro)
 						)}
 						onReset={() => console.log("reset")}
@@ -102,7 +140,11 @@ export default function ScheduleDefinePage() {
 				</FormProvider>
 			</section>
 			<aside className="hidden lg:block">
-				<Image src={psiImage} alt="psicóloga arrumando um calendário" className="w-[400px] h-auto" />
+				<Image
+					src={psiImage}
+					alt="psicóloga arrumando um calendário"
+					className="h-auto w-[400px]"
+				/>
 			</aside>
 		</main>
 	);

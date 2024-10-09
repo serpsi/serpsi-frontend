@@ -6,24 +6,28 @@ import { Agenda, ScheduleAgendas } from "./dayTypes";
 type defineLineProps = {
 	label: string;
 	id: number;
-	aditional?: boolean;
 };
-export function DefineLine({ id, label, aditional = false }: defineLineProps) {
-	const { register } = useFormContext();
+export function DefineLine({ id, label }: defineLineProps) {
+	const {
+		register,
+		setValue,
+		watch,
+		formState: { errors }
+	} = useFormContext();
 	const { fields, insert, remove } = useFieldArray<ScheduleAgendas>({
-		name: `agendas.${id}.avaliableTimes`
+		name: `agendas.${id}._avaliableTimes`
 	});
 
-	const addAvaliableTime = (index: number) => {
-		insert(index, {
+	const addAvaliableTime = () => {
+		insert(fields.length, {
 			key: id,
-			startTime: "",
-			endTime: ""
+			_startTime: "08:00",
+			_endTime: "18:00"
 		});
 	};
 
-	const removeAvaliableTime = (index: number) => {
-		remove(index);
+	const removeAvaliableTime = () => {
+		remove(fields.length - 1);
 	};
 
 	return (
@@ -33,7 +37,7 @@ export function DefineLine({ id, label, aditional = false }: defineLineProps) {
 					return (
 						<div
 							key={value.id}
-							className="flex flex-col md:flex-row "
+							className="flex flex-col md:flex-row"
 						>
 							<div className="flex items-center justify-center gap-2">
 								<span className="w-8">
@@ -44,14 +48,20 @@ export function DefineLine({ id, label, aditional = false }: defineLineProps) {
 									type="text"
 									className="w-20 border-primary-400 lg:w-fit"
 									placeholder="hora inicial"
-									defaultValue="08:00"
+									defaultValue={watch(
+										`agendas.${id}._avaliableTimes.${index}._startTime`
+									)}
+									//error={errors.agendas?._avaliableTimes._startTime.message}
 									mask="99:99"
 									{...register(
-										`agendas.${id}.avaliableTimes.${index}.startTime`
-										// 	, {
-										// 	pattern: RegExp("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$"),
-										// 	required: true
-										// }
+										`agendas.${id}._avaliableTimes.${index}._startTime`,
+										{
+											onChange: (e) =>
+												setValue(
+													`agendas.${id}._avaliableTimes.${index}._startTime`,
+													e.target.value
+												)
+										}
 									)}
 								/>
 								<span className="w-8"> para </span>
@@ -59,45 +69,48 @@ export function DefineLine({ id, label, aditional = false }: defineLineProps) {
 									type="text"
 									className="w-20 border-primary-400 lg:w-fit"
 									placeholder="hora final"
-									defaultValue="12:00"
+									defaultValue={watch(
+										`agendas.${id}._avaliableTimes.${index}._endTime`
+									)}
 									mask="99:99"
 									{...register(
-										`agendas.${id}.avaliableTimes.${index}.endTime`
-										// 	, {
-										// 	pattern: RegExp("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$"),
-										// 	required: true
-										// }
+										`agendas.${id}._avaliableTimes.${index}._endTime`,
+										{
+											onChange: (e) =>
+												setValue(
+													`agendas.${id}._avaliableTimes.${index}._endTime`,
+													e.target.value
+												)
+										}
 									)}
 								/>
 							</div>
-							<div className="flex items-center justify-center lg:justify-start ml-2">
+							<div className="ml-2 flex items-center justify-center lg:justify-start">
 								<span className="w-8 md:w-0"> </span>
 								{index == fields.length - 1 ? (
 									<Button
 										type="button"
 										variant="link"
-										className="mt-2 w-20 md:w-fit bg-primary-400 text-white md:m-0 lg:bg-white lg:text-primary-400"
+										className="mt-2 w-20 bg-primary-400 text-white md:m-0 md:w-fit lg:bg-white lg:text-primary-400"
 										size="sm"
-										onClick={() => addAvaliableTime(1)}
+										onClick={() => addAvaliableTime()}
 									>
 										<PlusIcon width={24} height={24} />
 									</Button>
-								) : (
-									null
-								)}
+								) : null}
 								<span className="w-12 md:w-1"> </span>
 								{index == fields.length - 1 && index ? (
 									<Button
 										type="button"
 										variant="link"
-										className="mt-2 w-20 md:w-fit bg-red-400 text-white md:m-0 lg:bg-white lg:text-red-400"
+										className="mt-2 w-20 bg-red-400 text-white md:m-0 md:w-fit lg:bg-white lg:text-red-400"
 										size="sm"
-										onClick={() => removeAvaliableTime(1)}
+										onClick={() => removeAvaliableTime()}
 									>
 										<TrashIcon width={24} height={24} />
 									</Button>
 								) : (
-									<span className="md:w-fit w-20 px-4 md:py-2 text-white">
+									<span className="w-20 px-4 text-white md:w-fit md:py-2">
 										<TrashIcon width={24} height={1} />
 									</span>
 								)}

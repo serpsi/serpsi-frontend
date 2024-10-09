@@ -2,63 +2,74 @@ import { Input } from "@/components/ui/input";
 import { DefineLine } from "./defineLine";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useState } from "react";
-import { dayTypes, ScheduleAgendas } from "./dayTypes";
+import { dayTypes, dayTypesResolve, ScheduleAgendas } from "./dayTypes";
 const week = [
 	{
 		key: 0,
-		name: dayTypes.Sunday,
+		name: dayTypesResolve.Sunday,
+		label: dayTypes.Sunday,
 		checked: false
 	},
 	{
 		key: 1,
-		name: dayTypes.Monday,
+		name: dayTypesResolve.Monday,
+		label: dayTypes.Monday,
 		checked: true
 	},
 	{
 		key: 2,
-		name: dayTypes.Tuesday,
+		name: dayTypesResolve.Tuesday,
+		label: dayTypes.Tuesday,
 		checked: true
 	},
 	{
 		key: 3,
-		name: dayTypes.Wednesday,
+		name: dayTypesResolve.Wednesday,
+		label: dayTypes.Wednesday,
 		checked: true
 	},
 	{
 		key: 4,
-		name: dayTypes.Thursday,
+		name: dayTypesResolve.Thursday,
+		label: dayTypes.Thursday,
 		checked: true
 	},
 	{
 		key: 5,
-		name: dayTypes.Friday,
+		name: dayTypesResolve.Friday,
+		label: dayTypes.Friday,
 		checked: true
 	},
 	{
 		key: 6,
-		name: dayTypes.Saturday,
+		name: dayTypesResolve.Saturday,
+		label: dayTypes.Saturday,
 		checked: false
 	}
 ];
 
 export function ScheduleDefiner() {
-	const { register, setValue } = useFormContext();
+	const {
+		register,
+		setValue,
+		formState: { errors }
+	} = useFormContext();
 	const { fields, insert, remove } = useFieldArray<ScheduleAgendas>({
 		name: "agendas"
 	});
 
-	const addAgenda = (dayType: dayTypes, index: number) => {
+	const addAgenda = (dayType: dayTypesResolve, index: number) => {
 		let iterator = 0;
 		for (const value of fields) {
 			if (value.key > index) {
 				insert(iterator, {
 					key: index,
-					dayType,
-					avaliableTimes: [
+					_day: dayType,
+					_avaliableTimes: [
 						{
 							key: index,
-							startTime: "8:00",
-							endTime: "18:00"
+							_startTime: "08:00",
+							_endTime: "18:00"
 						}
 					]
 				});
@@ -68,12 +79,12 @@ export function ScheduleDefiner() {
 		}
 		insert(index, {
 			key: index,
-			dayType,
-			avaliableTimes: [
+			_day: dayType,
+			_avaliableTimes: [
 				{
 					key: index,
-					startTime: "8:00",
-					endTime: "18:00"
+					_startTime: "08:00",
+					_endTime: "18:00"
 				}
 			]
 		});
@@ -103,13 +114,11 @@ export function ScheduleDefiner() {
 		setCheckboxes(updatedCheckBoxes);
 	};
 
-	const [meetValue, setMeetValue] = useState(Number);
 	const [duration, setDuration] = useState(Number);
 
 	const changeMeetValue = (value: string) => {
 		let number = +value.slice(2).replaceAll(".", "").replaceAll(",", ".");
-		setValue("meetValue", number);
-		setMeetValue(number);
+		setValue("_meetValue", number);
 		return number;
 	};
 	return (
@@ -123,23 +132,29 @@ export function ScheduleDefiner() {
 					mask={"R$ 999.999.999,99"}
 					className="w-auto border border-primary-400 lg:w-fit"
 					defaultValue={120.5}
+					error={errors._meetValue?.message}
 					beforeMaskedStateChange={({ nextState }) => {
 						let number = nextState.value.replace("R$ ", "");
 						if (number.replaceAll(".", "").length < 9) {
 							number = number.trim().split(".").join();
 							nextState.value = "R$ " + number;
-							if(number.split(",").length > 2)
-								nextState.value = "R$ " + number.replace(",", ".");
+							if (number.split(",").length > 2)
+								nextState.value =
+									"R$ " + number.replace(",", ".");
 						}
 
-						if(nextState.value.endsWith(",") || nextState.value.endsWith("."))
+						if (
+							nextState.value.endsWith(",") ||
+							nextState.value.endsWith(".")
+						)
 							nextState.value = nextState.value.slice(0, -1);
 						return nextState;
 					}}
-					{...register("meetValue", {
+					{...register("_meetValue", {
 						valueAsNumber: true,
-						onChange: (e) => changeMeetValue(e.target.value)
-					})}
+						onChange: (e) => changeMeetValue(e.target.value),
+					})
+				}
 				/>
 				<label htmlFor="duracao">Duração:</label>
 				<Input
@@ -148,7 +163,8 @@ export function ScheduleDefiner() {
 					className="w-auto border border-primary-400 lg:w-fit"
 					min={0}
 					max={600}
-					{...register("duration", {
+					error={errors._duration?.message}
+					{...register("_duration", {
 						valueAsNumber: true,
 						setValueAs: setDuration,
 						value: duration
@@ -172,7 +188,7 @@ export function ScheduleDefiner() {
 								className="h-4 w-4"
 							/>
 							<label htmlFor={"check" + value.name}>
-								{value.name}
+								{value.label}
 							</label>
 						</div>
 					);
@@ -185,7 +201,7 @@ export function ScheduleDefiner() {
 							<DefineLine
 								key={value.id}
 								id={index}
-								label={week[value.key].name}
+								label={week[value.key].label}
 							/>
 						)
 					);

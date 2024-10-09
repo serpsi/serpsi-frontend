@@ -8,19 +8,30 @@ export const enum dayTypes {
 	Saturday = "Sab."
 }
 
+export enum dayTypesResolve {
+	Sunday = "DOMINGO",
+	Monday = "SEGUNDA",
+	Tuesday = "TERÇA",
+	Wednesday = "QUARTA",
+	Thursday = "QUINTA",
+	Friday = "SEXTA",
+	Saturday = "SABADO"
+}
+
 export type AvaliableTime = {
 	key: number;
-	startTime: string;
-	endTime: string;
+	_startTime: string;
+	_endTime: string;
 };
 export type Agenda = {
 	key: number;
-	dayType: string;
-	avaliableTimes: AvaliableTime[];
+	_day: string;
+	_avaliableTimes: AvaliableTime[];
 };
 
 export type ScheduleAgendas = {
-	meetValue: number;
-	duration: number;
+	psychologistId: string;
+	_meetValue: number;
+	_duration: number;
 	agendas: Agenda[];
 };
