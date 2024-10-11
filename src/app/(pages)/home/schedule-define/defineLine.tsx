@@ -13,7 +13,7 @@ export function DefineLine({ id, label }: defineLineProps) {
 		setValue,
 		watch,
 		formState: { errors }
-	} = useFormContext();
+	} = useFormContext<ScheduleAgendas>();
 	const { fields, insert, remove } = useFieldArray<ScheduleAgendas>({
 		name: `agendas.${id}._avaliableTimes`
 	});
@@ -51,7 +51,7 @@ export function DefineLine({ id, label }: defineLineProps) {
 									defaultValue={watch(
 										`agendas.${id}._avaliableTimes.${index}._startTime`
 									)}
-									error={errors.agendas?.[id]?._avaliableTimes?.[index]._startTime.message}
+									error={errors.agendas?.[id]?._avaliableTimes?.[index]?._startTime?.message}
 									mask="99:99"
 									{...register(
 										`agendas.${id}._avaliableTimes.${index}._startTime`,

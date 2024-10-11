@@ -14,9 +14,7 @@ export default function ScheduleDefinePage() {
 	const scheduleSchema = z.object({
 		psychologistId: z.string(),
 		_meetValue: z.number().positive("O valor deve ser maior que 0"),
-		_duration: z
-			.number()
-			.positive("a duração deve ser maior que 0"),
+		_duration: z.number().positive("a duração deve ser maior que 0"),
 		agendas: z.array(
 			z.object({
 				_day: z.nativeEnum(dayTypesResolve, {
@@ -26,18 +24,12 @@ export default function ScheduleDefinePage() {
 					z.object({
 						_startTime: z
 							.string()
-							.min(1, "horário de inicio é obrigatório")
-							.regex(
-								horarioRegex,
-								"horários devem estar entre 00:00 e 23:59"
-							),
+							.min(1, "horário inicial é obrigatório")
+							.regex(horarioRegex, "horário não permitido"),
 						_endTime: z
 							.string()
-							.min(1, "horário de finalização é obrigatório")
-							.regex(
-								horarioRegex,
-								"horários devem estar entre 00:00 e 23:59"
-							)
+							.min(1, "horário final é obrigatório")
+							.regex(horarioRegex, "horário não permitido")
 					})
 				)
 			})
