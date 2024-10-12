@@ -26,7 +26,7 @@ import { SearchIcon } from "@heroicons/react/outline";
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
-	linkTop: boolean;
+	linkTop?: boolean;
 	filteringColumn: string;
 }
 export function DataTable<TData, TValue>({
