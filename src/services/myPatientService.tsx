@@ -1,8 +1,11 @@
 import { Patient } from "@/models";
 import moment from "moment";
 export async function getData(id: string): Promise<Patient> {
-	'use server'
-	const response = await fetch(process.env.BACKEND_URL + "/patients/" + id);
+	"use server";
+	const response = await fetch(process.env.BACKEND_URL + "/patients/" + id, {
+		headers: { Authorization: `Bearer ${process.env.token}` },
+		next: { revalidate: 30 }
+	});
 	return response.json();
 }
 
