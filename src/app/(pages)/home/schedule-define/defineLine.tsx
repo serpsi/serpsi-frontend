@@ -73,6 +73,7 @@ export function DefineLine({ id, label }: defineLineProps) {
 										`agendas.${id}._avaliableTimes.${index}._endTime`
 									)}
 									mask="99:99"
+									error={errors.agendas?.[id]?._avaliableTimes?.[index]?._endTime?.message}
 									{...register(
 										`agendas.${id}._avaliableTimes.${index}._endTime`,
 										{
