@@ -2,12 +2,19 @@
 import React from "react";
 import { ScheduleDefiner } from "./scheduleDefiner";
 import { FormProvider, useForm } from "react-hook-form";
-import { dayTypes, dayTypesResolve, ScheduleAgendas } from "./dayTypes";
+import {
+	Agenda,
+	AvaliableTime,
+	dayTypes,
+	dayTypesResolve,
+	ScheduleAgendas
+} from "./dayTypes";
 import { Button } from "@/components/ui/button";
 import psiImage from "/public/img/psi_calendar.svg";
 import Image from "next/image";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Toaster, toast } from "sonner";
 
 export default function ScheduleDefinePage() {
 	const horarioRegex = /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
@@ -98,17 +105,51 @@ export default function ScheduleDefinePage() {
 					]
 				}
 			]
-		},
-		
+		}
 	});
+	const validateData = (
+		agendas: Agenda[]
+	): { validate: boolean; message?: string } => {
+		for (let agenda of agendas) {
+			let times: AvaliableTime[] = [];
+			for (let time of agenda._avaliableTimes) {
+				if (time._endTime <= time._startTime) {
+					return {
+						validate: false,
+						message:
+							"Os horários finais têm que ser maiores que os horários iniciais"
+					};
+				}
+				console.log(times.length);
+				if (times.length > 0) {
+					if (time._startTime <= times[times.length - 1]._endTime) {
+						return {
+							validate: false,
+							message: `Os horários da ${agenda._day} conflitam`
+						};
+					}
+				}
+				times.push(time);
+			}
+		}
+		return { validate: true };
+	};
+	const onSubmit = (data: ScheduleAgendas) => {
+		const validation = validateData(data.agendas);
+		if (!validation.validate) {
+			toast.warning(validation.message);
+			return;
+		}
+		console.log(data);
+		toast.success("Lista de horários atualizados com sucesso");
+	};
 	return (
 		<main className="mx-10 my-5 flex items-start justify-around">
 			<section className="w-fit text-black">
 				<FormProvider {...methods}>
 					<form
-						onSubmit={methods.handleSubmit(
-							(data) => console.log(data),
-							(erro) => console.log(erro)
+						onSubmit={methods.handleSubmit(onSubmit, () =>
+							toast.warning("Algo deu errado")
 						)}
 						onReset={() => console.log("reset")}
 					>
