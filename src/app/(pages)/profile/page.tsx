@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
@@ -19,7 +19,7 @@ const profileSchema = z.object({
   phone: z.string().min(1, 'Telefone é obrigatório'),
   crp: z.string().min(1, 'CRP é obrigatório'),
   address: z.object({
-    cep: z.string().min(1,'CEP é obrigatório'),
+    cep: z.string().regex(/^\d{5}-\d{3}$/, 'CEP inválido'),
     street: z.string().min(1, 'Rua é obrigatória'),
     number: z.string().min(1, 'Número é obrigatório'),
     complement: z.string().min(1, 'Complemneto é obrigatório'),
@@ -32,35 +32,42 @@ const profileSchema = z.object({
 type ProfileData = z.infer<typeof profileSchema>;
 
 export default function Profile() {
+  const [defaultProfileData, setDefaultProfileData] = useState<ProfileData>({
+    name: 'Iara de Lima Oliveira',
+    birthDate: '31/12/2000',
+    cpf: '000.000.000-00',
+    rg: '000000000',
+    phone: '(00) 00000 - 0000',
+    crp: '00/00000',
+    address: {
+      cep: '00000-000',
+      street: 'Rua dos Bobos',
+      number: '0',
+      complement: 'Depois do ovo',
+      neighborhood: 'Bairro dos babos',
+      city: 'Cidade dos Bobos',
+      state: 'Bahia',
+    },
+  });
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const methods = useForm<ProfileData>({
     resolver: zodResolver(profileSchema),
-    defaultValues: {
-      name: 'Iara de Lima Oliveira',
-      birthDate: '31/12/2000',
-      cpf: '000.000.000-00',
-      rg: '000000000',
-      phone: '(00) 00000 - 0000',
-      crp: '00/00000',
-      address: {
-        cep: '00000-000',
-        street: 'Rua dos Bobos',
-        number: "0",
-        complement: 'Depois do ovo',
-        neighborhood: 'Bairro dos babos',
-        city: 'Cidade dos Bobos',
-        state: 'Bahia',
-      },
-    },
+    defaultValues: defaultProfileData,
     mode: 'onChange'
   });
 
+  useEffect(() => {
+    methods.reset(defaultProfileData);
+  }, [defaultProfileData, methods]);
+
   const { register, handleSubmit, formState } = methods;
   const { errors } = formState;
+
   const onSubmit: SubmitHandler<ProfileData> = (data) => {
-    
+
     console.log('Dados salvos:', data);
+    setDefaultProfileData(data);
     setIsEditing(false);
   };
 
@@ -80,15 +87,18 @@ export default function Profile() {
         </div>
 
         <div className="w-[60vw]">
-          <div
+          {!isEditing &&
+            <div
             className="flex justify-end space-x-3 items-center cursor-pointer"
             onClick={() => setIsEditing(!isEditing)}
           >
             <span className="text-primary-600">
-              {isEditing ? 'Cancelar' : 'Editar perfil'}
+              Editar perfil
             </span>
             <PencilAltIcon className="text-primary-400" width={24} height={24} />
           </div>
+          }
+         
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* Card do Perfil */}
@@ -141,8 +151,35 @@ export default function Profile() {
                       {errors.cpf && (
                         <p className="text-red-500 text-sm">{errors.cpf.message}</p>
                       )}
+                      <label className="block text-gray-700">RG:</label>
+                      <input
+                        type="text"
+                        {...register('rg')}
+                        className="w-full border border-gray-300 rounded px-2 py-1"
+                      />
+                      {errors.rg && (
+                        <p className="text-red-500 text-sm">{errors.rg.message}</p>
+                      )}
+
+                      <label className="block text-gray-700">Tel:</label>
+                      <input
+                        type="text"
+                        {...register('phone')}
+                        className="w-full border border-gray-300 rounded px-2 py-1"
+                      />
+                      {errors.phone && (
+                        <p className="text-red-500 text-sm">{errors.phone.message}</p>
+                      )}
+                      <label className="block text-gray-700">CRP:</label>
+                      <input
+                        type="text"
+                        {...register('crp')}
+                        className="w-full border border-gray-300 rounded px-2 py-1"
+                      />
+                      {errors.crp && (
+                        <p className="text-red-500 text-sm">{errors.crp.message}</p>
+                      )}
                     </div>
-                    {/* Continue com os demais campos */}
                   </>
                 ) : (
                   <>
@@ -222,7 +259,6 @@ export default function Profile() {
                   <div className="flex-col space-y-3">
                     {isEditing ? (
                       <>
-                        {/* Campos de edição (neighborhood, city, state) */}
                         <div>
                           <label className="block text-gray-700">Bairro:</label>
                           <input
@@ -272,12 +308,24 @@ export default function Profile() {
               </Square>
             </div>
             {isEditing && (
-              <button
-                type="submit"
-                className="mt-4 bg-primary-600 text-white px-4 py-2 rounded"
-              >
-                Salvar
-              </button>
+              <div className='flex gap-3'>
+
+                <button
+                  onClick={() => {
+                    setIsEditing(false);
+                    methods.reset(defaultProfileData)
+                  }}
+                  className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="mt-4 bg-primary-600 text-white px-4 py-2 rounded"
+                >
+                  Salvar
+                </button>
+              </div>
             )}
           </form>
         </div>
