@@ -1,6 +1,5 @@
 import { ColumnDef, Table, flexRender } from "@tanstack/react-table";
 import { TableBody, TableCell, TableRow } from "../ui/table";
-import Link from "next/link";
 interface bodyTableProps<TData, TValue> {
 	table: Table<TData>;
 	columns: ColumnDef<TData, TValue>[];

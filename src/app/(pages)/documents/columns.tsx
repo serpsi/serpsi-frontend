@@ -2,7 +2,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
-import { ArchiveIcon, DocumentTextIcon, EyeIcon, SearchCircleIcon } from "@heroicons/react/outline";
+import { DocumentTextIcon } from "@heroicons/react/outline";
 
 export type Document = {
 	id: string;
@@ -46,7 +46,11 @@ export const columns: ColumnDef<Document>[] = [
 		header: "",
 		size: 70,
 		cell: (cell) => (
-			<Link href={cell.row.original.link} target="_blank" className="text-primary-600">
+			<Link
+				href={cell.row.original.link}
+				target="_blank"
+				className="text-primary-600"
+			>
 				<DocumentTextIcon width={24} height={24} />
 			</Link>
 		)
