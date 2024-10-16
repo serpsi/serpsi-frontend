@@ -1,5 +1,6 @@
 import { ColumnDef, Table, flexRender } from "@tanstack/react-table";
 import { TableBody, TableCell, TableRow } from "../ui/table";
+import Link from "next/link";
 interface bodyTableProps<TData, TValue> {
 	table: Table<TData>;
 	columns: ColumnDef<TData, TValue>[];
@@ -13,14 +14,14 @@ export function BodyTable<TData, TValue>({
 			{table.getRowModel().rows?.length ? (
 				table.getRowModel().rows.map((row) => (
 					<TableRow key={row.id}>
-						{row.getVisibleCells().map((cell) => (
-							<TableCell key={cell.id}>
-								{flexRender(
-									cell.column.columnDef.cell,
-									cell.getContext()
-								)}
-							</TableCell>
-						))}
+							{row.getVisibleCells().map((cell) => (
+								<TableCell key={cell.id}>
+									{flexRender(
+										cell.column.columnDef.cell,
+										cell.getContext()
+									)}
+								</TableCell>
+							))}
 					</TableRow>
 				))
 			) : (

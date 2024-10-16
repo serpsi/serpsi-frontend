@@ -1,16 +1,8 @@
 "use client";
 
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableFooter,
-	TableHeader,
-	TableRow
-} from "@/components/ui/table";
+import { Table, TableCell, TableFooter, TableRow } from "@/components/ui/table";
 import {
 	ColumnDef,
-	flexRender,
 	getCoreRowModel,
 	useReactTable,
 	getPaginationRowModel,
@@ -21,7 +13,9 @@ import Link from "next/link";
 import { PaginationTable } from "./pagination-table";
 import { HeaderTable } from "./header-table";
 import { BodyTable } from "./body-table";
-import { SearchIcon } from "@heroicons/react/outline";
+import { DownloadIcon, SearchIcon } from "@heroicons/react/outline";
+import { useState } from "react";
+import { Button } from "../ui/button";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -35,19 +29,24 @@ export function DataTable<TData, TValue>({
 	linkTop,
 	filteringColumn
 }: DataTableProps<TData, TValue>) {
+	const [rowSelection, setRowSelection] = useState({});
 	const table = useReactTable({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
-		getPaginationRowModel: getPaginationRowModel()
+		getPaginationRowModel: getPaginationRowModel(),
+		onRowSelectionChange: setRowSelection,
+		state: {
+			rowSelection
+		}
 	});
 
 	return (
 		<section className="flex w-4/5 flex-col items-start gap-2 rounded-[20px] p-4">
 			{/* seção de filtros para a tabela */}
-			<section className="flex w-full items-center gap-4">
-				<section className="border-1 flex max-w-[300px] items-center rounded-lg border px-2">
+			<section className="flex w-full items-center justify-between gap-4">
+				<div className="border-1 flex max-w-[300px] items-center rounded-lg border px-2">
 					<SearchIcon className="h-6 w-6" />
 					<Input
 						id="busca"
@@ -64,7 +63,16 @@ export function DataTable<TData, TValue>({
 								?.setFilterValue(event.target.value)
 						}
 					/>
-				</section>
+				</div>
+				{table.getFilteredSelectedRowModel().rows.length > 0 ? (
+					<Button
+						variant="link"
+						className="flex items-center justify-center gap-2 text-center text-primary-600"
+					>
+						Baixar arquivos selecionados{" "}
+						<DownloadIcon className="h-4 w-4" />
+					</Button>
+				) : null}
 			</section>
 			{/* se verdadeiro aparece o Link para cadastrar novo paciente */}
 			{linkTop ? (
@@ -77,16 +85,31 @@ export function DataTable<TData, TValue>({
 					</Link>
 				</section>
 			) : null}
+
 			<Table className="rounded-3xl">
 				<HeaderTable table={table} />
 				<BodyTable table={table} columns={columns} />
 				<TableFooter>
-					<TableRow className="hover:bg-primary-50">
-						<TableCell
-							colSpan={columns.length}
-							className="h-10 px-8"
-						>
-							{table.getPageCount() > 1 ? <PaginationTable table={table} />: null}
+					<TableRow className="hover:bg-white">
+						<TableCell colSpan={columns.length - 2}>
+							{table.getFilteredSelectedRowModel().rows.length >
+							0 ? (
+								<p className="text-sm font-bold text-primary-600">
+									{
+										table.getFilteredSelectedRowModel().rows
+											.length
+									}{" "}
+									<span className="font-normal">
+										documento(s) selecionados de
+									</span>{" "}
+									{table.getPreFilteredRowModel().rows.length}
+								</p>
+							) : null}
+						</TableCell>
+						<TableCell colSpan={2} className="h-10 px-8">
+							{table.getPageCount() > 1 ? (
+								<PaginationTable table={table} />
+							) : null}
 						</TableCell>
 					</TableRow>
 				</TableFooter>

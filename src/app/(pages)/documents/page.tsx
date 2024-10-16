@@ -1,15 +1,16 @@
 import { DataTable } from "@/components/table/data-table";
-import { columns, data } from "./columns";
+import { columns, data, Document } from "./columns";
 
-export default function Documents() {
+async function getData(): Promise<Document[]> {
+	const response = data;
+	return response;
+}
+
+export default async function Documents() {
+	const data = await getData();
 	return (
-		<main className="flex h-full w-full justify-center bg-white p-3">
-			<DataTable
-				columns={columns}
-				data={data}
-				filteringColumn="name"
-				hasLinkInRow={true}
-			/>
+		<main className="flex flex-col items-center justify-center bg-white p-3">
+			<DataTable columns={columns} data={data} filteringColumn="name" />
 		</main>
 	);
 }
