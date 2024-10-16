@@ -132,15 +132,17 @@ export default function Profile() {
                 <Image
                   className="mb-4 h-24 w-24 rounded-full"
                   src={psiImage}
-                  width={100}
-                  height={100}
                   alt="Profile"
                 />
                 {isEditing ? (
+                  <>
                   <input
                     type="text"
                     {...register('person.name')}
-                    className=" w-full text-xl text-gray-900 border border-gray-300 rounded px-2 py-1" />
+                    className=
+                    " w-full text-xl text-gray-900 border border-gray-300 rounded px-2 py-1" />
+                      <a className='text-red-400' href='/changePass'>Atualizar senha</a>
+                    </>
                 ) : (
                   <h2 className="text-xl text-gray-900">{methods.getValues('person.name')}</h2>
                 )}
