@@ -14,7 +14,7 @@ export const columns: ColumnDef<Document>[] = [
 	{
 		accessorKey: "editar",
 		header: () => (
-			<div className="flex w-[70px] justify-center">Editar</div>
+			<div className="flex w-[70px] justify-center"></div>
 		),
 		size: 70,
 		cell: () => (
@@ -45,7 +45,8 @@ export const data = [
     id: "1",
     createDate: "04/11/2024",
     name: "Roberto Santos",
-    title: "Acompanhamento da psiquiatra"
+    title: "Acompanhamento da psiquiatra",
+    link: "https://google.com"
   },
   {
     id: "2",

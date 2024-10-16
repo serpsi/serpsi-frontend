@@ -86,7 +86,7 @@ export function DataTable<TData, TValue>({
 							colSpan={columns.length}
 							className="h-10 px-8"
 						>
-							<PaginationTable table={table} />
+							{table.getPageCount() > 1 ? <PaginationTable table={table} />: null}
 						</TableCell>
 					</TableRow>
 				</TableFooter>
