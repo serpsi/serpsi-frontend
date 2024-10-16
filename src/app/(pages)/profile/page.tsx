@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,7 +14,12 @@ import { PencilAltIcon } from '@heroicons/react/outline';
 
 const profileSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
-  birthDate: z.string().min(1, 'Data de nascimento é obrigatória'),
+  birthDate: z
+    .string()
+    .min(1, 'Data de nascimento é obrigatória')
+    .refine((val) => moment.utc(val, 'YYYY-MM-DD', true).isValid(), {
+      message: 'Data de nascimento inválida',
+    }),
   cpf: z.string().min(1, 'CPF é obrigatório'),
   rg: z.string().min(1, 'RG é obrigatório'),
   phone: z.string().min(1, 'Telefone é obrigatório'),
@@ -34,7 +40,7 @@ type ProfileData = z.infer<typeof profileSchema>;
 export default function Profile() {
   const [defaultProfileData, setDefaultProfileData] = useState<ProfileData>({
     name: 'Iara de Lima Oliveira',
-    birthDate: '31/12/2000',
+    birthDate: '2000-12-31',
     cpf: '000.000.000-00',
     rg: '000000000',
     phone: '(00) 00000 - 0000',
@@ -89,16 +95,16 @@ export default function Profile() {
         <div className="w-[60vw]">
           {!isEditing &&
             <div
-            className="flex justify-end space-x-3 items-center cursor-pointer"
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            <span className="text-primary-600">
-              Editar perfil
-            </span>
-            <PencilAltIcon className="text-primary-400" width={24} height={24} />
-          </div>
+              className="flex justify-end space-x-3 items-center cursor-pointer"
+              onClick={() => setIsEditing(!isEditing)}
+            >
+              <span className="text-primary-600">
+                Editar perfil
+              </span>
+              <PencilAltIcon className="text-primary-400" width={24} height={24} />
+            </div>
           }
-         
+
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* Card do Perfil */}
@@ -114,8 +120,7 @@ export default function Profile() {
                   <input
                     type="text"
                     {...register('name')}
-                    className="text-xl text-gray-900 border border-gray-300 rounded px-2 py-1"
-                  />
+                    className=" w-full text-xl text-gray-900 border border-gray-300 rounded px-2 py-1" />
                 ) : (
                   <h2 className="text-xl text-gray-900">{methods.getValues('name')}</h2>
                 )}
@@ -132,19 +137,21 @@ export default function Profile() {
                     <div className="mb-2">
                       <label className="block text-gray-700">Nascimento:</label>
                       <input
-                        type="text"
+                        type="date"
                         {...register('birthDate')}
+                        defaultValue={methods.getValues('birthDate')}
                         className="w-full border border-gray-300 rounded px-2 py-1"
                       />
                       {errors.birthDate && (
                         <p className="text-red-500 text-sm">{errors.birthDate.message}</p>
                       )}
                     </div>
-                    {/* Repita para os demais campos (cpf, rg, phone, crp) */}
+
                     <div className="mb-2">
                       <label className="block text-gray-700">CPF:</label>
                       <input
                         type="text"
+                        disabled={true}
                         {...register('cpf')}
                         className="w-full border border-gray-300 rounded px-2 py-1"
                       />
@@ -154,6 +161,7 @@ export default function Profile() {
                       <label className="block text-gray-700">RG:</label>
                       <input
                         type="text"
+                        disabled={true}
                         {...register('rg')}
                         className="w-full border border-gray-300 rounded px-2 py-1"
                       />
@@ -173,6 +181,7 @@ export default function Profile() {
                       <label className="block text-gray-700">CRP:</label>
                       <input
                         type="text"
+                        disabled={true}
                         {...register('crp')}
                         className="w-full border border-gray-300 rounded px-2 py-1"
                       />
@@ -183,7 +192,13 @@ export default function Profile() {
                   </>
                 ) : (
                   <>
-                    <p>Nascimento: {methods.getValues('birthDate')}</p>
+                    <p>
+                      Nascimento:{' '}
+                      {moment
+                        .utc(methods.getValues('birthDate'), 'YYYY-MM-DD')
+                        .format('DD/MM/YYYY')}
+                    </p>
+
                     <p>CPF: {methods.getValues('cpf')}</p>
                     <p>RG: {methods.getValues('rg')}</p>
                     <p>Tel: {methods.getValues('phone')}</p>
