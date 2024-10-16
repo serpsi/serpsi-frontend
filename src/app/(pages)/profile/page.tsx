@@ -24,7 +24,7 @@ const profileSchema = z.object({
     cpf: z.string().min(1, 'CPF é obrigatório'),
     rg: z.string().min(1, 'RG é obrigatório'),
   }),
-  phone: z.string().min(1, 'Telefone é obrigatório'),
+  phone: z.string().regex(/^\(\d{2}\) \d{5} - \d{4}$/, 'Telefone inválido'),
   crp: z.string().min(1, 'CRP é obrigatório'),
   address: z.object({
     cep: z.string().regex(/^\d{5}-\d{3}$/, 'CEP inválido'),
