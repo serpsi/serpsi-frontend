@@ -9,7 +9,7 @@ async function getData(): Promise<Document[]> {
 export default async function Documents() {
 	const data = await getData();
 	return (
-		<main className="flex flex-col items-center justify-center bg-white p-3">
+		<main className="flex h-full w-full items-center justify-center bg-white p-3">
 			<DataTable columns={columns} data={data} filteringColumn="name" />
 		</main>
 	);
