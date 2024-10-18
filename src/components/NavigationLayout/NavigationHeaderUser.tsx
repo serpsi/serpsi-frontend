@@ -54,7 +54,7 @@ export default function NavigationHeaderUser({
 					<DropdownMenuItem className="cursor-pointer">
 						<UserCircleIcon width={16} height={16} />
 						&nbsp;
-						<span>Conta</span>
+						<a href="/profile/">Conta</a>
 					</DropdownMenuItem>
 					<DropdownMenuItem className="cursor-pointer">
 						<MailIcon width={16} height={16} />

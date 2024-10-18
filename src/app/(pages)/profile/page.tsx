@@ -11,7 +11,7 @@ import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import psiImage from '/public/img/avatar.svg';
 import { PencilAltIcon } from '@heroicons/react/outline';
-import {Phone} from '../../../models/vos/Phone';
+import { Phone } from '../../../models/vos/Phone';
 const profileSchema = z.object({
   person: z.object({
     name: z.string().min(1, 'Nome é obrigatório'),
@@ -77,7 +77,7 @@ export default function Profile() {
   const onSubmit: SubmitHandler<ProfileData> = (data) => {
 
     console.log('Dados salvos:', data);
-    const {person, address, crp, phone} = data;
+    const { person, address, crp, phone } = data;
     const phoneParts = phone.split(/[\(\)]/);
 
     const phoneData: Phone = {
@@ -85,7 +85,7 @@ export default function Profile() {
       _ddd: phoneParts[1],
       _number: phoneParts[2]
     }
-    const {cpf, rg, ...personData} = person;
+    const { cpf, rg, ...personData } = person;
     const sendData = {
       person: personData,
       address: address,
@@ -136,13 +136,12 @@ export default function Profile() {
                 />
                 {isEditing ? (
                   <>
-                  <input
-                    type="text"
-                    {...register('person.name')}
-                    className=
-                    " w-full text-xl text-gray-900 border border-gray-300 rounded px-2 py-1" />
-                      <a className='text-red-400' href='/changePass'>Atualizar senha</a>
-                    </>
+                    <input
+                      type="text"
+                      {...register('person.name')}
+                      className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800" />
+                    <a className='text-primary-500' href='/changePass/'>Atualizar senha</a>
+                  </>
                 ) : (
                   <h2 className="text-xl text-gray-900">{methods.getValues('person.name')}</h2>
                 )}
@@ -162,7 +161,7 @@ export default function Profile() {
                         type="date"
                         {...register('person.birthDate')}
                         defaultValue={methods.getValues('person.birthDate')}
-                        className="w-full border border-gray-300 rounded px-2 py-1"
+                          className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                       />
                       {errors.person?.birthDate && (
                         <p className="text-red-500 text-sm">{errors.person.birthDate.message}</p>
@@ -172,10 +171,11 @@ export default function Profile() {
                     <div className="mb-2">
                       <label className="block text-gray-700">CPF:</label>
                       <input
+
                         type="text"
                         disabled={true}
                         {...register('person.cpf')}
-                        className="w-full border border-gray-300 rounded px-2 py-1"
+                        className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                       />
                       {errors.person?.cpf && (
                         <p className="text-red-500 text-sm">{errors.person.cpf.message}</p>
@@ -185,7 +185,7 @@ export default function Profile() {
                         type="text"
                         disabled={true}
                         {...register('person.rg')}
-                        className="w-full border border-gray-300 rounded px-2 py-1"
+                          className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                       />
                       {errors.person?.rg && (
                         <p className="text-red-500 text-sm">{errors.person.rg.message}</p>
@@ -195,7 +195,7 @@ export default function Profile() {
                       <input
                         type="text"
                         {...register('phone')}
-                        className="w-full border border-gray-300 rounded px-2 py-1"
+                          className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                       />
                       {errors.phone && (
                         <p className="text-red-500 text-sm">{errors.phone.message}</p>
@@ -205,7 +205,7 @@ export default function Profile() {
                         type="text"
                         disabled={true}
                         {...register('crp')}
-                        className="w-full border border-gray-300 rounded px-2 py-1"
+                          className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                       />
                       {errors.crp && (
                         <p className="text-red-500 text-sm">{errors.crp.message}</p>
@@ -241,7 +241,7 @@ export default function Profile() {
                           <input
                             type="text"
                             {...register('address.cep')}
-                            className="w-full border border-gray-300 rounded px-2 py-1"
+                              className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />
                           {errors.address?.cep && (
                             <p className="text-red-500 text-sm">
@@ -252,7 +252,7 @@ export default function Profile() {
                           <input
                             type="text"
                             {...register('address.street')}
-                            className="w-full border border-gray-300 rounded px-2 py-1"
+                              className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />
                           {errors.address?.street && (
                             <p className="text-red-500 text-sm">
@@ -263,7 +263,7 @@ export default function Profile() {
                           <input
                             type="string"
                             {...register('address.number')}
-                            className="w-full border border-gray-300 rounded px-2 py-1"
+                              className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />
                           {errors.address?.number && (
                             <p className="text-red-500 text-sm">
@@ -274,7 +274,7 @@ export default function Profile() {
                           <input
                             type="string"
                             {...register('address.complement')}
-                            className="w-full border border-gray-300 rounded px-2 py-1"
+                              className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />
                           {errors.address?.complement && (
                             <p className="text-red-500 text-sm">
@@ -301,7 +301,7 @@ export default function Profile() {
                           <input
                             type="text"
                             {...register('address.neighborhood')}
-                            className="w-full border border-gray-300 rounded px-2 py-1"
+                              className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />
                           {errors.address?.neighborhood && (
                             <p className="text-red-500 text-sm">
@@ -312,7 +312,7 @@ export default function Profile() {
                           <input
                             type="text"
                             {...register('address.city')}
-                            className="w-full border border-gray-300 rounded px-2 py-1"
+                              className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />
                           {errors.address?.city && (
                             <p className="text-red-500 text-sm">
@@ -323,7 +323,7 @@ export default function Profile() {
                           <input
                             type="text"
                             {...register('address.state')}
-                            className="w-full border border-gray-300 rounded px-2 py-1"
+                              className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />
                           {errors.address?.state && (
                             <p className="text-red-500 text-sm">
