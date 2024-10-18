@@ -1,12 +1,12 @@
 'use server'
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { z, ZodIssue } from "zod";
-
+import { z } from "zod";
+import { jwtDecode } from "jwt-decode";
 export async function login(form: FormData): Promise<Record<string, string> | null> {
-  
 
   const login = {
-    "email": form.get("email")?.toString(),
+    email: form.get("email")?.toString(),
     password: form.get("password")?.toString()
   }
 
@@ -31,10 +31,32 @@ export async function login(form: FormData): Promise<Record<string, string> | nu
         password: login.password
       })
     });
-    console.log(await response.json());
-    if(!response.ok){
+    const payload = await response.json()
+    if (!response.ok) {
       return null;
     }
+    cookies().set({
+      name: "Authorization",
+      value: "Bearer " + payload.access_token,
+      secure: true,
+      httpOnly: true,
+      expires: new Date(jwtDecode(payload.access_token).exp! * 1000)
+    });
+    cookies().set({
+      name: "sub",
+      value: payload.payload.sub,
+      secure: true,
+      httpOnly: true,
+      expires: new Date(jwtDecode(payload.access_token).exp! * 1000)
+    });
+    cookies().set({
+      name: "role",
+      value: payload.payload.role,
+      secure: true,
+      httpOnly: true,
+      expires: new Date(jwtDecode(payload.access_token).exp! * 1000)
+    });
+
     return redirect("/patients");
   }
   else {
