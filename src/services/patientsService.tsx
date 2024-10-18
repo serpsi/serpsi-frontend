@@ -6,7 +6,7 @@ export async function getData() {
 	if (jwt) {
 		const sub = cookies().get("sub")?.value!;
 		const response = await fetch(
-			process.env.BACKEND_URL + "/patients/psychologist/8487fcd2-542a-4abc-8b41-e016fa58bdde",
+			process.env.BACKEND_URL + "/patients/psychologist/" + sub,
 			{
 				method: "GET",
 				next: { revalidate: 30 },
