@@ -12,8 +12,7 @@ export default async function MyPatient({
 }: {
 	params: { id: string };
 }) {
-	const data = await getData(params.id);
-	console.log(data);
+	const data = await getData(params.id)
 	return (
 		<main className="flex flex-col items-center justify-center bg-cover px-10 py-5">
 			<div className="mb-2 flex w-full">

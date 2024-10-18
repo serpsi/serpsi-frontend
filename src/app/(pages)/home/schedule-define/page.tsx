@@ -120,7 +120,6 @@ export default function ScheduleDefinePage() {
 							"Os horários finais têm que ser maiores que os horários iniciais"
 					};
 				}
-				console.log(times.length);
 				if (times.length > 0) {
 					if (time._startTime <= times[times.length - 1]._endTime) {
 						return {
@@ -140,7 +139,6 @@ export default function ScheduleDefinePage() {
 			toast.warning(validation.message);
 			return;
 		}
-		console.log(data);
 		toast.success("Lista de horários atualizados com sucesso");
 	};
 	return (
@@ -151,7 +149,6 @@ export default function ScheduleDefinePage() {
 						onSubmit={methods.handleSubmit(onSubmit, () =>
 							toast.warning("Algo deu errado")
 						)}
-						onReset={() => console.log("reset")}
 					>
 						<ScheduleDefiner />
 						<div className="mt-3 flex justify-around">

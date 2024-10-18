@@ -3,23 +3,21 @@ import { Button } from "@/components/form/button";
 import { InputText } from "@/components/form/input";
 import { login } from "@/services/authService";
 import { useState } from "react";
-import { useFormState } from "react-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface IFormProps{
 	email: string;
 	password: string;
 }
+
 export default function LoginPage() {
 	const {register, handleSubmit} = useForm<IFormProps>();
 	const [errors, setErrors] = useState<Record<string, string>>({});
 	const onSubmit: SubmitHandler<IFormProps> = async (data) => {
-		// setErrors({});
 		const formData = new FormData();
 		formData.set("email", data.email);
 		formData.set("password", data.password);
 		const result = await login(formData);
-		// console.log(result);
 		if (result) {
       setErrors(result);
     } else {
