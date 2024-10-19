@@ -12,101 +12,115 @@ import PatientPictureSection from "./PatientPictureSection";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export default function RegisterNewPatientPage() {
-	const [progress, setProgress] = useState<number>(1);
+// Validations Regex
+const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+const cepRegex = /^\d{5}-\d{3}$/;
+const phoneRegex = /^\(\d{2}\) \d{4,5}-\d{4}$/;
+const cnpjRegex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
 
-	// Validations Regex
-	const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-	const cepRegex = /^\d{5}-\d{3}$/;
-	const phoneRegex = /^\(\d{2}\) \d{4,5}-\d{4}$/;
-	const cnpjRegex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
+const fileListType =
+	typeof window !== "undefined" && typeof FileList !== "undefined"
+		? z.instanceof(FileList)
+		: z.any();
 
-	const fileListType =
-		typeof window !== "undefined" && typeof FileList !== "undefined"
-			? z.instanceof(FileList)
-			: z.any();
-
-	const createPatientFormSchema = z.object({
+const createPatientFormSchema = z
+	.object({
 		// PatientPictureSection
 		profilePicture: fileListType.optional(),
 
 		// PatientInfoSection
 		person: z.object({
-			name: z.string().min(1, "Nome é obrigatório"),
-			rg: z.string(),
-			birthdate: z.coerce.date(),
+			name: z.string().min(1, "Nome é um campo obrigatório."),
+			rg: z.string().min(1, "RG é um campo obrigatório."),
+			birthdate: z
+				.preprocess((val) => {
+					return val === "" ? undefined : val;
+				}, z.coerce.date().optional())
+				.refine((val) => val !== undefined, {
+					message: "Data de nascimento é obrigatória."
+				}),
 			phone: z
 				.string()
 				.regex(
 					phoneRegex,
-					"O telefone deve seguir o padrão (00) 00000-0000"
+					"O telefone deve seguir o padrão (00) 00000-0000."
 				),
 			cpf: z
 				.string()
-				.regex(cpfRegex, "O CPF deve seguir o padrão 000.000.000-00")
+				.regex(cpfRegex, "O CPF deve seguir o padrão 000.000.000-00.")
 		}),
 
 		// AddressInfoSection
 		address: z.object({
 			state: z
 				.string()
-				.min(2, "Estado é obrigatório")
-				.max(2, "Estado deve ter exatamente 2 caracteres")
+				.min(2, "Estado é um campo obrigatório.")
+				.max(2, "Estado deve ter exatamente 2 caracteres.")
 				.transform((val) => val.toUpperCase()),
 			zipCode: z
 				.string()
-				.regex(cepRegex, "O CEP deve seguir o padrão 00000-000"),
-			street: z.string().min(1, "Rua é obrigatória"),
-			district: z.string().min(1, "Bairro é obrigatório"),
-			city: z.string().min(1, "Cidade é obrigatória"),
-			homeNumber: z.string().min(1, "Número residencial é obrigatório"),
+				.regex(cepRegex, "O CEP deve seguir o padrão 00000-000."),
+			street: z.string().min(1, "Rua é um campo obrigatório."),
+			district: z.string().min(1, "Bairro é um campo obrigatório."),
+			city: z.string().min(1, "Cidade é um campo obrigatório."),
+			homeNumber: z
+				.string()
+				.min(1, "Número residencial é um campo obrigatório."),
 			complement: z.string().optional()
 		}),
 
 		// ParentsInfoSection
 		parents: z.array(
 			z.object({
-				name: z.string().min(1, "Nome é obrigatório"),
-				rg: z.string(),
-				birthdate: z.coerce.date(),
+				name: z.string().min(1, "Nome é um campo obrigatório."),
+				rg: z.string().min(1, "RG é um campo obrigatório."),
+				birthdate: z
+					.preprocess((val) => {
+						return val === "" ? undefined : val;
+					}, z.coerce.date().optional())
+					.refine((val) => val !== undefined, {
+						message: "Data de nascimento é obrigatória."
+					}),
 				phone: z
 					.string()
 					.regex(
 						phoneRegex,
-						"O telefone deve seguir o padrão (00) 00000-0000"
+						"O telefone deve seguir o padrão (00) 00000-0000."
 					),
 				cpf: z
 					.string()
 					.regex(
 						cpfRegex,
-						"O CPF deve seguir o padrão 000.000.000-00"
+						"O CPF deve seguir o padrão 000.000.000-00."
 					)
 			})
 		),
 
 		// SchoolInfoSection
 		school: z.object({
-			name: z.string().min(1, "Nome é obrigatório"),
+			name: z.string().min(1, "Nome é um campo obrigatório."),
 			cnpj: z
 				.string()
 				.regex(
 					cnpjRegex,
-					"O CNPJ deve seguir o padrão 00.000.000/0000-00"
+					"O CNPJ deve seguir o padrão 00.000.000/0000-00."
 				),
 			phone: z
 				.string()
 				.regex(
 					phoneRegex,
-					"O telefone deve seguir o padrão (00) 00000-0000"
+					"O telefone deve seguir o padrão (00) 00000-0000."
 				),
-			state: z.string().min(2, "Estado é obrigatório"),
+			state: z.string().min(2, "Estado é um campo obrigatório."),
 			zipCode: z
 				.string()
-				.regex(cepRegex, "O CEP deve seguir o padrão 00000-000"),
-			street: z.string().min(1, "Rua é obrigatória"),
-			district: z.string().min(1, "Bairro é obrigatório"),
-			city: z.string().min(1, "Cidade é obrigatória"),
-			schoolNumber: z.string().min(1, "Número da escola é obrigatório"),
+				.regex(cepRegex, "O CEP deve seguir o padrão 00000-000."),
+			street: z.string().min(1, "Rua é um campo obrigatório."),
+			district: z.string().min(1, "Bairro é um campo obrigatório."),
+			city: z.string().min(1, "Cidade é um campo obrigatório."),
+			schoolNumber: z
+				.string()
+				.min(1, "Número da escola é um campo obrigatório."),
 			complement: z.string().optional()
 		}),
 
@@ -121,35 +135,55 @@ export default function RegisterNewPatientPage() {
 					name: z
 						.string()
 						.min(1, "Nome do medicamento é obrigatório"),
-					dosage: z
+					dosage: z.coerce
 						.number()
 						.positive("A dosagem deve ser maior que zero"),
 					dosageUnity: z
 						.string()
 						.min(1, "Unidade de dosagem é obrigatória"),
-					frequency: z
+					frequency: z.coerce
 						.number()
 						.positive("A frequência deve ser maior que zero"),
 					firstTimeOfTheDay: z
 						.string()
 						.min(1, "Horário é obrigatório"),
-					startDate: z.coerce.date(),
+					startDate: z
+						.preprocess((val) => {
+							return val === "" ? undefined : val;
+						}, z.coerce.date().optional())
+						.refine((val) => val !== undefined, {
+							message: "Data é um campo obrigatório."
+						}),
 					observation: z.string().optional()
 				})
 			)
 			.optional()
-	});
+	})
+	.refine(
+		(data) =>
+			!data.checkMedicines ||
+			(data.medicines && data.medicines.length > 0),
+		{
+			message: "Preencha os campos de medicamento.",
+			path: ["medicines"]
+		}
+	);
+
+export type CreatePatientForm = z.infer<typeof createPatientFormSchema>;
+
+export default function RegisterNewPatientPage() {
+	const [progress, setProgress] = useState<number>(1);
 
 	const maxProgress = 5;
 
-	const methods = useForm({
+	const methods = useForm<CreatePatientForm>({
 		resolver: zodResolver(createPatientFormSchema),
 		defaultValues: {
 			profilePicture: undefined,
 			person: {
 				name: "",
 				rg: "",
-				birthdate: "",
+				// birthdate: new Date(),
 				phone: "",
 				cpf: ""
 			},
@@ -166,7 +200,7 @@ export default function RegisterNewPatientPage() {
 				{
 					name: "",
 					rg: "",
-					birthdate: "",
+					// birthdate: new Date(),
 					phone: "",
 					cpf: ""
 				}
@@ -186,29 +220,60 @@ export default function RegisterNewPatientPage() {
 			comorbidities: "",
 			previousDocuments: undefined,
 			paymentPlan: "",
-			checkMedicines: false,
-			medicines: [
-				{
-					name: "",
-					dosage: 0,
-					dosageUnity: "",
-					frequency: 0,
-					firstTimeOfTheDay: "",
-					startDate: "",
-					observation: ""
-				}
-			]
+			checkMedicines: false
+			// medicines: [
+			// 	{
+			// 		name: "",
+			// 		dosage: 0,
+			// 		dosageUnity: "",
+			// 		frequency: 0,
+			// 		firstTimeOfTheDay: "",
+			// 		// startDate: new Date(),
+			// 		observation: ""
+			// 	}
+			// ]
 		}
 	});
 
 	const onSubmit = (data: any) => {
-		console.log("TESTE!!");
+		console.log("CADASTROU PACIENTE!!");
 		console.log("Erros de validação:", methods.formState.errors);
 		console.log("Dados do formulário:", data);
 		console.log("Estado atual do formulário:", methods.watch());
 	};
 
-	const advanceProgress = () => {
+	const onInvalidSubmit = (data: any) => {
+		console.log("INVALIDOS!!");
+		console.log("Erros de validação:", methods.formState.errors);
+		console.log("Dados do formulário:", data);
+		console.log("Estado atual do formulário:", methods.watch());
+	};
+
+	const advanceProgress = async () => {
+		var isValid: boolean = true;
+		switch (progress) {
+			case 1:
+				isValid = await methods.trigger(["person"]);
+				break;
+			case 2:
+				isValid = await methods.trigger(["address"]);
+				break;
+			case 3:
+				isValid = await methods.trigger(["parents"]);
+				break;
+			case 4:
+				isValid = await methods.trigger(["school"]);
+				break;
+
+			default:
+				break;
+		}
+		// Verifica se há erros após a validação
+		if (!isValid) {
+			console.log("Erros de validação:", methods.formState.errors);
+			return;
+		}
+
 		setProgress((prev) => prev + 1);
 	};
 
@@ -222,7 +287,10 @@ export default function RegisterNewPatientPage() {
 				<h1>Cadastrar Novo Paciente</h1>
 				<FormProvider {...methods}>
 					<form
-						onSubmit={methods.handleSubmit(onSubmit)}
+						onSubmit={methods.handleSubmit(
+							onSubmit,
+							onInvalidSubmit
+						)}
 						className="w-full"
 					>
 						<PatientPictureSection />

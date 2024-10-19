@@ -1,6 +1,7 @@
 import { InputText } from "@/components/form/InputText";
 import { FormSection } from "./FormSection";
 import { useFormContext } from "react-hook-form";
+import { CreatePatientForm } from "./page";
 
 interface PacientInfoProps {
 	progress: number;
@@ -11,7 +12,10 @@ export default function PatientInfoSection({
 	progress,
 	componentIndex
 }: PacientInfoProps) {
-	const { register } = useFormContext();
+	const {
+		register,
+		formState: { errors }
+	} = useFormContext<CreatePatientForm>();
 	return (
 		<FormSection
 			currentStep={progress}
@@ -27,6 +31,7 @@ export default function PatientInfoSection({
 						type="text"
 						name="person.name"
 						register={register}
+						error={errors.person?.name?.message}
 					/>
 				</div>
 				<div>
@@ -38,6 +43,7 @@ export default function PatientInfoSection({
 						name="person.cpf"
 						mask="999.999.999-99"
 						register={register}
+						error={errors.person?.cpf?.message}
 					/>
 				</div>
 				<div>
@@ -48,6 +54,7 @@ export default function PatientInfoSection({
 						type="date"
 						name="person.birthdate"
 						register={register}
+						error={errors.person?.birthdate?.message}
 					/>
 				</div>
 				<div>
@@ -58,6 +65,7 @@ export default function PatientInfoSection({
 						type="text"
 						name="person.rg"
 						register={register}
+						error={errors.person?.rg?.message}
 					/>
 				</div>
 				<div>
@@ -69,6 +77,7 @@ export default function PatientInfoSection({
 						name="person.phone"
 						mask="(99) 99999-9999"
 						register={register}
+						error={errors.person?.phone?.message}
 					/>
 				</div>
 			</>

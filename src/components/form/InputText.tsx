@@ -1,6 +1,7 @@
+"use client";
 import classNames from "classnames";
 import { Input } from "../ui/input";
-import { FieldValues, UseFormRegister } from "react-hook-form";
+import { UseFormRegister } from "react-hook-form";
 import InputMask from "react-input-mask-next";
 
 interface InputTextProps {
@@ -9,9 +10,10 @@ interface InputTextProps {
 	placeholder: string;
 	type: string;
 	name?: string;
-	register?: UseFormRegister<FieldValues>;
+	register?: UseFormRegister<any>;
 	variant?: "primary" | "secondary";
 	mask?: string;
+	error?: string;
 }
 
 export function InputText({
@@ -22,13 +24,16 @@ export function InputText({
 	name,
 	register,
 	variant = "primary",
-	mask
+	mask,
+	error
 }: InputTextProps) {
 	const inputClassNames = classNames("w-full rounded-md  p-2 text-left", {
-		"border border-primary-400 focus-visible:ring-primary-500 placeholder:text-gray-500 outline-primary-500":
-			variant === "primary",
+		"border placeholder:text-gray-500 ": variant === "primary",
 		"border border-primary-500 bg-vidro text-primary-800":
-			variant === "secondary"
+			variant === "secondary",
+		"border-red-500 focus-visible:ring-red-600 outline-red-600": error,
+		"border-primary-400 focus-visible:ring-primary-500 outline-primary-500":
+			!error
 	});
 
 	return (
@@ -56,6 +61,9 @@ export function InputText({
 					className={inputClassNames}
 					{...(register ? register(name ? name : id) : {})}
 				/>
+			)}
+			{error !== undefined && (
+				<span className="text-sm text-red-400">{error}</span>
 			)}
 		</>
 	);

@@ -1,4 +1,3 @@
-import { ReactNode, useEffect, useState } from "react";
 import { FormSection } from "./FormSection";
 import { InputText } from "@/components/form/InputText";
 import { Button } from "@/components/ui/button";
@@ -10,18 +9,32 @@ interface ParentsInfoProps {
 	componentIndex: number;
 }
 
+type ParentsInfoForm = {
+	parents: {
+		name: string;
+		rg: string;
+		birthdate: Date | undefined;
+		phone: string;
+		cpf: string;
+	}[];
+};
+
 export default function ParentsInfoSection({
 	progress,
 	componentIndex
 }: ParentsInfoProps) {
-	const { control, register } = useFormContext();
+	const {
+		control,
+		register,
+		formState: { errors }
+	} = useFormContext<ParentsInfoForm>();
 	const { fields, append, remove } = useFieldArray({
 		control,
 		name: "parents"
 	});
 
 	const addParent = () => {
-		append({ name: "", rg: "", birthdate: "", phone: "", cpf: "" });
+		append({ name: "", rg: "", birthdate: undefined, phone: "", cpf: "" });
 	};
 
 	const removeParent = () => {
@@ -45,6 +58,7 @@ export default function ParentsInfoSection({
 								type="text"
 								name={`parents.${index}.name`}
 								register={register}
+								error={errors.parents?.[index]?.name?.message}
 							/>
 						</div>
 						<div>
@@ -56,6 +70,7 @@ export default function ParentsInfoSection({
 								name={`parents.${index}.cpf`}
 								mask="999.999.999-99"
 								register={register}
+								error={errors.parents?.[index]?.cpf?.message}
 							/>
 						</div>
 						<div>
@@ -66,6 +81,9 @@ export default function ParentsInfoSection({
 								type="date"
 								name={`parents.${index}.birthdate`}
 								register={register}
+								error={
+									errors.parents?.[index]?.birthdate?.message
+								}
 							/>
 						</div>
 						<div>
@@ -76,6 +94,7 @@ export default function ParentsInfoSection({
 								type="text"
 								name={`parents.${index}.rg`}
 								register={register}
+								error={errors.parents?.[index]?.rg?.message}
 							/>
 						</div>
 						<div>
@@ -87,6 +106,7 @@ export default function ParentsInfoSection({
 								name={`parents.${index}.phone`}
 								register={register}
 								mask="(99) 99999-9999"
+								error={errors.parents?.[index]?.phone?.message}
 							/>
 						</div>
 						<br />
