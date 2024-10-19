@@ -13,6 +13,8 @@ import psiImage from '/public/img/avatar.svg';
 import { PencilAltIcon } from '@heroicons/react/outline';
 import { Phone } from '../../../models/vos/Phone';
 import InputMask from "react-input-mask-next";
+
+
 const profileSchema = z.object({
   person: z.object({
     name: z.string().min(1, 'Nome é obrigatório'),

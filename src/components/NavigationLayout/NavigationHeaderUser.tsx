@@ -15,8 +15,6 @@ import {
 	MailIcon,
 	UserCircleIcon
 } from "@heroicons/react/outline";
-import { ReactNode } from "react";
-import { Button } from "../ui/button";
 import Link from "next/link";
 
 interface NavigationHeaderUserProps {
@@ -53,11 +51,12 @@ export default function NavigationHeaderUser({
 					</div>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
-					<DropdownMenuItem className="cursor-pointer">
-						<UserCircleIcon width={16} height={16} />
-						&nbsp;
-						<a href="/profile/">Conta</a>
-					</DropdownMenuItem>
+					<Link href="/profile/">
+						<DropdownMenuItem className="cursor-pointer">
+							<UserCircleIcon width={16} height={16} />
+							&nbsp; Conta
+						</DropdownMenuItem>
+					</Link>
 					<Link href="/home/schedule_definer">
 						<DropdownMenuItem className="cursor-pointer">
 							<MailIcon width={16} height={16} />
