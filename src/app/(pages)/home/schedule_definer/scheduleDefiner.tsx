@@ -2,51 +2,7 @@ import { Input } from "@/components/ui/input";
 import { DefineLine } from "./defineLine";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useState } from "react";
-import { dayTypes, dayTypesResolve, ScheduleAgendas } from "./dayTypes";
-const week = [
-	{
-		key: 0,
-		name: dayTypesResolve.Sunday,
-		label: dayTypes.Sunday,
-		checked: false
-	},
-	{
-		key: 1,
-		name: dayTypesResolve.Monday,
-		label: dayTypes.Monday,
-		checked: true
-	},
-	{
-		key: 2,
-		name: dayTypesResolve.Tuesday,
-		label: dayTypes.Tuesday,
-		checked: true
-	},
-	{
-		key: 3,
-		name: dayTypesResolve.Wednesday,
-		label: dayTypes.Wednesday,
-		checked: true
-	},
-	{
-		key: 4,
-		name: dayTypesResolve.Thursday,
-		label: dayTypes.Thursday,
-		checked: true
-	},
-	{
-		key: 5,
-		name: dayTypesResolve.Friday,
-		label: dayTypes.Friday,
-		checked: true
-	},
-	{
-		key: 6,
-		name: dayTypesResolve.Saturday,
-		label: dayTypes.Saturday,
-		checked: false
-	}
-];
+import { dayTypes, dayTypesResolve, ScheduleAgendas, week } from "./dayTypes";
 
 export function ScheduleDefiner() {
 	const {
@@ -97,10 +53,10 @@ export function ScheduleDefiner() {
 			}
 		});
 	};
-
 	const [checkboxes, setCheckboxes] = useState(
 		week.map((value) => value.checked)
 	);
+
 	const handleClickCheckbox = (index: number) => {
 		const updatedCheckBoxes = checkboxes.map((value, idx) => {
 			let newValue = value;
@@ -118,7 +74,7 @@ export function ScheduleDefiner() {
 
 	const changeMeetValue = (value: string) => {
 		let number = +value.slice(2).replaceAll(".", "").replaceAll(",", ".");
-		setValue("_meetValue", number);
+		setValue("meetValue", number);
 		return number;
 	};
 	return (
@@ -132,7 +88,7 @@ export function ScheduleDefiner() {
 					mask={"R$ 999.999.999,99"}
 					className="w-auto border border-primary-400 lg:w-fit"
 					defaultValue={120.5}
-					error={errors._meetValue?.message}
+					error={errors.meetValue?.message}
 					beforeMaskedStateChange={({ nextState }) => {
 						let number = nextState.value.replace("R$ ", "");
 						if (number.replaceAll(".", "").length < 9) {
@@ -150,11 +106,10 @@ export function ScheduleDefiner() {
 							nextState.value = nextState.value.slice(0, -1);
 						return nextState;
 					}}
-					{...register("_meetValue", {
+					{...register("meetValue", {
 						valueAsNumber: true,
-						onChange: (e) => changeMeetValue(e.target.value),
-					})
-				}
+						onChange: (e) => changeMeetValue(e.target.value)
+					})}
 				/>
 				<label htmlFor="duracao">Duração:</label>
 				<Input
@@ -163,8 +118,8 @@ export function ScheduleDefiner() {
 					className="w-auto border border-primary-400 lg:w-fit"
 					min={0}
 					max={600}
-					error={errors._duration?.message}
-					{...register("_duration", {
+					error={errors.meetDuration?.message}
+					{...register("meetDuration", {
 						valueAsNumber: true,
 						setValueAs: setDuration,
 						value: duration
