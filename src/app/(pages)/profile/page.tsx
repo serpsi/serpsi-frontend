@@ -12,6 +12,7 @@ import Image from 'next/image';
 import psiImage from '/public/img/avatar.svg';
 import { PencilAltIcon } from '@heroicons/react/outline';
 import { Phone } from '../../../models/vos/Phone';
+import InputMask from "react-input-mask-next";
 const profileSchema = z.object({
   person: z.object({
     name: z.string().min(1, 'Nome é obrigatório'),
@@ -75,8 +76,6 @@ export default function Profile() {
   const { errors } = formState;
 
   const onSubmit: SubmitHandler<ProfileData> = (data) => {
-
-    console.log('Dados salvos:', data);
     const { person, address, crp, phone } = data;
     const phoneParts = phone.split(/[\(\)]/);
 
@@ -92,7 +91,6 @@ export default function Profile() {
       phone: phoneData
     }
 
-    console.log(sendData);
     setDefaultProfileData(data);
     setIsEditing(false);
   };
@@ -192,7 +190,8 @@ export default function Profile() {
                       )}
 
                       <label className="block text-gray-700">Tel:</label>
-                      <input
+                      <InputMask
+                       mask={"(99) 99999 - 9999"}
                         type="text"
                         {...register('phone')}
                         className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
@@ -238,8 +237,9 @@ export default function Profile() {
                       <>
                         <div>
                           <label className="block text-gray-700">CEP:</label>
-                          <input
+                          <InputMask
                             type="text"
+                            mask={"99999-999"}
                             {...register('address.cep')}
                             className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />

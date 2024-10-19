@@ -34,15 +34,12 @@ export default function ChangePass() {
 
   const methods = useForm<PasswordData>({
     resolver: zodResolver(passwordSchema),
-    // defaultValues: defaultProfileData,
     mode: 'onChange'
   });
   const { register, handleSubmit, formState } = methods;
   const { errors } = formState;
 
   const onSubmit: SubmitHandler<PasswordData> = (data) => {
-
-    console.log('Dados salvos:', data);
 
   };
 
