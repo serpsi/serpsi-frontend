@@ -60,6 +60,7 @@ export function InputText({
 					placeholder={placeholder}
 					className={inputClassNames}
 					{...(register ? register(name ? name : id) : {})}
+					{...(type === "file" && { multiple: true })}
 				/>
 			)}
 			{error !== undefined && (

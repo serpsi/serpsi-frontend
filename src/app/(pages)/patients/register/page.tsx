@@ -179,23 +179,6 @@ export default function RegisterNewPatientPage() {
 	const methods = useForm<CreatePatientForm>({
 		resolver: zodResolver(createPatientFormSchema),
 		defaultValues: {
-			profilePicture: undefined,
-			person: {
-				name: "",
-				rg: "",
-				// birthdate: new Date(),
-				phone: "",
-				cpf: ""
-			},
-			address: {
-				state: "",
-				zipCode: "",
-				street: "",
-				district: "",
-				city: "",
-				homeNumber: "",
-				complement: ""
-			},
 			parents: [
 				{
 					name: "",
@@ -204,34 +187,16 @@ export default function RegisterNewPatientPage() {
 					phone: "",
 					cpf: ""
 				}
-			],
-			school: {
-				name: "",
-				cnpj: "",
-				phone: "",
-				state: "",
-				zipCode: "",
-				street: "",
-				district: "",
-				city: "",
-				schoolNumber: "",
-				complement: ""
-			},
-			comorbidities: "",
-			previousDocuments: undefined,
-			paymentPlan: "",
-			checkMedicines: false
-			// medicines: [
-			// 	{
-			// 		name: "",
-			// 		dosage: 0,
-			// 		dosageUnity: "",
-			// 		frequency: 0,
-			// 		firstTimeOfTheDay: "",
-			// 		// startDate: new Date(),
-			// 		observation: ""
-			// 	}
-			// ]
+			]
+		}
+	});
+
+	const { clearErrors, watch } = methods;
+
+	// Monitor changes in form fields and clear errors on changes
+	watch((_, { name }) => {
+		if (name) {
+			clearErrors(name);
 		}
 	});
 
