@@ -45,7 +45,7 @@ export function PaginationTable<TData>({ table }: paginationTableProps<TData>) {
 					<span>Página</span>
 					<Input
 						id="pagination"
-						className="mx-2 inline w-8 rounded-xl text-gray-500"
+						className="mx-2 inline w-8 rounded-xl text-gray-500 text-center"
 						onKeyDown={(e) => {
 							e.key === "Enter"
 								? changePage(Number(e.currentTarget.value))
