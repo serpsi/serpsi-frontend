@@ -1,30 +1,33 @@
-'use client'
+"use client";
 import { Button } from "@/components/form/button";
 import { InputText } from "@/components/form/input";
 import { login } from "@/services/authService";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-interface IFormProps{
+interface IFormProps {
 	email: string;
 	password: string;
 }
 
 export default function LoginPage() {
-	const {register, handleSubmit} = useForm<IFormProps>();
+	const { register, handleSubmit } = useForm<IFormProps>();
 	const [errors, setErrors] = useState<Record<string, string>>({});
-	const onSubmit: SubmitHandler<IFormProps> = async (data) => {
+	const [loading, setLoading] = useState(false);
+	const onSubmit: SubmitHandler<IFormProps> = async (data: any) => {
 		const formData = new FormData();
 		formData.set("email", data.email);
 		formData.set("password", data.password);
+		setLoading(true);
 		const result = await login(formData);
 		if (result) {
-      setErrors(result);
-    } else {
-      setErrors({});
-    }
-	}
-	
+			console.log(result)
+			setErrors(result);
+			setLoading(false);
+		} else {
+			setErrors({});
+		}
+	};
 
 	return (
 		<main
@@ -46,11 +49,14 @@ export default function LoginPage() {
 					<h1 className="mb-8 text-center text-5xl font-medium text-primary-900">
 						Login
 					</h1>
-					<form className="flex h-2/5 flex-col justify-around" onSubmit={handleSubmit(onSubmit)}>
+					<form
+						className="flex h-2/5 flex-col justify-around"
+						onSubmit={handleSubmit(onSubmit)}
+					>
 						<InputText
 							// name="email"
 							label="Insira seu E-mail"
-							type="text"					
+							type="text"
 							id="email"
 							placeholder="Email"
 							{...register("email")}
@@ -68,8 +74,9 @@ export default function LoginPage() {
 						/>
 						<br />
 						<Button
-							text="Entrar"
+							text={loading ? "carregando..." : "Entrar"}
 							variant="second"
+							disabled={loading}
 							className="pb-1 pt-1 text-xl"
 							type="submit"
 						/>

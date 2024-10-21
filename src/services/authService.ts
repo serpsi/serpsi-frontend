@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { jwtDecode } from "jwt-decode";
-export async function login(form: FormData): Promise<Record<string, string> | null> {
+export async function login(form: FormData): Promise<Record<string, string>> {
 
   const login = {
     email: form.get("email")?.toString(),
@@ -33,7 +33,7 @@ export async function login(form: FormData): Promise<Record<string, string> | nu
     });
     const payload = await response.json()
     if (!response.ok) {
-      return null;
+      return { password: "e-mail ou senha incorretos" };
     }
     cookies().set({
       name: "Authorization",
