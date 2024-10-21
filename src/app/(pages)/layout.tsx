@@ -36,9 +36,9 @@ export default function RootLayout({
 						<Image
 							alt="logo-empresa"
 							src={"/logo-teste.jpg"}
-							width={33}
-							height={33}
-							className="mr-3 rounded-full"
+							width={35}
+							height={34}
+							className="mr-3 w-auto rounded-full"
 						/>
 						<Navigation.Breadcrumb />
 					</div>
