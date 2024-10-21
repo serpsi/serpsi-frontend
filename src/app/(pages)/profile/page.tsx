@@ -13,21 +13,23 @@ import psiImage from '/public/img/avatar.svg';
 import { PencilAltIcon } from '@heroicons/react/outline';
 import { Phone } from '../../../models/vos/Phone';
 import InputMask from "react-input-mask-next";
+import { getProfileData } from '@/services/profileService';
 
 
 const profileSchema = z.object({
   person: z.object({
-    name: z.string().min(1, 'Nome é obrigatório'),
-    birthDate: z
+    _name: z.string().min(1, 'Nome é obrigatório'),
+    _birthDate: z
       .string()
       .min(1, 'Data de nascimento é obrigatória')
       .refine((val) => moment.utc(val, 'YYYY-MM-DD', true).isValid(), {
         message: 'Data de nascimento inválida',
       }),
-    cpf: z.string().min(1, 'CPF é obrigatório'),
-    rg: z.string().min(1, 'RG é obrigatório'),
+    _cpf: z.string().min(1, 'CPF é obrigatório'),
+    _rg: z.string().min(1, 'RG é obrigatório'),
+    _phone: z.string().regex(/^\(\d{2}\) \d{5}-\d{4}$/, 'Telefone inválido'),
+    _profilePicture: z.string(),
   }),
-  phone: z.string().regex(/^\(\d{2}\) \d{5} - \d{4}$/, 'Telefone inválido'),
   crp: z.string().min(1, 'CRP é obrigatório'),
   address: z.object({
     cep: z.string().regex(/^\d{5}-\d{3}$/, 'CEP inválido'),
@@ -42,24 +44,37 @@ const profileSchema = z.object({
 
 type ProfileData = z.infer<typeof profileSchema>;
 
+function formatPhone(phoneObj: Phone): string {
+  const ddd = phoneObj._ddd.replace('+', '');
+  const number = phoneObj._number.padStart(9, '9');
+  return `(${ddd}) ${number.slice(0, 5)}-${number.slice(5)}`;
+}
+
+function formatCEP(cep: string): string {
+  const cepNumbers = cep.replace(/\D/g, '').padStart(8, '0');
+  return `${cepNumbers.slice(0, 5)}-${cepNumbers.slice(5)}`;
+}
+
+
 export default function Profile() {
   const [defaultProfileData, setDefaultProfileData] = useState<ProfileData>({
     person: {
-      name: 'Iara de Lima Oliveira',
-      birthDate: '2000-12-31',
-      cpf: '000.000.000-00',
-      rg: '000000000',
+      _name: '',
+      _birthDate: '',
+      _cpf: '',
+      _rg: '',
+      _phone: '',
+      _profilePicture: '',
     },
-    phone: '(00) 00000 - 0000',
-    crp: '00/00000',
+    crp: '',
     address: {
-      cep: '00000-000',
-      street: 'Rua dos Bobos',
-      number: '0',
-      complement: 'Depois do ovo',
-      neighborhood: 'Bairro dos babos',
-      city: 'Cidade dos Bobos',
-      state: 'Bahia',
+      cep: '',
+      street: '',
+      number: '',
+      complement: '',
+      neighborhood: '',
+      city: '',
+      state: '',
     },
   });
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -71,22 +86,52 @@ export default function Profile() {
   });
 
   useEffect(() => {
-    methods.reset(defaultProfileData);
-  }, [defaultProfileData, methods]);
+    async function getProfile() {
+      const value = await getProfileData();
+      const formattedData: ProfileData = {
+        person: {
+          _name: value.user.person._name || '',
+          _birthDate: moment.utc(value.user.person._birthdate).format('YYYY-MM-DD') || '',
+          _cpf: value.user.person._cpf._cpf || '',
+          _rg: value.user.person._rg || '',
+          _phone: formatPhone(value.user.person._phone) || '',
+          _profilePicture: value.user.person._profilePicture || ''
+        },
+        crp: value._crp._crp || '',
+        address: {
+          cep: formatCEP(value.user.person.address._zipCode) || '',
+          street: value.user.person.address._street || '',
+          number: value.user.person.address._homeNumber.toString() || '',
+          complement: value.user.person.address._complement || '',
+          neighborhood: value.user.person.address._district || '',
+          city: value.user.person.address._city || '',
+          state: value.user.person.address._state || '',
+        },
+      };
+      setDefaultProfileData(formattedData);
+      methods.reset(formattedData);
+    }
+
+    getProfile();
+  }, [methods]);
+
+  // useEffect(() => {
+  //   methods.reset(defaultProfileData);
+  // }, [defaultProfileData, methods]);
 
   const { register, handleSubmit, formState } = methods;
   const { errors } = formState;
 
   const onSubmit: SubmitHandler<ProfileData> = (data) => {
-    const { person, address, crp, phone } = data;
-    const phoneParts = phone.split(/[\(\)]/);
+    const { person, address, crp } = data;
+    const phoneParts = person._phone.split(/[\(\)]/);
 
     const phoneData: Phone = {
       _ddi: '+55',
       _ddd: phoneParts[1],
       _number: phoneParts[2]
     }
-    const { cpf, rg, ...personData } = person;
+    const { _cpf, _rg, ...personData } = person;
     const sendData = {
       person: personData,
       address: address,
@@ -108,7 +153,7 @@ export default function Profile() {
               className="text-gray-500"
             />
             &nbsp;
-            <span className="text-gray-900">Iara de Lima Oliveira</span>
+            <span className="text-gray-900">{defaultProfileData.person._name}</span>
           </Link>
         </div>
 
@@ -131,22 +176,24 @@ export default function Profile() {
               <Square variant="WithImage">
                 <Image
                   className="mb-4 h-24 w-24 rounded-full"
-                  src={psiImage}
+                  src={defaultProfileData.person._profilePicture || psiImage}
                   alt="Profile"
+                  width={100}
+                  height={100}
                 />
                 {isEditing ? (
                   <>
                     <input
                       type="text"
-                      {...register('person.name')}
+                      {...register('person._name')}
                       className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800" />
                     <a className='text-primary-500' href='/changePass/'>Atualizar senha</a>
                   </>
                 ) : (
-                  <h2 className="text-xl text-gray-900">{methods.getValues('person.name')}</h2>
+                  <h2 className="text-xl text-gray-900">{methods.getValues('person._name')}</h2>
                 )}
-                {errors.person?.name && (
-                  <p className="text-red-500 text-sm">{errors.person.name.message}</p>
+                {errors.person?._name && (
+                  <p className="text-red-500 text-sm">{errors.person._name.message}</p>
                 )}
               </Square>
 
@@ -159,12 +206,12 @@ export default function Profile() {
                       <label className="block text-gray-700">Nascimento:</label>
                       <input
                         type="date"
-                        {...register('person.birthDate')}
-                        defaultValue={methods.getValues('person.birthDate')}
+                        {...register('person._birthDate')}
+                        defaultValue={methods.getValues('person._birthDate')}
                         className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                       />
-                      {errors.person?.birthDate && (
-                        <p className="text-red-500 text-sm">{errors.person.birthDate.message}</p>
+                      {errors.person?._birthDate && (
+                        <p className="text-red-500 text-sm">{errors.person._birthDate.message}</p>
                       )}
                     </div>
 
@@ -174,32 +221,32 @@ export default function Profile() {
 
                         type="text"
                         disabled={true}
-                        {...register('person.cpf')}
+                        {...register('person._cpf')}
                         className="w-full rounded-xl border border-primary-500 bg-gray-500 p-2 text-primary-800 focus:outline focus:outline-primary-800"
                       />
-                      {errors.person?.cpf && (
-                        <p className="text-red-500 text-sm">{errors.person.cpf.message}</p>
+                      {errors.person?._cpf && (
+                        <p className="text-red-500 text-sm">{errors.person._cpf.message}</p>
                       )}
                       <label className="block text-gray-700">RG:</label>
                       <input
                         type="text"
                         disabled={true}
-                        {...register('person.rg')}
+                        {...register('person._rg')}
                         className="w-full rounded-xl border border-primary-500 bg-gray-500 p-2 text-primary-800 focus:outline focus:outline-primary-800"
                       />
-                      {errors.person?.rg && (
-                        <p className="text-red-500 text-sm">{errors.person.rg.message}</p>
+                      {errors.person?._rg && (
+                        <p className="text-red-500 text-sm">{errors.person._rg.message}</p>
                       )}
 
                       <label className="block text-gray-700">Tel:</label>
                       <InputMask
-                       mask={"(99) 99999 - 9999"}
+                        mask={"(99) 99999-9999"}
                         type="text"
-                        {...register('phone')}
+                        {...register('person._phone')}
                         className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                       />
-                      {errors.phone && (
-                        <p className="text-red-500 text-sm">{errors.phone.message}</p>
+                      {errors.person?._phone && (
+                        <p className="text-red-500 text-sm">{errors.person._phone.message}</p>
                       )}
                       <label className="block text-gray-700">CRP:</label>
                       <input
@@ -218,13 +265,13 @@ export default function Profile() {
                     <p>
                       Nascimento:{' '}
                       {moment
-                        .utc(methods.getValues('person.birthDate'), 'YYYY-MM-DD')
+                        .utc(methods.getValues('person._birthDate'), 'YYYY-MM-DD')
                         .format('DD/MM/YYYY')}
                     </p>
 
-                    <p>CPF: {methods.getValues('person.cpf')}</p>
-                    <p>RG: {methods.getValues('person.rg')}</p>
-                    <p>Tel: {methods.getValues('phone')}</p>
+                    <p>CPF: {methods.getValues('person._cpf')}</p>
+                    <p>RG: {methods.getValues('person._rg')}</p>
+                    <p>Tel: {methods.getValues('person._phone')}</p>
                     <p>CRP: {methods.getValues('crp')}</p>
                   </>
                 )}
