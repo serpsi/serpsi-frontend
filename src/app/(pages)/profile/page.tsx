@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
+import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Square, SquareHeader } from '../patients/[id]/Square';
@@ -14,6 +14,7 @@ import { PencilAltIcon } from '@heroicons/react/outline';
 import { Phone } from '../../../models/vos/Phone';
 import InputMask from "react-input-mask-next";
 import { getProfileData } from '@/services/profileService';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 
 const profileSchema = z.object({
@@ -119,7 +120,7 @@ export default function Profile() {
   //   methods.reset(defaultProfileData);
   // }, [defaultProfileData, methods]);
 
-  const { register, handleSubmit, formState } = methods;
+  const { register, handleSubmit, formState, control } = methods;
   const { errors } = formState;
 
   const onSubmit: SubmitHandler<ProfileData> = (data) => {
@@ -369,10 +370,78 @@ export default function Profile() {
                             </p>
                           )}
                           <label className="block text-gray-700">Estado:</label>
-                          <input
-                            type="text"
-                            {...register('address.state')}
-                            className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
+                          <Controller
+                            name="address.state"
+                            control={control}
+                            render={({ field }) => (
+                              <Select
+                                onValueChange={field.onChange}
+                                value={field.value}
+                              >
+                                <SelectTrigger
+                                  className={
+                                    errors.address?.state
+                                      ? "w-full border-red-500 focus:ring-red-600"
+                                      : "w-full border-primary-400 focus:ring-primary-500"
+                                  }
+                                >
+                                  <SelectValue placeholder="Selecione o estado" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="AC">Acre</SelectItem>
+                                  <SelectItem value="AL">Alagoas</SelectItem>
+                                  <SelectItem value="AP">Amapá</SelectItem>
+                                  <SelectItem value="AM">Amazonas</SelectItem>
+                                  <SelectItem value="BA">Bahia</SelectItem>
+                                  <SelectItem value="CE">Ceará</SelectItem>
+                                  <SelectItem value="DF">
+                                    Distrito Federal
+                                  </SelectItem>
+                                  <SelectItem value="ES">
+                                    Espírito Santo
+                                  </SelectItem>
+                                  <SelectItem value="GO">Goiás</SelectItem>
+                                  <SelectItem value="MA">Maranhão</SelectItem>
+                                  <SelectItem value="MT">
+                                    Mato Grosso
+                                  </SelectItem>
+                                  <SelectItem value="MS">
+                                    Mato Grosso do Sul
+                                  </SelectItem>
+                                  <SelectItem value="MG">
+                                    Minas Gerais
+                                  </SelectItem>
+                                  <SelectItem value="PA">Pará</SelectItem>
+                                  <SelectItem value="PB">Paraíba</SelectItem>
+                                  <SelectItem value="PR">Paraná</SelectItem>
+                                  <SelectItem value="PE">
+                                    Pernambuco
+                                  </SelectItem>
+                                  <SelectItem value="PI">Piauí</SelectItem>
+                                  <SelectItem value="RJ">
+                                    Rio de Janeiro
+                                  </SelectItem>
+                                  <SelectItem value="RN">
+                                    Rio Grande do Norte
+                                  </SelectItem>
+                                  <SelectItem value="RS">
+                                    Rio Grande do Sul
+                                  </SelectItem>
+                                  <SelectItem value="RO">Rondônia</SelectItem>
+                                  <SelectItem value="RR">Roraima</SelectItem>
+                                  <SelectItem value="SC">
+                                    Santa Catarina
+                                  </SelectItem>
+                                  <SelectItem value="SP">
+                                    São Paulo
+                                  </SelectItem>
+                                  <SelectItem value="SE">Sergipe</SelectItem>
+                                  <SelectItem value="TO">
+                                    Tocantins
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            )}
                           />
                           {errors.address?.state && (
                             <p className="text-red-500 text-sm">
