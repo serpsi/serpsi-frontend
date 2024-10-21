@@ -6,7 +6,8 @@ import {
 	getCoreRowModel,
 	useReactTable,
 	getPaginationRowModel,
-	getFilteredRowModel
+	getFilteredRowModel,
+	Row
 } from "@tanstack/react-table";
 import { Input } from "../ui/input";
 import Link from "next/link";
@@ -16,6 +17,8 @@ import { BodyTable } from "./body-table";
 import { DownloadIcon, SearchIcon } from "@heroicons/react/outline";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { DownloadFile } from "@/services/downloadFile";
+import { Document } from "@/models/Entities/Document";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -43,7 +46,7 @@ export function DataTable<TData, TValue>({
 	});
 
 	return (
-		<section className="flex w-4/5 flex-col items-start gap-2 rounded-[20px] p-4">
+		<section className="flex flex-col items-start gap-2 rounded-[20px] lg:w-4/5">
 			{/* seção de filtros para a tabela */}
 			<section className="flex w-full items-center justify-between gap-4">
 				<div className="border-1 flex max-w-[300px] items-center rounded-lg border px-2">
@@ -68,6 +71,11 @@ export function DataTable<TData, TValue>({
 					<Button
 						variant="link"
 						className="flex items-center justify-center gap-2 text-center text-primary-600"
+						onClick={() =>
+							downlooadMultiFiles(
+								table.getFilteredSelectedRowModel().rows as Row<Document>[]
+							)
+						}
 					>
 						Baixar arquivos selecionados{" "}
 						<DownloadIcon className="h-4 w-4" />
@@ -115,5 +123,12 @@ export function DataTable<TData, TValue>({
 				</TableFooter>
 			</Table>
 		</section>
+	);
+}
+async function downlooadMultiFiles(rows: Row<Document>[]) {
+	await Promise.all(
+		rows.map((value) => {
+			DownloadFile(value.original.link, value.original.name + " - " + value.original.title);
+		})
 	);
 }
