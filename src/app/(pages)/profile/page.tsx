@@ -13,14 +13,15 @@ import psiImage from '/public/img/avatar.svg';
 import { PencilAltIcon } from '@heroicons/react/outline';
 import { Phone } from '../../../models/vos/Phone';
 import InputMask from "react-input-mask-next";
-import { getProfileData } from '@/services/profileService';
+import { getProfileData, setProfile } from '@/services/profileService';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { toast } from 'sonner';
 
 
 const profileSchema = z.object({
   person: z.object({
     _name: z.string().min(1, 'Nome é obrigatório'),
-    _birthDate: z
+    _birthdate: z
       .string()
       .min(1, 'Data de nascimento é obrigatória')
       .refine((val) => moment.utc(val, 'YYYY-MM-DD', true).isValid(), {
@@ -30,53 +31,65 @@ const profileSchema = z.object({
     _rg: z.string().min(1, 'RG é obrigatório'),
     _phone: z.string().regex(/^\(\d{2}\) \d{5}-\d{4}$/, 'Telefone inválido'),
     _profilePicture: z.string(),
+    address: z.object({
+      zipCode: z.string().regex(/^\d{5}-\d{3}$/, 'CEP inválido'),
+      street: z.string().min(1, 'Rua é obrigatória'),
+      homeNumber: z.number().min(1, 'Número é obrigatório'),
+      complement: z.string().min(1, 'Complemneto é obrigatório'),
+      district: z.string().min(1, 'Bairro é obrigatório'),
+      city: z.string().min(1, 'Cidade é obrigatória'),
+      state: z.string().min(1, 'Estado é obrigatório'),
+    }),
   }),
   crp: z.string().min(1, 'CRP é obrigatório'),
-  address: z.object({
-    cep: z.string().regex(/^\d{5}-\d{3}$/, 'CEP inválido'),
-    street: z.string().min(1, 'Rua é obrigatória'),
-    number: z.string().min(1, 'Número é obrigatório'),
-    complement: z.string().min(1, 'Complemneto é obrigatório'),
-    neighborhood: z.string().min(1, 'Bairro é obrigatório'),
-    city: z.string().min(1, 'Cidade é obrigatória'),
-    state: z.string().min(1, 'Estado é obrigatório'),
-  }),
+
 });
 
 type ProfileData = z.infer<typeof profileSchema>;
 
 function formatPhone(phoneObj: Phone): string {
   const ddd = phoneObj._ddd.replace('+', '');
-  const number = phoneObj._number.padStart(9, '9');
-  return `(${ddd}) ${number.slice(0, 5)}-${number.slice(5)}`;
+  const number = phoneObj._number;
+  if (number.length === 9) {
+    return `(${ddd})${number.slice(0, 5)}-${number.slice(5)}`;
+  } else {
+    return `(${ddd}) ${number}`;
+  }
 }
+
 
 function formatCEP(cep: string): string {
   const cepNumbers = cep.replace(/\D/g, '').padStart(8, '0');
   return `${cepNumbers.slice(0, 5)}-${cepNumbers.slice(5)}`;
 }
 
+function cleanPhone(phone: string): string {
+  return phone.replace(/\s+/g, '').trim();
+}
+
+
 
 export default function Profile() {
   const [defaultProfileData, setDefaultProfileData] = useState<ProfileData>({
     person: {
       _name: '',
-      _birthDate: '',
+      _birthdate: '',
       _cpf: '',
       _rg: '',
       _phone: '',
       _profilePicture: '',
+      address: {
+        zipCode: '',
+        street: '',
+        homeNumber: 0,
+        complement: '',
+        district: '',
+        city: '',
+        state: '',
+      },
     },
     crp: '',
-    address: {
-      cep: '',
-      street: '',
-      number: '',
-      complement: '',
-      neighborhood: '',
-      city: '',
-      state: '',
-    },
+
   });
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -92,23 +105,25 @@ export default function Profile() {
       const formattedData: ProfileData = {
         person: {
           _name: value.user.person._name || '',
-          _birthDate: moment.utc(value.user.person._birthdate).format('YYYY-MM-DD') || '',
+          _birthdate: moment.utc(value.user.person._birthdate).format('YYYY-MM-DD') || '',
           _cpf: value.user.person._cpf._cpf || '',
           _rg: value.user.person._rg || '',
           _phone: formatPhone(value.user.person._phone) || '',
-          _profilePicture: value.user.person._profilePicture || ''
+          _profilePicture: value.user.person._profilePicture || '',
+          address: {
+            zipCode: formatCEP(value.user.person.address._zipCode) || '',
+            street: value.user.person.address._street || '',
+            homeNumber: value.user.person.address._homeNumber || 0,
+            complement: value.user.person.address._complement || '',
+            district: value.user.person.address._district || '',
+            city: value.user.person.address._city || '',
+            state: value.user.person.address._state || '',
+          },
         },
         crp: value._crp._crp || '',
-        address: {
-          cep: formatCEP(value.user.person.address._zipCode) || '',
-          street: value.user.person.address._street || '',
-          number: value.user.person.address._homeNumber.toString() || '',
-          complement: value.user.person.address._complement || '',
-          neighborhood: value.user.person.address._district || '',
-          city: value.user.person.address._city || '',
-          state: value.user.person.address._state || '',
-        },
+
       };
+      console.log(formattedData)
       setDefaultProfileData(formattedData);
       methods.reset(formattedData);
     }
@@ -123,24 +138,33 @@ export default function Profile() {
   const { register, handleSubmit, formState, control } = methods;
   const { errors } = formState;
 
-  const onSubmit: SubmitHandler<ProfileData> = (data) => {
-    const { person, address, crp } = data;
+  const onSubmit: SubmitHandler<ProfileData> = async (data) => {
+    const { person, crp } = data;
     const phoneParts = person._phone.split(/[\(\)]/);
-
-    const phoneData: Phone = {
-      _ddi: '+55',
-      _ddd: phoneParts[1],
-      _number: phoneParts[2]
+    person._phone = cleanPhone(person._phone);
+    const phoneData = {
+      ddi: '+55',
+      ddd: phoneParts[1],
+      number: phoneParts[2]
     }
-    const { _cpf, _rg, ...personData } = person;
+    const { _cpf, _rg, _phone, ...personData } = person;
+
     const sendData = {
-      person: personData,
-      address: address,
-      phone: phoneData
+      person: { ...personData, phone: phoneData }
+    }
+    console.log(sendData);
+    const response = await setProfile(sendData);
+    console.log(JSON.stringify(sendData))
+
+    if (response?.error) {
+      toast.error("Algo de errado aconteceu.");
+    }
+    else {
+      toast.success("Dados atualizados com sucesso");
+      setDefaultProfileData(data);
+      setIsEditing(false);
     }
 
-    setDefaultProfileData(data);
-    setIsEditing(false);
   };
 
   return (
@@ -207,12 +231,12 @@ export default function Profile() {
                       <label className="block text-gray-700">Nascimento:</label>
                       <input
                         type="date"
-                        {...register('person._birthDate')}
-                        defaultValue={methods.getValues('person._birthDate')}
+                        {...register('person._birthdate')}
+                        defaultValue={methods.getValues('person._birthdate')}
                         className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                       />
-                      {errors.person?._birthDate && (
-                        <p className="text-red-500 text-sm">{errors.person._birthDate.message}</p>
+                      {errors.person?._birthdate && (
+                        <p className="text-red-500 text-sm">{errors.person._birthdate.message}</p>
                       )}
                     </div>
 
@@ -246,6 +270,7 @@ export default function Profile() {
                         {...register('person._phone')}
                         className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                       />
+
                       {errors.person?._phone && (
                         <p className="text-red-500 text-sm">{errors.person._phone.message}</p>
                       )}
@@ -266,7 +291,7 @@ export default function Profile() {
                     <p>
                       Nascimento:{' '}
                       {moment
-                        .utc(methods.getValues('person._birthDate'), 'YYYY-MM-DD')
+                        .utc(methods.getValues('person._birthdate'), 'YYYY-MM-DD')
                         .format('DD/MM/YYYY')}
                     </p>
 
@@ -290,45 +315,45 @@ export default function Profile() {
                           <InputMask
                             type="text"
                             mask={"99999-999"}
-                            {...register('address.cep')}
+                            {...register('person.address.zipCode')}
                             className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />
-                          {errors.address?.cep && (
+                          {errors.person?.address?.zipCode && (
                             <p className="text-red-500 text-sm">
-                              {errors.address.cep.message}
+                              {errors.person.address.zipCode.message}
                             </p>
                           )}
                           <label className="block text-gray-700">Rua:</label>
                           <input
                             type="text"
-                            {...register('address.street')}
+                            {...register('person.address.street')}
                             className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />
-                          {errors.address?.street && (
+                          {errors.person?.address?.street && (
                             <p className="text-red-500 text-sm">
-                              {errors.address.street.message}
+                              {errors.person.address.street.message}
                             </p>
                           )}
                           <label className="block text-gray-700">Número:</label>
                           <input
-                            type="string"
-                            {...register('address.number')}
+                            type="number"
+                            {...register('person.address.homeNumber')}
                             className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />
-                          {errors.address?.number && (
+                          {errors.person?.address?.homeNumber && (
                             <p className="text-red-500 text-sm">
-                              {errors.address.number.message}
+                              {errors.person.address.homeNumber.message}
                             </p>
                           )}
                           <label className="block text-gray-700">Complemento:</label>
                           <input
                             type="string"
-                            {...register('address.complement')}
+                            {...register('person.address.complement')}
                             className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />
-                          {errors.address?.complement && (
+                          {errors.person?.address?.complement && (
                             <p className="text-red-500 text-sm">
-                              {errors.address.complement.message}
+                              {errors.person.address.complement.message}
                             </p>
                           )}
                         </div>
@@ -336,10 +361,10 @@ export default function Profile() {
                       </>
                     ) : (
                       <>
-                        <p>CEP: {methods.getValues('address.cep')}</p>
-                        <p>Rua: {methods.getValues('address.street')}</p>
-                        <p>Número: {methods.getValues('address.number')}</p>
-                        <p>Complemento: {methods.getValues('address.complement')}</p>
+                        <p>CEP: {methods.getValues('person.address.zipCode')}</p>
+                        <p>Rua: {methods.getValues('person.address.street')}</p>
+                        <p>Número: {methods.getValues('person.address.homeNumber')}</p>
+                        <p>Complemento: {methods.getValues('person.address.complement')}</p>
                       </>
                     )}
                   </div>
@@ -350,28 +375,28 @@ export default function Profile() {
                           <label className="block text-gray-700">Bairro:</label>
                           <input
                             type="text"
-                            {...register('address.neighborhood')}
+                            {...register('person.address.district')}
                             className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />
-                          {errors.address?.neighborhood && (
+                          {errors.person?.address?.district && (
                             <p className="text-red-500 text-sm">
-                              {errors.address.neighborhood.message}
+                              {errors.person.address.district.message}
                             </p>
                           )}
                           <label className="block text-gray-700">Cidade:</label>
                           <input
                             type="text"
-                            {...register('address.city')}
+                            {...register('person.address.city')}
                             className="w-full rounded-xl border border-primary-500 bg-vidro p-2 text-primary-800 focus:outline focus:outline-primary-800"
                           />
-                          {errors.address?.city && (
+                          {errors.person?.address?.city && (
                             <p className="text-red-500 text-sm">
-                              {errors.address.city.message}
+                              {errors.person.address.city.message}
                             </p>
                           )}
                           <label className="block text-gray-700">Estado:</label>
                           <Controller
-                            name="address.state"
+                            name="person.address.state"
                             control={control}
                             render={({ field }) => (
                               <Select
@@ -380,7 +405,7 @@ export default function Profile() {
                               >
                                 <SelectTrigger
                                   className={
-                                    errors.address?.state
+                                    errors.person?.address?.state
                                       ? "w-full border-red-500 focus:ring-red-600"
                                       : "w-full border-primary-400 focus:ring-primary-500"
                                   }
@@ -443,9 +468,9 @@ export default function Profile() {
                               </Select>
                             )}
                           />
-                          {errors.address?.state && (
+                          {errors.person?.address?.state && (
                             <p className="text-red-500 text-sm">
-                              {errors.address.state.message}
+                              {errors.person.address.state.message}
                             </p>
                           )}
                         </div>
@@ -453,9 +478,9 @@ export default function Profile() {
                       </>
                     ) : (
                       <>
-                        <p>Bairro: {methods.getValues('address.neighborhood')}</p>
-                        <p>Cidade: {methods.getValues('address.city')}</p>
-                        <p>Estado: {methods.getValues('address.state')}</p>
+                        <p>Bairro: {methods.getValues('person.address.district')}</p>
+                        <p>Cidade: {methods.getValues('person.address.city')}</p>
+                        <p>Estado: {methods.getValues('person.address.state')}</p>
                       </>
                     )}
                   </div>
