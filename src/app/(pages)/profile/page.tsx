@@ -16,6 +16,7 @@ import InputMask from "react-input-mask-next";
 import { getProfileData, setProfile } from '@/services/profileService';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { updateProfilePicture } from './uploadImage';
 
 
 const fileListType =
@@ -101,13 +102,16 @@ export default function Profile() {
     crp: '',
 
   });
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-
   const methods = useForm<ProfileData>({
     resolver: zodResolver(profileSchema),
     defaultValues: defaultProfileData,
     mode: 'onChange'
   });
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const { register, handleSubmit, formState, control, watch } = methods;
+  const { errors } = formState;
+  const [image, setImage] = useState<string | null>(null);
+  const selectedImage = watch("picture");
 
   useEffect(() => {
     async function getProfile() {
@@ -142,18 +146,6 @@ export default function Profile() {
     getProfile();
   }, [methods]);
 
-  // useEffect(() => {
-  //   methods.reset(defaultProfileData);
-  // }, [defaultProfileData, methods]);
-
-  const { register, handleSubmit, formState, control, watch } = methods;
-  const { errors } = formState;
-
-  const [image, setImage] = useState<string | null>(null);
-
-
-  const selectedImage = watch("picture");
-
   useEffect(() => {
     if (selectedImage && selectedImage.length > 0) {
       const file = selectedImage[0];
@@ -172,33 +164,38 @@ export default function Profile() {
     const phoneData = {
       ddi: '+55',
       ddd: phoneParts[1],
-      number: phoneParts[2]
+      number: phoneParts[2],
+    };
+    const { _cpf, _rg, _phone, _profilePicture, _id, ...personData } = person;
+  
+    if (selectedImage && selectedImage.length > 0) {
+      try {
+        const profileUpdateResponse = await updateProfilePicture(_id, selectedImage);
+        if (profileUpdateResponse?.newImageUrl) {
+          setImage(profileUpdateResponse.newImageUrl);
+          person._profilePicture = profileUpdateResponse.newImageUrl;
+          toast.success("Imagem atualizada com sucesso");
+        }
+      } catch (error) {
+        toast.error("Erro ao atualizar a imagem.");
+        return;
+      }
     }
-    const { _cpf, _rg, _phone, _profilePicture, _id,...personData } = person;
-
-    if (selectedImage.length > 0) {
-      console.log('Aquiiii', selectedImage);
-    }
-
-    
     const sendData = {
       person: { ...personData, phone: phoneData }
-    }
-    console.log(sendData);
+    };
     const response = await setProfile(sendData);
-    console.log(JSON.stringify(sendData))
-
+    console.log(JSON.stringify(sendData));
+  
     if (response?.error) {
       toast.error("Algo de errado aconteceu.");
-    }
-    else {
+    } else {
       toast.success("Dados atualizados com sucesso");
       setDefaultProfileData(data);
       setIsEditing(false);
     }
-
   };
-
+  
   return (
     <FormProvider {...methods}>
       <main className="flex flex-col items-center justify-center bg-cover px-10 py-5">
@@ -239,7 +236,7 @@ export default function Profile() {
                     width={100}
                     height={100}
                   /> :
-                  <div className="flex w-full flex-col items-center justify-center">
+                  <div className="flex w-full flex-col items-center justify-center mb-3">
                     <input
                       type="file"
                       id="foto-paciente"

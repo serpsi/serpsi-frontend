@@ -44,22 +44,25 @@ export async function setProfile(data: any): Promise<any | undefined> {
 }
 
 
-export async function updateProfilePicture(id: string) {
-  const jwt = cookies().get("Authorization")?.value!;
-  if (jwt) {
-    // const sub = cookies().get("sub")?.value!;
-    const response = await fetch(process.env.BACKEND_URL + "/persons/picture/" + id, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: jwt,
-      },
-      // body: JSON.stringify(data)
-    });
-    // if (response.ok) {
-    //   revalidatePath(`/psychologists/${sub}`);
-    // }
-    return await response.json();
-  }
-  return undefined
-}
+// export async function updateProfilePicture(id: string, file: FileList) {
+//   const jwt = cookies().get("Authorization")?.value!;
+//   if (jwt) {
+//     const formData = new FormData();
+//     formData.append('profilePicture', file[0]); 
+
+//     const response = await fetch(`${process.env.BACKEND_URL}/persons/picture/${id}`, {
+//       method: "PUT",
+//       headers: {
+//         Authorization: jwt, 
+//       },
+//       body: formData, 
+//     });
+
+//     if (!response.ok) {
+//       throw new Error('Erro ao enviar a imagem');
+//     }
+
+//     return await response.json();
+//   }
+//   return undefined;
+// }
