@@ -1,13 +1,21 @@
 import { Input } from "@/components/ui/input";
 import { DefineLine } from "./defineLine";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { dayTypes, dayTypesResolve, ScheduleAgendas, week } from "./dayTypes";
+import { Checkbox } from "@/components/ui/checkbox";
 
-export function ScheduleDefiner() {
+export function ScheduleDefiner({
+	checkboxes,
+	setCheckboxes
+}: {
+	checkboxes: boolean[];
+	setCheckboxes: any;
+}) {
 	const {
 		register,
 		setValue,
+		watch,
 		formState: { errors }
 	} = useFormContext();
 	const { fields, insert, remove } = useFieldArray<ScheduleAgendas>({
@@ -17,6 +25,7 @@ export function ScheduleDefiner() {
 	const addAgenda = (dayType: dayTypesResolve, index: number) => {
 		let iterator = 0;
 		for (const value of fields) {
+			if (value.key === index) return;
 			if (value.key > index) {
 				insert(iterator, {
 					key: index,
@@ -53,9 +62,6 @@ export function ScheduleDefiner() {
 			}
 		});
 	};
-	const [checkboxes, setCheckboxes] = useState(
-		week.map((value) => value.checked)
-	);
 
 	const handleClickCheckbox = (index: number) => {
 		const updatedCheckBoxes = checkboxes.map((value, idx) => {
@@ -135,11 +141,12 @@ export function ScheduleDefiner() {
 							key={value.key}
 							className="flex flex-col-reverse items-center justify-center gap-2 lg:flex-row"
 						>
-							<input
+							<Checkbox
 								id={"check" + value.name}
-								type="checkbox"
 								checked={checkboxes[index]}
-								onChange={() => handleClickCheckbox(index)}
+								onCheckedChange={() =>
+									handleClickCheckbox(index)
+								}
 								className="h-4 w-4"
 							/>
 							<label htmlFor={"check" + value.name}>
@@ -156,7 +163,7 @@ export function ScheduleDefiner() {
 							<DefineLine
 								key={value.id}
 								id={index}
-								label={week[value.key].label}
+								label={week[value.key]?.label || ""}
 							/>
 						)
 					);

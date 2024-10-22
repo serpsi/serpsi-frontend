@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ScheduleDefiner } from "./scheduleDefiner";
 import { FormProvider, useForm } from "react-hook-form";
 import {
@@ -19,7 +19,8 @@ import { getAgenda, setAgenda } from "@/services/agendaService";
 import { useRouter } from "next/navigation";
 
 export default function ScheduleDefinePage() {
-	const horarioRegex = /^(([0-1][0-9]|2[0-3]):[0-5][0-9])|([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+	const horarioRegex =
+		/^(([0-1][0-9]|2[0-3]):[0-5][0-9])|([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
 	const scheduleSchema = z.object({
 		psychologistId: z.string(),
 		meetValue: z.number().positive("O valor deve ser maior que 0"),
@@ -135,21 +136,40 @@ export default function ScheduleDefinePage() {
 		}
 		return { validate: true };
 	};
+
 	const router = useRouter();
+
+	const settingWatchToCheckboxes = () => {
+		let checks: boolean[] = Array.from({ length: 7 }, () => false);
+		checks.map((_value, index) => {
+			let key = methods.watch(`agendas.${index}.key`);
+			if (key) {
+				checks[key] = true;
+			}
+		});
+		return checks;
+	};
+
+	const [checkboxes, setCheckboxes] = useState(settingWatchToCheckboxes());
+
 	useEffect(() => {
 		async function setDefaultAgendas() {
 			const data = await getAgenda();
-			console.log(data);
-			let checkValues = [false]
+			let checks: boolean[] = Array.from({ length: 7 }, () => false);
 			data?.agendas.map((value) => {
 				value.key = getKeyByDay(value._day);
-				value._avaliableTimes.map((time) =>{
+				checks[value.key] = true;
+				value._avaliableTimes.map((time) => {
 					time.key = getKeyByDay(value._day);
 					return time;
 				}, value);
 				return value;
 			}, data);
+			data?.agendas.sort((a,b) => a.key - b.key);
+			
 			methods.reset({ ...data });
+			setCheckboxes(checks);
+			console.log(data);
 		}
 		setDefaultAgendas();
 	}, [methods]);
@@ -171,7 +191,6 @@ export default function ScheduleDefinePage() {
 		}
 	};
 
-	
 	return (
 		<main className="mx-10 my-5 flex items-start justify-around">
 			<section className="w-fit text-black">
@@ -185,7 +204,10 @@ export default function ScheduleDefinePage() {
 							methods.reset();
 						}}
 					>
-						<ScheduleDefiner/>
+						<ScheduleDefiner
+							checkboxes={checkboxes}
+							setCheckboxes={setCheckboxes}
+						/>
 						<div className="mt-3 flex justify-around">
 							<Button
 								type="reset"
@@ -215,5 +237,6 @@ export default function ScheduleDefinePage() {
 	);
 }
 function getKeyByDay(_day: string): number {
-	return week.find((v) => v.name === _day )?.key || -1;
+	let key = week.find((v) => v.name === _day)?.key;
+	return key || key === 0 ? key : -1;
 }
