@@ -169,7 +169,6 @@ export default function ScheduleDefinePage() {
 			
 			methods.reset({ ...data });
 			setCheckboxes(checks);
-			console.log(data);
 		}
 		setDefaultAgendas();
 	}, [methods]);
@@ -180,9 +179,7 @@ export default function ScheduleDefinePage() {
 			toast.warning(validation.message);
 			return;
 		}
-		console.log(data);
 		const response = await setAgenda(data);
-		console.log(response);
 		if (response?.error) {
 			toast.error("Algo de errado aconteceu.");
 		} else {
@@ -197,7 +194,6 @@ export default function ScheduleDefinePage() {
 				<FormProvider {...methods}>
 					<form
 						onSubmit={methods.handleSubmit(onSubmit, (data) => {
-							console.log(data);
 							toast.warning("Algo deu errado");
 						})}
 						onReset={() => {

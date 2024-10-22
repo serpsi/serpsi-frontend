@@ -21,7 +21,6 @@ export default function LoginPage() {
 		setLoading(true);
 		const result = await login(formData);
 		if (result) {
-			console.log(result)
 			setErrors(result);
 			setLoading(false);
 		} else {
