@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -13,6 +11,9 @@ import {
 	MailIcon,
 	UserCircleIcon
 } from "@heroicons/react/outline";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import Link from "next/link";
 
 interface NavigationHeaderUserProps {
@@ -39,13 +40,10 @@ export default function NavigationHeaderUser({
 							className="text-primary-950"
 						/>
 						&nbsp;
-						<Image
-							alt="foto do psicólogo"
-							src={img}
-							width={33}
-							height={33}
-							className="rounded-full"
-						/>
+						<Avatar>
+							<AvatarImage src={img} width={33}/>
+							<AvatarFallback><UserCircleIcon/></AvatarFallback>
+						</Avatar>
 					</div>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
