@@ -107,7 +107,9 @@ export default function Profile() {
     defaultValues: defaultProfileData,
     mode: 'onChange'
   });
+
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
   const { register, handleSubmit, formState, control, watch } = methods;
   const { errors } = formState;
   const [image, setImage] = useState<string | null>(null);
@@ -158,6 +160,7 @@ export default function Profile() {
   }, [selectedImage]);
 
   const onSubmit: SubmitHandler<ProfileData> = async (data) => {
+    setLoading(true);
     const { person } = data;
     const phoneParts = person._phone.split(/[\(\)]/);
     person._phone = cleanPhone(person._phone);
@@ -185,8 +188,8 @@ export default function Profile() {
       person: { ...personData, phone: phoneData }
     };
     const response = await setProfile(sendData);
+    setLoading(false);
 
-  
     if (response?.error) {
       toast.error("Algo de errado aconteceu.");
     } else {
@@ -554,15 +557,17 @@ export default function Profile() {
                     setIsEditing(false);
                     methods.reset(defaultProfileData)
                   }}
+                  disabled={loading}
                   className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
+                  disabled={loading}
                   className="mt-4 bg-primary-600 text-white px-4 py-2 rounded"
                 >
-                  Salvar
+                  {!loading ?  'Salvar' : 'Carregando...'}
                 </button>
               </div>
             )}
