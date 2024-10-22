@@ -7,7 +7,7 @@ import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-for
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Square, SquareHeader } from '../patients/[id]/Square';
-import { ChevronLeftIcon } from '@radix-ui/react-icons';
+import { ChevronLeftIcon, UploadIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import psiImage from '/public/img/avatar.svg';
 import { PencilAltIcon } from '@heroicons/react/outline';
@@ -18,7 +18,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner';
 
 
+const fileListType =
+  typeof window !== "undefined" && typeof FileList !== "undefined"
+    ? z.instanceof(FileList)
+    : z.any();
+
+
 const profileSchema = z.object({
+  picture: fileListType.optional(),
   person: z.object({
     _name: z.string().min(1, 'Nome é obrigatório'),
     _birthdate: z
@@ -27,6 +34,7 @@ const profileSchema = z.object({
       .refine((val) => moment.utc(val, 'YYYY-MM-DD', true).isValid(), {
         message: 'Data de nascimento inválida',
       }),
+    _id: z.string().min(1),
     _cpf: z.string().min(1, 'CPF é obrigatório'),
     _rg: z.string().min(1, 'RG é obrigatório'),
     _phone: z.string().regex(/^\(\d{2}\) \d{5}-\d{4}$/, 'Telefone inválido'),
@@ -70,6 +78,7 @@ function cleanPhone(phone: string): string {
 
 
 export default function Profile() {
+
   const [defaultProfileData, setDefaultProfileData] = useState<ProfileData>({
     person: {
       _name: '',
@@ -77,6 +86,7 @@ export default function Profile() {
       _cpf: '',
       _rg: '',
       _phone: '',
+      _id: '',
       _profilePicture: '',
       address: {
         zipCode: '',
@@ -108,6 +118,7 @@ export default function Profile() {
           _birthdate: moment.utc(value.user.person._birthdate).format('YYYY-MM-DD') || '',
           _cpf: value.user.person._cpf._cpf || '',
           _rg: value.user.person._rg || '',
+          _id: value.user.person._id._id || '',
           _phone: formatPhone(value.user.person._phone) || '',
           _profilePicture: value.user.person._profilePicture || '',
           address: {
@@ -135,11 +146,27 @@ export default function Profile() {
   //   methods.reset(defaultProfileData);
   // }, [defaultProfileData, methods]);
 
-  const { register, handleSubmit, formState, control } = methods;
+  const { register, handleSubmit, formState, control, watch } = methods;
   const { errors } = formState;
 
+  const [image, setImage] = useState<string | null>(null);
+
+
+  const selectedImage = watch("picture");
+
+  useEffect(() => {
+    if (selectedImage && selectedImage.length > 0) {
+      const file = selectedImage[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  }, [selectedImage]);
+
   const onSubmit: SubmitHandler<ProfileData> = async (data) => {
-    const { person, crp } = data;
+    const { person } = data;
     const phoneParts = person._phone.split(/[\(\)]/);
     person._phone = cleanPhone(person._phone);
     const phoneData = {
@@ -147,8 +174,13 @@ export default function Profile() {
       ddd: phoneParts[1],
       number: phoneParts[2]
     }
-    const { _cpf, _rg, _phone, ...personData } = person;
+    const { _cpf, _rg, _phone, _profilePicture, _id,...personData } = person;
 
+    if (selectedImage.length > 0) {
+      console.log('Aquiiii', selectedImage);
+    }
+
+    
     const sendData = {
       person: { ...personData, phone: phoneData }
     }
@@ -199,13 +231,42 @@ export default function Profile() {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* Card do Perfil */}
               <Square variant="WithImage">
-                <Image
-                  className="mb-4 h-24 w-24 rounded-full"
-                  src={defaultProfileData.person._profilePicture || psiImage}
-                  alt="Profile"
-                  width={100}
-                  height={100}
-                />
+                {!isEditing ?
+                  <Image
+                    className="mb-4 h-24 w-24 rounded-full"
+                    src={defaultProfileData.person._profilePicture || psiImage}
+                    alt="Profile"
+                    width={100}
+                    height={100}
+                  /> :
+                  <div className="flex w-full flex-col items-center justify-center">
+                    <input
+                      type="file"
+                      id="foto-paciente"
+                      accept="image/jpeg, image/png"
+                      {...register("picture")}
+                      className="hidden"
+                    />
+                    <label htmlFor="foto-paciente" className="cursor-pointer">
+                      {image ? (
+                        <>
+                          <Image
+                            src={image}
+                            alt="Foto Do Paciente"
+                            className="h-36 w-36 rounded-full object-cover"
+                            width={140}
+                            height={140}
+                          />
+                        </>
+                      ) : (
+                        <div className="flex h-36 w-36 items-center justify-center rounded-full bg-gray-300 p-5">
+                          <UploadIcon width={75} height={75} />
+                        </div>
+                      )}
+                    </label>
+                  </div>
+                }
+
                 {isEditing ? (
                   <>
                     <input
