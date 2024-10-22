@@ -1,4 +1,4 @@
-import { Step } from "./barElements";
+import { Bar, Ball, Step } from "./barElements";
 
 interface ProgressBarProps {
 	steps: number;

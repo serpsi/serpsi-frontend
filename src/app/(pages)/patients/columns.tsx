@@ -17,8 +17,8 @@ export const columns: ColumnDef<Patient>[] = [
 			<div className="flex w-[70px] justify-center">Editar</div>
 		),
 		size: 70,
-		cell: (cell) => (
-			<Link href={"patients/"+cell.row.id} className="flex justify-center">
+		cell: () => (
+			<Link href="" className="flex justify-center">
 				<PencilAltIcon width={24} height={24} />
 			</Link>
 		)

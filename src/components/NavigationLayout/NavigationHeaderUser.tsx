@@ -4,6 +4,8 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
@@ -13,6 +15,7 @@ import {
 	MailIcon,
 	UserCircleIcon
 } from "@heroicons/react/outline";
+import { ReactNode } from "react";
 
 interface NavigationHeaderUserProps {
 	name: string;
