@@ -138,7 +138,7 @@ export default function Profile() {
         crp: value._crp._crp || '',
 
       };
-      console.log(formattedData)
+
       setDefaultProfileData(formattedData);
       methods.reset(formattedData);
     }
@@ -185,12 +185,13 @@ export default function Profile() {
       person: { ...personData, phone: phoneData }
     };
     const response = await setProfile(sendData);
-    console.log(JSON.stringify(sendData));
+
   
     if (response?.error) {
       toast.error("Algo de errado aconteceu.");
     } else {
       toast.success("Dados atualizados com sucesso");
+      data.person._profilePicture = response.user.person._profilePicture;
       setDefaultProfileData(data);
       setIsEditing(false);
     }
