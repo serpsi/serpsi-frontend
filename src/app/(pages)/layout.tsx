@@ -18,13 +18,11 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const [collapsedLink, setCollapsedLink] = useState(true);
-	const [user, setUser] = useState({
-		person: { _name: "", _profilePicture: "" }
-	});
+	const [user, setUser] = useState({ name: "", profilePic: "" });
 	useEffect(() => {
 		async function setUserData() {
 			const value = await getData();
-			setUser(value.user);
+			setUser(value);
 		}
 		setUserData();
 	}, [setUser]);
@@ -54,8 +52,8 @@ export default function RootLayout({
 					</div>
 					{/* User Profile */}
 					<Navigation.User
-						name={user?.person?._name}
-						img={user?.person?._profilePicture}
+						name={user?.name}
+						img={user?.profilePic}
 					/>
 				</Navigation.Header>
 

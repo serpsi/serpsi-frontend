@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { jwtDecode } from "jwt-decode";
+import { setUserCookies } from "./userService";
 export async function login(form: FormData): Promise<Record<string, string>> {
 
   const login = {
@@ -35,6 +36,7 @@ export async function login(form: FormData): Promise<Record<string, string>> {
     if (!response.ok) {
       return { password: "e-mail ou senha incorretos" };
     }
+    await setUserCookies();
     cookies().set({
       name: "Authorization",
       value: "Bearer " + payload.access_token,
