@@ -9,7 +9,7 @@ async function getData(): Promise<Patient[]> {
 export default async function PatientsPage() {
 	const data = await getData();
 	return (
-		<main className="flex h-full w-full items-center justify-center bg-white p-4">
+		<main className="flex h-full w-full items-center justify-center bg-white p-5 md:p-10">
 			<DataTable
 				columns={columns}
 				data={data}
