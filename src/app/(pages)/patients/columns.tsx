@@ -12,13 +12,13 @@ export type Patient = {
 
 export const columns: ColumnDef<Patient>[] = [
 	{
-		accessorKey: "editar",
+		accessorKey: "id",
 		header: () => (
 			<div className="flex w-[70px] justify-center">Editar</div>
 		),
 		size: 70,
-		cell: (cell) => (
-			<Link href={"patients/"+cell.row.id} className="flex justify-center">
+		cell: (e) => (
+			<Link href={"/patients/"+ e.getValue()} className="flex justify-center">
 				<PencilAltIcon width={24} height={24} />
 			</Link>
 		)
@@ -29,12 +29,12 @@ export const columns: ColumnDef<Patient>[] = [
 		size: 250
 	},
 	{
-		accessorKey: "documento",
+		accessorKey: "cpf",
 		header: "Documento",
 		size: 250
 	},
 	{
-		accessorKey: "paymentPlan",
+		accessorKey: "payment_plan",
 		header: "Plano de pagamento",
 		size: 250
 	}

@@ -1,7 +1,34 @@
+"use client";
 import { Button } from "@/components/form/button";
 import { InputText } from "@/components/form/input";
+import { login } from "@/services/authService";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+interface IFormProps {
+	email: string;
+	password: string;
+}
 
 export default function LoginPage() {
+	const { register, handleSubmit } = useForm<IFormProps>();
+	const [errors, setErrors] = useState<Record<string, string>>({});
+	const [loading, setLoading] = useState(false);
+	const onSubmit: SubmitHandler<IFormProps> = async (data: any) => {
+		const formData = new FormData();
+		formData.set("email", data.email);
+		formData.set("password", data.password);
+		setLoading(true);
+		const result = await login(formData);
+		if (result) {
+			console.log(result)
+			setErrors(result);
+			setLoading(false);
+		} else {
+			setErrors({});
+		}
+	};
+
 	return (
 		<main
 			className="flex h-screen w-screen items-center justify-center bg-cover p-5 md:p-10"
@@ -22,24 +49,34 @@ export default function LoginPage() {
 					<h1 className="mb-8 text-center text-5xl font-medium text-primary-900">
 						Login
 					</h1>
-					<form className="flex h-2/5 flex-col justify-around">
+					<form
+						className="flex h-2/5 flex-col justify-around"
+						onSubmit={handleSubmit(onSubmit)}
+					>
 						<InputText
-							type="text"
+							// name="email"
 							label="Insira seu E-mail"
+							type="text"
 							id="email"
 							placeholder="Email"
+							{...register("email")}
+							error={errors.email}
 						/>
 						<br />
 						<InputText
+							// name="password"
 							type="password"
 							label="Insira sua Senha"
 							id="password"
 							placeholder="Senha"
+							{...register("password")}
+							error={errors.password}
 						/>
 						<br />
 						<Button
-							text="Entrar"
+							text={loading ? "carregando..." : "Entrar"}
 							variant="second"
+							disabled={loading}
 							className="pb-1 pt-1 text-xl"
 							type="submit"
 						/>
