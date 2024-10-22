@@ -5,7 +5,7 @@ import { getData } from "@/services/patientsService";
 export default async function PatientsPage() {
 	const data = await getData();
 	return (
-		<main className="flex h-full w-full items-center justify-center bg-white">
+		<main className="flex h-full w-full items-center justify-center bg-white p-4">
 			<DataTable
 				columns={columns}
 				data={data}

@@ -1,6 +1,7 @@
-import { EntityBase } from "../entityBase";
-
-export interface Document extends EntityBase{
-  _title: string,
-  _docLink: string,
-}
+export type Document = {
+	id: string;
+	name: string;
+	title: string;
+	createDate: string;
+	link: string;
+};

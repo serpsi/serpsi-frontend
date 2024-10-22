@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import { Toaster } from "sonner";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -21,10 +20,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="pt-br">
-			<body className={roboto.className}>
-				{children}
-				<Toaster closeButton richColors/>
-			</body>
+			<body className={roboto.className}>{children}</body>
 		</html>
 	);
 }

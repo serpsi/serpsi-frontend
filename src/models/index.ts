@@ -9,6 +9,7 @@ import { PaymentPlan } from "./vos/PaymentPlan";
 import { Person } from "./Entities/Person";
 import { User } from "./Entities/User";
 import { Patient } from "./Entities/Patient";
+import { Document } from "./Entities/Document";
 import { Role } from "./vos/Role";
 import { Email } from "./vos/Email";
 
@@ -19,6 +20,7 @@ export type {
   Address,
   Comorbidity,
   Cpf,
+  Document,
   Email,
   EntityBase,
   MedicamentInfo,
