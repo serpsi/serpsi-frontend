@@ -219,7 +219,10 @@ export default function Profile() {
           {!isEditing &&
             <div
               className="flex justify-end space-x-3 items-center cursor-pointer"
-              onClick={() => setIsEditing(!isEditing)}
+              onClick={() => {
+                setImage(null);
+                setIsEditing(!isEditing)
+              }}
             >
               <span className="text-primary-600">
                 Editar perfil
