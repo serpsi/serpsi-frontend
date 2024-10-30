@@ -1,5 +1,6 @@
 import { DataTable } from "@/components/table/data-table";
-import { columns, data, Document } from "./columns";
+import { columns, data } from "./columns";
+import { Document } from "@/models/Entities/Document";
 
 async function getData(): Promise<Document[]> {
 	const response = data;

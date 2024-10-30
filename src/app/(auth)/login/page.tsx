@@ -73,7 +73,7 @@ export default function LoginPage() {
 						/>
 						<br />
 						<Button
-							text={loading ? "carregando..." : "Entrar"}
+							text={loading ? "Carregando..." : "Entrar"}
 							variant="second"
 							disabled={loading}
 							className="pb-1 pt-1 text-xl"
