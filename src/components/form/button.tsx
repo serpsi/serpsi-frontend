@@ -1,37 +1,32 @@
-import { Button } from "../ui/button";
-
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	text: string;
 	variant?: "default" | "second";
 }
 
-export function ButtonLogin({
+export function Button({
 	text,
 	variant = "default",
 	className = "",
 	...props
 }: ButtonProps) {
 	const getVariantClassName = (): string => {
-		let base = "w-full rounded-md border ";
+		let base = "w-full rounded-md border disabled:pointer-events-none disabled:opacity-60";
 		if (variant == "second") {
-			base +=
-				"border-primary-600 bg-white text-primary-600 hover:bg-primary-50 hover:text-primary-400 hover:border-primary-400";
+			base += " border-primary-500 bg-primary-50 text-primary-700";
 		} else {
-			base +=
-				"border-none bg-primary-600 text-primary-50 hover:bg-primary-400 hover:text-white";
+			base += " bg-primary-600 text-primary-50";
 		}
 		return base;
 	};
 
 	return (
 		<>
-			<Button
-				variant={"outline"}
+			<button
 				className={`${getVariantClassName()} ${className}`}
 				{...props}
 			>
 				{text}
-			</Button>
+			</button>
 		</>
 	);
 }

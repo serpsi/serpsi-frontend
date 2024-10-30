@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -16,6 +14,10 @@ import {
 	UserCircleIcon
 } from "@heroicons/react/outline";
 import { ReactNode } from "react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+import Link from "next/link";
 
 interface NavigationHeaderUserProps {
 	name: string;
@@ -41,26 +43,26 @@ export default function NavigationHeaderUser({
 							className="text-primary-950"
 						/>
 						&nbsp;
-						<Image
-							alt="logo-empresa"
-							src={img}
-							width={33}
-							height={33}
-							className="rounded-full"
-						/>
+						<Avatar>
+							<AvatarImage src={img} width={33}/>
+							<AvatarFallback><UserCircleIcon/></AvatarFallback>
+						</Avatar>
 					</div>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
-					<DropdownMenuItem className="cursor-pointer">
-						<UserCircleIcon width={16} height={16} />
-						&nbsp;
-						<span>Conta</span>
-					</DropdownMenuItem>
-					<DropdownMenuItem className="cursor-pointer">
-						<MailIcon width={16} height={16} />
-						&nbsp;
-						<span>Definir Horários</span>
-					</DropdownMenuItem>
+					<Link href="/profile/">
+						<DropdownMenuItem className="cursor-pointer">
+							<UserCircleIcon width={16} height={16} />
+							&nbsp; Conta
+						</DropdownMenuItem>
+					</Link>
+					<Link href="/home/schedule_definer">
+						<DropdownMenuItem className="cursor-pointer">
+							<MailIcon width={16} height={16} />
+							&nbsp;
+							<span>Definir Horários</span>
+						</DropdownMenuItem>
+					</Link>
 					<DropdownMenuItem className="cursor-pointer">
 						<LogoutIcon width={16} height={16} />
 						&nbsp;

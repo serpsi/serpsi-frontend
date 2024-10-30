@@ -51,7 +51,7 @@ export function DataTable<TData, TValue>({
 					<SearchIcon className="h-6 w-6" />
 					<Input
 						id="busca"
-						className="border-0 focus-visible:ring-0"
+						className="border-0 text-start focus-visible:ring-0"
 						placeholder="Procurar por nome..."
 						value={
 							(table

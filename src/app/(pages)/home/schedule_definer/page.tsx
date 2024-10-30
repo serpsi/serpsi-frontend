@@ -1,27 +1,30 @@
 "use client";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ScheduleDefiner } from "./scheduleDefiner";
 import { FormProvider, useForm } from "react-hook-form";
 import {
 	Agenda,
 	AvaliableTime,
-	dayTypes,
 	dayTypesResolve,
-	ScheduleAgendas
+	ScheduleAgendas,
+	week
 } from "./dayTypes";
 import { Button } from "@/components/ui/button";
 import psiImage from "/public/img/psi_calendar.svg";
 import Image from "next/image";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
+import { getAgenda, setAgenda } from "@/services/agendaService";
+import { useRouter } from "next/navigation";
 
 export default function ScheduleDefinePage() {
-	const horarioRegex = /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
+	const horarioRegex =
+		/^(([0-1][0-9]|2[0-3]):[0-5][0-9])|([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
 	const scheduleSchema = z.object({
 		psychologistId: z.string(),
-		_meetValue: z.number().positive("O valor deve ser maior que 0"),
-		_duration: z.number().positive("a duração deve ser maior que 0"),
+		meetValue: z.number().positive("O valor deve ser maior que 0"),
+		meetDuration: z.number().positive("a duração deve ser maior que 0"),
 		agendas: z.array(
 			z.object({
 				_day: z.nativeEnum(dayTypesResolve, {
@@ -46,8 +49,8 @@ export default function ScheduleDefinePage() {
 		resolver: zodResolver(scheduleSchema),
 		defaultValues: {
 			psychologistId: "",
-			_meetValue: 120.5,
-			_duration: 50,
+			meetValue: 120.5,
+			meetDuration: 50,
 			agendas: [
 				{
 					key: 1,
@@ -120,7 +123,6 @@ export default function ScheduleDefinePage() {
 							"Os horários finais têm que ser maiores que os horários iniciais"
 					};
 				}
-				console.log(times.length);
 				if (times.length > 0) {
 					if (time._startTime <= times[times.length - 1]._endTime) {
 						return {
@@ -134,26 +136,74 @@ export default function ScheduleDefinePage() {
 		}
 		return { validate: true };
 	};
-	const onSubmit = (data: ScheduleAgendas) => {
+
+	const router = useRouter();
+
+	const settingWatchToCheckboxes = () => {
+		let checks: boolean[] = Array.from({ length: 7 }, () => false);
+		checks.map((_value, index) => {
+			let key = methods.watch(`agendas.${index}.key`);
+			if (key) {
+				checks[key] = true;
+			}
+		});
+		return checks;
+	};
+
+	const [checkboxes, setCheckboxes] = useState(settingWatchToCheckboxes());
+
+	useEffect(() => {
+		async function setDefaultAgendas() {
+			const data = await getAgenda();
+			let checks: boolean[] = Array.from({ length: 7 }, () => false);
+			data?.agendas.map((value) => {
+				value.key = getKeyByDay(value._day);
+				checks[value.key] = true;
+				value._avaliableTimes.map((time) => {
+					time.key = getKeyByDay(value._day);
+					return time;
+				}, value);
+				return value;
+			}, data);
+			data?.agendas.sort((a,b) => a.key - b.key);
+			
+			methods.reset({ ...data });
+			setCheckboxes(checks);
+		}
+		setDefaultAgendas();
+	}, [methods]);
+
+	const onSubmit = async (data: ScheduleAgendas) => {
 		const validation = validateData(data.agendas);
 		if (!validation.validate) {
 			toast.warning(validation.message);
 			return;
 		}
-		console.log(data);
-		toast.success("Lista de horários atualizados com sucesso");
+		const response = await setAgenda(data);
+		if (response?.error) {
+			toast.error("Algo de errado aconteceu.");
+		} else {
+			toast.success("Lista de horários atualizados com sucesso.");
+			router.push("/patients");
+		}
 	};
+
 	return (
 		<main className="mx-10 my-5 flex items-start justify-around">
 			<section className="w-fit text-black">
 				<FormProvider {...methods}>
 					<form
-						onSubmit={methods.handleSubmit(onSubmit, () =>
-							toast.warning("Algo deu errado")
-						)}
-						onReset={() => console.log("reset")}
+						onSubmit={methods.handleSubmit(onSubmit, (data) => {
+							toast.warning("Algo deu errado");
+						})}
+						onReset={() => {
+							methods.reset();
+						}}
 					>
-						<ScheduleDefiner />
+						<ScheduleDefiner
+							checkboxes={checkboxes}
+							setCheckboxes={setCheckboxes}
+						/>
 						<div className="mt-3 flex justify-around">
 							<Button
 								type="reset"
@@ -181,4 +231,8 @@ export default function ScheduleDefinePage() {
 			</aside>
 		</main>
 	);
+}
+function getKeyByDay(_day: string): number {
+	let key = week.find((v) => v.name === _day)?.key;
+	return key || key === 0 ? key : -1;
 }

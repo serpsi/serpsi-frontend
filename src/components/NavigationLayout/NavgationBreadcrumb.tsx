@@ -22,7 +22,8 @@ const routeTitles: { [key: string]: string } = {
 	schedule: "Agenda",
 	register: "Cadastro",
 	documents: "Documentos",
-	bills: "Financeiro"
+	bills: "Financeiro",
+	schedule_definer: "Minha agenda"
 };
 
 export default function NavigationBreadcrumb() {
