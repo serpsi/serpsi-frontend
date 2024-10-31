@@ -11,7 +11,8 @@ export default async function PastSessionsPage({
 			<DataTable
 				columns={columns}
 				data={data}
-				filteringColumn="name"
+				filteringColumn="schedule"
+				filteringPlaceHolder="data"
 			/>
 		</main>
 	);

@@ -45,19 +45,19 @@ export const data: Session[] = [
 		id: "INV00",
 		name: "Roberto Santos",
 		paymentType: "PIX",
-		schedule: "dd/mm/aaaa HH:MM"
+		schedule: "01/mm/aaaa HH:MM"
 	},
 	{
 		id: "INV01",
 		name: "Roberto Santos",
 		paymentType: "PIX",
-		schedule: "dd/mm/aaaa HH:MM"
+		schedule: "02/mm/aaaa HH:MM"
 	},
 	{
 		id: "INV02",
 		name: "Roberto Santos",
 		paymentType: "PIX",
-		schedule: "dd/mm/aaaa HH:MM"
+		schedule: "03/mm/aaaa HH:MM"
 	},
 	{
 		id: "INV03",

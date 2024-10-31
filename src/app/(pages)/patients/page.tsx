@@ -11,6 +11,7 @@ export default async function PatientsPage() {
 				data={data}
 				linkTop={true}
 				filteringColumn="name"
+				filteringPlaceHolder="nome"
 			/>
 		</main>
 	);
