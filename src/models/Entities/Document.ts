@@ -1,7 +1,8 @@
-export type Document = {
-	id: string;
-	name: string;
-	title: string;
-	createDate: string;
-	link: string;
+import { EntityBase } from "../entityBase";
+import { Patient } from "./Patient";
+
+export interface Document extends EntityBase {
+	_title: string;
+	_docLink: string;
+	_patient: Patient;
 };

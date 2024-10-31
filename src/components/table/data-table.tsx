@@ -19,6 +19,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { DownloadFile } from "@/services/downloadFile";
 import { Document } from "@/models/Entities/Document";
+import { DocumentColumns } from "@/app/(pages)/documents/columns";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -67,13 +68,14 @@ export function DataTable<TData, TValue>({
 						}
 					/>
 				</div>
+				{/** seção para arquivos selecionados. disponivel apenas para documentos por enquanto */}
 				{table.getFilteredSelectedRowModel().rows.length > 0 ? (
 					<Button
 						variant="link"
 						className="flex items-center justify-center gap-2 text-center text-primary-600"
 						onClick={() =>
-							downlooadMultiFiles(
-								table.getFilteredSelectedRowModel().rows as Row<Document>[]
+							downloadMultiFiles(
+								table.getFilteredSelectedRowModel().rows as Row<DocumentColumns>[]
 							)
 						}
 					>
@@ -125,10 +127,10 @@ export function DataTable<TData, TValue>({
 		</section>
 	);
 }
-async function downlooadMultiFiles(rows: Row<Document>[]) {
+async function downloadMultiFiles(rows: Row<DocumentColumns>[]) {
 	await Promise.all(
 		rows.map((value) => {
-			DownloadFile(value.original.link, value.original.name + " - " + value.original.title);
+			DownloadFile(value.original._docLink, value.original._name + " - " + value.original._title);
 		})
 	);
 }
