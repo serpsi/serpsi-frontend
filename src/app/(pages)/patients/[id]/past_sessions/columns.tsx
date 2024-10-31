@@ -3,18 +3,18 @@ import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { PencilAltIcon } from "@heroicons/react/outline";
 
-export type Patient = {
+export type Session = {
 	id: string;
 	name: string;
-	paymentPlan: "Mensal" | "Bimestral" | "Trimestral" | "Avulso";
-	documento: string;
+	paymentType: "Transferência" | "PIX" | "Cartão" | "Dinheiro";
+	schedule: string;
 };
 
-export const columns: ColumnDef<Patient>[] = [
+export const columns: ColumnDef<Session>[] = [
 	{
 		accessorKey: "id",
 		header: () => (
-			<div className="flex w-[70px] justify-center">Editar</div>
+			<div className="flex w-[70px] justify-center"></div>
 		),
 		size: 70,
 		cell: (e) => (
@@ -29,94 +29,68 @@ export const columns: ColumnDef<Patient>[] = [
 		size: 250
 	},
 	{
-		accessorKey: "cpf",
-		header: "Documento",
+		accessorKey: "paymentType",
+		header: "Forma de pagamento",
 		size: 250
 	},
 	{
-		accessorKey: "payment_plan",
-		header: "Plano de pagamento",
+		accessorKey: "schedule",
+		header: "Data da sessão",
 		size: 250
 	}
 ];
 
-export const data: Patient[] = [
+export const data: Session[] = [
 	{
-		id: "INV001",
-		paymentPlan: "Mensal",
-		name: "Aurora",
-		documento: "000.000.000-00"
-	},
-	{
-		id: "INV002",
-		paymentPlan: "Bimestral",
-		name: "Antonio",
-		documento: "000.000.000-00"
-	},
-	{
-		id: "INV003",
-		paymentPlan: "Mensal",
-		name: "Daniel",
-		documento: "000.000.000-00"
-	},
-	{
-		id: "INV004",
-		paymentPlan: "Trimestral",
-		name: "Marcelo",
-		documento: "000.000.000-00"
-	},
-	{
-		id: "INV005",
-		paymentPlan: "Avulso",
-		name: "danillo",
-		documento: "000.000.000-00"
-	},
-	{
-		id: "INV006",
-		paymentPlan: "Avulso",
-		name: "Iara",
-		documento: "000.000.000-00"
-	},
-	{
-		id: "INV007",
-		paymentPlan: "Bimestral",
+		id: "INV00",
 		name: "Roberto Santos",
-		documento: "000.000.000-00"
+		paymentType: "PIX",
+		schedule: "dd/mm/aaaa HH:MM"
 	},
 	{
-		id: "INV008",
-		paymentPlan: "Mensal",
+		id: "INV01",
 		name: "Roberto Santos",
-		documento: "000.000.000-00"
+		paymentType: "PIX",
+		schedule: "dd/mm/aaaa HH:MM"
 	},
 	{
-		id: "INV009",
-		paymentPlan: "Trimestral",
+		id: "INV02",
 		name: "Roberto Santos",
-		documento: "000.000.000-00"
+		paymentType: "PIX",
+		schedule: "dd/mm/aaaa HH:MM"
 	},
 	{
-		id: "INV010",
-		paymentPlan: "Avulso",
+		id: "INV03",
 		name: "Roberto Santos",
-		documento: "000.000.000-00"
+		paymentType: "PIX",
+		schedule: "dd/mm/aaaa HH:MM"
 	},
 	{
-		id: "INV011",
-		paymentPlan: "Mensal",
+		id: "INV04",
 		name: "Roberto Santos",
-		documento: "000.000.000-00"
+		paymentType: "PIX",
+		schedule: "dd/mm/aaaa HH:MM"
 	},
 	{
-		id: "INV012",
-		paymentPlan: "Avulso",
+		id: "INV05",
 		name: "Roberto Santos",
-		documento: "000.000.000-00"
+		paymentType: "PIX",
+		schedule: "dd/mm/aaaa HH:MM"
 	},
 	{
-		id: "INV013",
-		paymentPlan: "Mensal",
+		id: "INV06",
 		name: "Roberto Santos",
-		documento: "000.000.000-00"
+		paymentType: "PIX",
+		schedule: "dd/mm/aaaa HH:MM"
+	},
+	{
+		id: "INV07",
+		name: "Roberto Santos",
+		paymentType: "PIX",
+		schedule: "dd/mm/aaaa HH:MM"
 	}
 ];
+
+export const getData = () => {
+	return data;
+}
