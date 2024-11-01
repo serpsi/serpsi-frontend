@@ -13,12 +13,13 @@ export type Session = {
 export const columns: ColumnDef<Session>[] = [
 	{
 		accessorKey: "id",
-		header: () => (
-			<div className="flex w-[70px] justify-center"></div>
-		),
+		header: () => <div className="flex w-[70px] justify-center"></div>,
 		size: 70,
 		cell: (e) => (
-			<Link href={"/patients/"+ e.getValue()} className="flex justify-center">
+			<Link
+				href={"/patients/" + e.getValue()}
+				className="flex justify-center"
+			>
 				<PencilAltIcon width={24} height={24} />
 			</Link>
 		)
@@ -32,9 +33,9 @@ export const columns: ColumnDef<Session>[] = [
 		accessorKey: "paymentType",
 		header: "Forma de pagamento",
 		cell: (e) => {
-			console.log(e.getValue())
-			let className = e.getValue() == "Pendente" ? "text-orange-600/70": "";
-			return (<p className={className}>{e.getValue() as string}</p>)
+			let className =
+				e.getValue() == "Pendente" ? "text-orange-600/70" : "";
+			return <p className={className}>{e.getValue() as string}</p>;
 		},
 		size: 250
 	},
@@ -98,4 +99,4 @@ export const data: Session[] = [
 
 export const getData = () => {
 	return data;
-}
+};
