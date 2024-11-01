@@ -6,7 +6,7 @@ import { PencilAltIcon } from "@heroicons/react/outline";
 export type Session = {
 	id: string;
 	name: string;
-	paymentType: "Transferência" | "PIX" | "Cartão" | "Dinheiro";
+	paymentType: "Transferência" | "PIX" | "Cartão" | "Dinheiro" | "Pendente";
 	schedule: string;
 };
 
@@ -31,6 +31,11 @@ export const columns: ColumnDef<Session>[] = [
 	{
 		accessorKey: "paymentType",
 		header: "Forma de pagamento",
+		cell: (e) => {
+			console.log(e.getValue())
+			let className = e.getValue() == "Pendente" ? "text-orange-600/70": "";
+			return (<p className={className}>{e.getValue() as string}</p>)
+		},
 		size: 250
 	},
 	{
@@ -56,7 +61,7 @@ export const data: Session[] = [
 	{
 		id: "INV02",
 		name: "Roberto Santos",
-		paymentType: "PIX",
+		paymentType: "Pendente",
 		schedule: "03/mm/aaaa HH:MM"
 	},
 	{
@@ -74,7 +79,7 @@ export const data: Session[] = [
 	{
 		id: "INV05",
 		name: "Roberto Santos",
-		paymentType: "PIX",
+		paymentType: "Pendente",
 		schedule: "dd/mm/aaaa HH:MM"
 	},
 	{
