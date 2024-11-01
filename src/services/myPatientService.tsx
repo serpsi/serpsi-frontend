@@ -27,5 +27,5 @@ export function formatMedicineSchedule(schedules: Date[]) {
 }
 
 export function formatDateToddmmYYYY(date: Date) {
-	return moment(date).format("DD/MM/YYYY");
+	return date? moment(date).format("DD/MM/YYYY") : null;
 }
