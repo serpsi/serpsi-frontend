@@ -289,7 +289,7 @@ export default function Profile() {
 
               {/* Informações do Paciente */}
               <Square>
-                <SquareHeader titulo="Informações do paciente" />
+                <SquareHeader titulo="Informações pessoais" />
                 {isEditing ? (
                   <>
                     <div className="mb-2">
