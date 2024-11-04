@@ -1,4 +1,5 @@
 "use server"
+import { jwtDecode } from "jwt-decode";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
@@ -34,10 +35,26 @@ export async function setProfile(data: any): Promise<any | undefined> {
       },
       body: JSON.stringify(data)
     });
+    const returnedData = await response.json();
     // if (response.ok) {
     //   revalidatePath(`/psychologists/${sub}`);
     // }
-    return await response.json();
+    cookies().set({
+			name: "name",
+			value: returnedData.user.person._name,
+			secure: true,
+			httpOnly: true,
+			expires: new Date(jwtDecode(jwt).exp! * 1000)
+		});
+		cookies().set({
+			name: "profilePic",
+			value: returnedData.user.person._profilePicture,
+			secure: true,
+			httpOnly: true,
+			expires: new Date(jwtDecode(jwt).exp! * 1000)
+		});
+    return returnedData;
+    
   }
   return undefined;
 }
