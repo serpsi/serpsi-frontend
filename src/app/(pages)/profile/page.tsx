@@ -38,7 +38,8 @@ const profileSchema = z.object({
     _id: z.string().min(1),
     _cpf: z.string().min(1, 'CPF é obrigatório'),
     _rg: z.string().min(1, 'RG é obrigatório'),
-    _phone: z.string().regex(/^\(\d{2}\) \d{5}-\d{4}$/, 'Telefone inválido'),
+    _phone: z.string().min(1, 'Telefone é obrigatório')
+      .regex(/^\(\d{2}\) \d{5}-\d{4}$/, 'Telefone inválido'),
     _profilePicture: z.string(),
     address: z.object({
       zipCode: z.string().regex(/^\d{5}-\d{3}$/, 'CEP inválido'),
@@ -58,7 +59,7 @@ type ProfileData = z.infer<typeof profileSchema>;
 
 function formatPhone(phoneObj: Phone): string {
   const ddd = phoneObj._ddd.replace('+', '');
-  const number = phoneObj._number;
+  const number = phoneObj._number.trim();
   if (number.length === 9) {
     return `(${ddd})${number.slice(0, 5)}-${number.slice(5)}`;
   } else {
