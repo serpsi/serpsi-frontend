@@ -9,167 +9,14 @@ import ParentsInfoSection from "./ParentsInfoSection";
 import SchoolInfoSection from "./SchoolInfoSection";
 import ExtraInfoSection from "./ExtraInfoSection";
 import PatientPictureSection from "./PatientPictureSection";
-import { z } from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-
-// Validations Regex
-const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-const cepRegex = /^\d{5}-\d{3}$/;
-const phoneRegex = /^\(\d{2}\) \d{4,5}-\d{4}$/;
-const cnpjRegex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
-
-const fileListType =
-	typeof window !== "undefined" && typeof FileList !== "undefined"
-		? z.instanceof(FileList)
-		: z.any();
-
-const createPatientFormSchema = z
-	.object({
-		// PatientPictureSection
-		profilePicture: fileListType.optional(),
-
-		// PatientInfoSection
-		person: z.object({
-			name: z.string().min(1, "Nome é um campo obrigatório."),
-			rg: z.string().min(1, "RG é um campo obrigatório."),
-			birthdate: z
-				.preprocess((val) => {
-					return val === "" ? undefined : val;
-				}, z.coerce.date().optional())
-				.refine((val) => val !== undefined, {
-					message: "Data de nascimento é obrigatória."
-				}),
-			phone: z
-				.string()
-				.regex(
-					phoneRegex,
-					"O telefone deve seguir o padrão (00) 00000-0000."
-				),
-			cpf: z
-				.string()
-				.regex(cpfRegex, "O CPF deve seguir o padrão 000.000.000-00.")
-		}),
-
-		// AddressInfoSection
-		address: z.object({
-			state: z
-				.string()
-				.min(2, "Estado é um campo obrigatório.")
-				.max(2, "Estado deve ter exatamente 2 caracteres.")
-				.transform((val) => val.toUpperCase()),
-			zipCode: z
-				.string()
-				.regex(cepRegex, "O CEP deve seguir o padrão 00000-000."),
-			street: z.string().min(1, "Rua é um campo obrigatório."),
-			district: z.string().min(1, "Bairro é um campo obrigatório."),
-			city: z.string().min(1, "Cidade é um campo obrigatório."),
-			homeNumber: z
-				.string()
-				.min(1, "Número residencial é um campo obrigatório."),
-			complement: z.string().optional()
-		}),
-
-		// ParentsInfoSection
-		parents: z.array(
-			z.object({
-				name: z.string().min(1, "Nome é um campo obrigatório."),
-				rg: z.string().min(1, "RG é um campo obrigatório."),
-				birthdate: z
-					.preprocess((val) => {
-						return val === "" ? undefined : val;
-					}, z.coerce.date().optional())
-					.refine((val) => val !== undefined, {
-						message: "Data de nascimento é obrigatória."
-					}),
-				phone: z
-					.string()
-					.regex(
-						phoneRegex,
-						"O telefone deve seguir o padrão (00) 00000-0000."
-					),
-				cpf: z
-					.string()
-					.regex(
-						cpfRegex,
-						"O CPF deve seguir o padrão 000.000.000-00."
-					)
-			})
-		),
-
-		// SchoolInfoSection
-		school: z.object({
-			name: z.string().min(1, "Nome é um campo obrigatório."),
-			cnpj: z
-				.string()
-				.regex(
-					cnpjRegex,
-					"O CNPJ deve seguir o padrão 00.000.000/0000-00."
-				),
-			phone: z
-				.string()
-				.regex(
-					phoneRegex,
-					"O telefone deve seguir o padrão (00) 00000-0000."
-				),
-			state: z.string().min(2, "Estado é um campo obrigatório."),
-			zipCode: z
-				.string()
-				.regex(cepRegex, "O CEP deve seguir o padrão 00000-000."),
-			street: z.string().min(1, "Rua é um campo obrigatório."),
-			district: z.string().min(1, "Bairro é um campo obrigatório."),
-			city: z.string().min(1, "Cidade é um campo obrigatório."),
-			schoolNumber: z
-				.string()
-				.min(1, "Número da escola é um campo obrigatório."),
-			complement: z.string().optional()
-		}),
-
-		// ExtraInfoSection
-		comorbidities: z.string().optional(),
-		previousDocuments: fileListType.optional(),
-		paymentPlan: z.string().min(1, "Plano de pagamento é obrigatório"),
-		checkMedicines: z.boolean(),
-		medicines: z
-			.array(
-				z.object({
-					name: z
-						.string()
-						.min(1, "Nome do medicamento é obrigatório"),
-					dosage: z.coerce
-						.number()
-						.positive("A dosagem deve ser maior que zero"),
-					dosageUnity: z
-						.string()
-						.min(1, "Unidade de dosagem é obrigatória"),
-					frequency: z.coerce
-						.number()
-						.positive("A frequência deve ser maior que zero"),
-					firstTimeOfTheDay: z
-						.string()
-						.min(1, "Horário é obrigatório"),
-					startDate: z
-						.preprocess((val) => {
-							return val === "" ? undefined : val;
-						}, z.coerce.date().optional())
-						.refine((val) => val !== undefined, {
-							message: "Data é um campo obrigatório."
-						}),
-					observation: z.string().optional()
-				})
-			)
-			.optional()
-	})
-	.refine(
-		(data) =>
-			!data.checkMedicines ||
-			(data.medicines && data.medicines.length > 0),
-		{
-			message: "Preencha os campos de medicamento.",
-			path: ["medicines"]
-		}
-	);
-
-export type CreatePatientForm = z.infer<typeof createPatientFormSchema>;
+import { createPatient } from "@/services/patientsService";
+import {
+	CreatePatientForm,
+	createPatientFormSchema,
+	formatPatientData
+} from "./schema";
 
 export default function RegisterNewPatientPage() {
 	const [progress, setProgress] = useState<number>(1);
@@ -183,7 +30,6 @@ export default function RegisterNewPatientPage() {
 				{
 					name: "",
 					rg: "",
-					// birthdate: new Date(),
 					phone: "",
 					cpf: ""
 				}
@@ -200,11 +46,18 @@ export default function RegisterNewPatientPage() {
 		}
 	});
 
-	const onSubmit = (data: any) => {
-		console.log("CADASTROU PACIENTE!!");
-		console.log("Erros de validação:", methods.formState.errors);
-		console.log("Dados do formulário:", data);
-		console.log("Estado atual do formulário:", methods.watch());
+	const onSubmit = async (data: CreatePatientForm) => {
+		try {
+			const formattedData = formatPatientData(data, true);
+			console.log(formattedData);
+
+			const response = await createPatient(formattedData);
+
+			console.log("Paciente cadastrado com sucesso:", response);
+			alert("Paciente cadastrado com sucesso!");
+		} catch (error) {
+			console.error("Erro ao cadastrar paciente:", error);
+		}
 	};
 
 	const onInvalidSubmit = (data: any) => {
@@ -212,6 +65,7 @@ export default function RegisterNewPatientPage() {
 		console.log("Erros de validação:", methods.formState.errors);
 		console.log("Dados do formulário:", data);
 		console.log("Estado atual do formulário:", methods.watch());
+		alert("Houve um erro ao cadastrar paciente.");
 	};
 
 	const advanceProgress = async () => {

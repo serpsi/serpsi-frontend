@@ -8,7 +8,7 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select";
-import { CreatePatientForm } from "./page";
+import { CreatePatientForm } from "./schema";
 
 interface SchoolInfoProps {
 	progress: number;

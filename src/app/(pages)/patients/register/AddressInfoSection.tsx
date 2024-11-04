@@ -1,7 +1,7 @@
 import { InputText } from "@/components/form/InputText";
 import { FormSection } from "./FormSection";
 import { Controller, useFormContext } from "react-hook-form";
-import { CreatePatientForm } from "./page";
+import { CreatePatientForm } from "./schema";
 import {
 	Select,
 	SelectContent,

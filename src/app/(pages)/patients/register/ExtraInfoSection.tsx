@@ -9,10 +9,8 @@ import {
 } from "@/components/ui/select";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { ReactNode, useState } from "react";
 import { PlusIcon, TrashIcon } from "@heroicons/react/outline";
 import React from "react";
-import { CreatePatientForm } from "./page";
 
 interface ExtraInfoProps {
 	progress: number;
