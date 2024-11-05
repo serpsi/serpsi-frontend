@@ -85,8 +85,8 @@ export default function ExtraInfoSection({
 				<div>
 					<InputText
 						id="comorbidades"
-						label="Possui Comorbidade? se Sim, Qual(is)?"
-						placeholder="Comorbidade 1, Comorbidade 2, ..."
+						label="Possui Diagnósticos? se Sim, Qual(is)?"
+						placeholder="Diagnóstico 1, Diagnóstico 2, ..."
 						type="text"
 						name="comorbidities"
 						register={register}
@@ -100,6 +100,7 @@ export default function ExtraInfoSection({
 						placeholder=""
 						type="file"
 						name="previousDocuments"
+						accept="application/pdf"
 						register={register}
 						error={
 							errors.previousDocuments
@@ -134,7 +135,7 @@ export default function ExtraInfoSection({
 									<SelectValue placeholder="Selecione o plano de pagamento..." />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="AVULSO">
+									<SelectItem value="AVULSA">
 										Avulso
 									</SelectItem>
 									<SelectItem value="MENSAL">

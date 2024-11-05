@@ -48,7 +48,7 @@ export default function RegisterNewPatientPage() {
 
 	const onSubmit = async (data: CreatePatientForm) => {
 		try {
-			const formattedData = formatPatientData(data, true);
+			const formattedData = formatPatientData(data);
 			console.log(formattedData);
 
 			const response = await createPatient(formattedData);
@@ -65,7 +65,6 @@ export default function RegisterNewPatientPage() {
 		console.log("Erros de validação:", methods.formState.errors);
 		console.log("Dados do formulário:", data);
 		console.log("Estado atual do formulário:", methods.watch());
-		alert("Houve um erro ao cadastrar paciente.");
 	};
 
 	const advanceProgress = async () => {
@@ -150,14 +149,16 @@ export default function RegisterNewPatientPage() {
 									Voltar
 								</Button>
 							)}
-							{progress === maxProgress ? (
+							{progress === maxProgress && (
 								<Button
 									type="submit"
 									className="rounded-lg bg-primary-600 text-white hover:bg-primary-400"
 								>
 									Cadastrar Paciente
 								</Button>
-							) : (
+							)}
+
+							{progress < maxProgress && (
 								<Button
 									onClick={advanceProgress}
 									className="w-24 bg-primary-600 hover:bg-primary-400"

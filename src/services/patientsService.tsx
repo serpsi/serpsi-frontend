@@ -19,8 +19,20 @@ export async function getPatientsData() {
 	}
 }
 
-export async function createPatient(formData: Record<string, any>) {
+export async function createPatient(formData: FormData) {
 	const jwt = cookies().get("Authorization")?.value;
+	const id = cookies().get("sub")?.value;
+
+	const patientData = formData.get("patientData");
+
+	if (patientData) {
+		const patientDataObj = JSON.parse(patientData.toString());
+
+		patientDataObj.psychologistId = id;
+
+		// Atualize o patientData no FormData com o JSON atualizado
+		formData.set("patientData", JSON.stringify(patientDataObj));
+	}
 
 	if (!jwt) {
 		throw new Error(
@@ -31,10 +43,9 @@ export async function createPatient(formData: Record<string, any>) {
 	const response = await fetch(process.env.BACKEND_URL + "/patients", {
 		method: "POST",
 		headers: {
-			"Content-Type": "application/json",
 			Authorization: jwt
 		},
-		body: JSON.stringify(formData)
+		body: formData
 	});
 
 	if (!response.ok) {

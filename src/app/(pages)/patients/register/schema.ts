@@ -159,15 +159,9 @@ export const createPatientFormSchema = z
 
 export type CreatePatientForm = z.infer<typeof createPatientFormSchema>;
 
-export function formatPatientData(
-	formData: CreatePatientForm,
-	asFormData: boolean = false
-) {
+export function formatPatientData(formData: CreatePatientForm): FormData {
 	const formattedData = {
-		profilePicture: formData.profilePicture,
-		document: formData.previousDocuments,
 		paymentPlan: formData.paymentPlan,
-		psychologistId: "1a6aecba-45d0-44c5-a47d-55b5aaeba93a",
 		person: {
 			name: formData.person.name,
 			rg: formData.person.rg,
@@ -242,20 +236,17 @@ export function formatPatientData(
 			})) || []
 	};
 
-	if (!asFormData) {
-		return formattedData;
-	}
-
 	const formDataObj = new FormData();
 
-	for (const key in formattedData) {
-		const value = (formattedData as any)[key];
-		if (value instanceof Blob) {
-			formDataObj.append(key, value);
-		} else {
-			formDataObj.append(key, JSON.stringify(value));
-		}
-	}
+	const profPic: FileList = formData.profilePicture;
+	const prevDocs: FileList = formData.previousDocuments;
+
+	formDataObj.append("patientData", JSON.stringify(formattedData));
+	formDataObj.append("profilePicture", profPic[0]);
+
+	Array.from(prevDocs).forEach((file) => {
+		formDataObj.append("document", file);
+	});
 
 	return formDataObj;
 }
