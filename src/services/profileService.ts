@@ -59,6 +59,28 @@ export async function setProfile(data: any): Promise<any | undefined> {
   return undefined;
 }
 
+export async function changePassword(data: any) {
+  const jwt = cookies().get("Authorization")?.value!;
+  if (jwt) {
+    const sub = cookies().get("sub")?.value!;
+    const response = await fetch(process.env.BACKEND_URL + "/psychologists/updatePassword/" + sub, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: jwt,
+      },
+      body: JSON.stringify(data)
+    });
+    if (response.ok) {
+      const returnedData = await response.json();
+      return returnedData;
+  } else {
+      return { error: true };
+  }
+    
+  }
+  return undefined;
+}
 
 // export async function updateProfilePicture(id: string, file: FileList) {
 //   const jwt = cookies().get("Authorization")?.value!;
