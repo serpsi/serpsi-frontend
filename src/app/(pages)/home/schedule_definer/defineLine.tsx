@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlusIcon, TrashIcon } from "@heroicons/react/outline";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Agenda, ScheduleAgendas } from "./dayTypes";
+import { ScheduleAgendas } from "./dayTypes";
 type defineLineProps = {
 	label: string;
 	id: number;

@@ -1,8 +1,8 @@
 import { Input } from "@/components/ui/input";
 import { DefineLine } from "./defineLine";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { useCallback, useEffect, useState } from "react";
-import { dayTypes, dayTypesResolve, ScheduleAgendas, week } from "./dayTypes";
+import { useState } from "react";
+import { dayTypesResolve, ScheduleAgendas, week } from "./dayTypes";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export function ScheduleDefiner({
