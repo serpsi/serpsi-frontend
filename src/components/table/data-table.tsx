@@ -17,8 +17,7 @@ import { BodyTable } from "./body-table";
 import { DownloadIcon, SearchIcon } from "@heroicons/react/outline";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { DownloadFile } from "@/services/downloadFile";
-import { Document } from "@/models/Entities/Document";
+import { DownloadFile } from "@/services/utils/downloadFile";
 import { DocumentColumns } from "@/app/(pages)/documents/columns";
 
 interface DataTableProps<TData, TValue> {

@@ -1,11 +1,13 @@
 import Image from "next/image";
 import { Square, SquareHeader } from "./Square";
-import { ChevronLeftIcon, DocumentSearchIcon } from "@heroicons/react/outline";
+import { ChevronLeftIcon } from "@heroicons/react/outline";
 import { ComorbidityTag } from "./comorbidityTag";
 import Link from "next/link";
-import { formatDateToddmmYYYY, formatMedicineSchedule, formatPhone, getData } from "@/services/myPatientService";
+import { formatMedicineSchedule, getData } from "@/services/myPatientService";
 import { Comorbidity, MedicamentInfo, Person } from "@/models";
 import { ListComponent } from "./listComponent";
+import { formatDateToddmmYYYY } from "@/services/utils/formatDateToDDMMYYYY";
+import { formatPhone } from "@/services/utils/formatPhone";
 
 export default async function MyPatient({
 	params

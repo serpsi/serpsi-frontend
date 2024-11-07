@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { getPatientsData } from "./patientsService";
 import { Document } from "@/models/Entities/Document";
 import { DocumentColumns } from "@/app/(pages)/documents/columns";
-import { formatDateToddmmYYYY } from "./myPatientService";
+import { formatDateToddmmYYYY } from "./utils/formatDateToDDMMYYYY";
 
 export async function getData() {
 	"use server";
