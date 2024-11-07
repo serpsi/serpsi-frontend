@@ -5,11 +5,11 @@ import { DocumentTextIcon } from "@heroicons/react/outline";
 import Viewer from "@/components/viewer/viewer";
 
 export type DocumentColumns = {
-	_id: string;
-	_title: string;
-	_docLink: string;
-	_name: string;
-	_createDate: string;
+	id: string;
+	title: string;
+	docLink: string;
+	name: string;
+	createDate: string;
 }
 
 
@@ -43,13 +43,13 @@ export const columns: ColumnDef<DocumentColumns>[] = [
 		enableHiding: false
 	},
 	{
-		accessorKey: "editar",
+		accessorKey: "viewer",
 		header: "",
 		size: 70,
 		cell: ({ row }) => (
 				<Viewer
-					link={row.original._docLink}
-					title={row.original._name + " - " + row.original._title}
+					link={row.original.docLink}
+					title={row.original.name + " - " + row.original.title}
 					className=""
 				>
 					<DocumentTextIcon
@@ -61,17 +61,17 @@ export const columns: ColumnDef<DocumentColumns>[] = [
 		)
 	},
 	{
-		accessorKey: "_name",
+		accessorKey: "name",
 		header: "Nome",
 		size: 250
 	},
 	{
-		accessorKey: "_title",
+		accessorKey: "title",
 		header: "Titulo",
 		size: 250
 	},
 	{
-		accessorKey: "_createDate",
+		accessorKey: "createDate",
 		header: "Data da sessão",
 		size: 250
 	}
