@@ -34,7 +34,7 @@ export async function login(form: FormData): Promise<Record<string, string>> {
 		});
 		const payload = await response.json();
 		if (!response.ok) {
-			return { password: "e-mail ou senha incorretos" };
+			throw new Error("e-mail ou senha incorretos");
 		}
 		await setUserCookies();
 		cookies().set({
@@ -65,7 +65,7 @@ export async function login(form: FormData): Promise<Record<string, string>> {
 		result.error.issues.forEach((error) => {
 			errors[error.path[0]] = error.message;
 		});
-		return errors;
+		throw new Error(JSON.stringify(errors));
 	}
 }
 
