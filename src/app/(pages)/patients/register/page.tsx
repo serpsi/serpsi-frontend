@@ -17,6 +17,7 @@ import {
 	createPatientFormSchema,
 	formatPatientData
 } from "./schema";
+import { toast } from "sonner";
 
 export default function RegisterNewPatientPage() {
 	const [progress, setProgress] = useState<number>(1);
@@ -51,19 +52,27 @@ export default function RegisterNewPatientPage() {
 			const formattedData = formatPatientData(data);
 			console.log(formattedData);
 
-			const response = await createPatient(formattedData);
+			toast.promise(createPatient(formattedData), {
+				loading: "Carregando...",
+				success: (response) => {
+					return `Paciente cadastrado com sucesso!`;
+				},
+				error: "Houve um erro ao cadastrar paciente."
+			});
 
-			console.log("Paciente cadastrado com sucesso:", response);
-			alert("Paciente cadastrado com sucesso!");
+			// console.log("Paciente cadastrado com sucesso:", response);
+			// toast.success("Paciente cadastrado com sucesso!");
 		} catch (error) {
+			toast.error("Houve um erro ao cadastrar paciente.");
 			console.error("Erro ao cadastrar paciente:", error);
 		}
 	};
 
 	const onInvalidSubmit = (data: any) => {
-		console.log("INVALIDOS!!");
+		toast.error(
+			"Cadastro inválido! Por favor, verifique os campos preenchidos e tente novamente."
+		);
 		console.log("Erros de validação:", methods.formState.errors);
-		console.log("Dados do formulário:", data);
 		console.log("Estado atual do formulário:", methods.watch());
 	};
 
@@ -89,6 +98,7 @@ export default function RegisterNewPatientPage() {
 		// Verifica se há erros após a validação
 		if (!isValid) {
 			console.log("Erros de validação:", methods.formState.errors);
+			toast.warning("Preencha os dados obrigatórios corretamente!");
 			return;
 		}
 
