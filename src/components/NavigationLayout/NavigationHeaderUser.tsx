@@ -56,7 +56,7 @@ export default function NavigationHeaderUser({
 							&nbsp; Conta
 						</DropdownMenuItem>
 					</Link>
-					<Link href="/home/schedule_definer">
+					<Link href="/home/schedule-definer">
 						<DropdownMenuItem className="cursor-pointer">
 							<MailIcon width={16} height={16} />
 							&nbsp;
