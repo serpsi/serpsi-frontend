@@ -192,6 +192,7 @@ export default function Profile() {
           toast.success("Imagem atualizada com sucesso");
         }
       } catch (error) {
+        setLoading(false);
         toast.error("Erro ao atualizar a imagem.");
         return;
       }

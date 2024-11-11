@@ -1,15 +1,15 @@
+import { getCookies } from "@/services/profileService";
+
 export async function updateProfilePicture(id: string, file: FileList) {
   const formData = new FormData();
   formData.append('profilePicture', file[0]);
-
-  const jwt = localStorage.getItem("Authorization"); // Ou pegue de onde estiver armazenado
-
+	const jwt = await getCookies();
   const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/persons/picture/${id}`, {
     method: "PUT",
     headers: {
-      Authorization: `Bearer ${jwt}`, 
+      Authorization: jwt, 
     },
-    body: formData, // Envia o FormData com a imagem
+    body: formData,
   });
 
   if (!response.ok) {

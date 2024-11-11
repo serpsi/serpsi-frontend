@@ -58,6 +58,10 @@ export async function setProfile(data: any): Promise<any | undefined> {
 	return undefined;
 }
 
+export async function getCookies() {
+  const jwt = cookies().get("Authorization")?.value!;
+  return jwt;
+}
 export async function changePassword(data: any) {
 	const jwt = cookies().get("Authorization")?.value!;
 	if (jwt) {
