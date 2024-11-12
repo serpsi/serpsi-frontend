@@ -167,8 +167,8 @@ export default function AddressInfoSection({
 					<InputText
 						id="numero"
 						label="Número:"
-						placeholder="Digite o Número"
-						type="number"
+						placeholder="Digite o Número da Residência"
+						type="text"
 						name="address.homeNumber"
 						register={register}
 						error={errors.address?.homeNumber?.message}

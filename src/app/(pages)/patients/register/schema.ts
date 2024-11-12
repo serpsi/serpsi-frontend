@@ -180,7 +180,7 @@ export function formatPatientData(formData: CreatePatientForm): FormData {
 				street: formData.address.street,
 				district: formData.address.district,
 				city: formData.address.city,
-				homeNumber: parseInt(formData.address.homeNumber, 10),
+				homeNumber: formData.address.homeNumber,
 				complement: formData.address.complement || ""
 			}
 		},
@@ -206,7 +206,7 @@ export function formatPatientData(formData: CreatePatientForm): FormData {
 				street: formData.school.street,
 				district: formData.school.district,
 				city: formData.school.city,
-				homeNumber: parseInt(formData.school.schoolNumber, 10),
+				homeNumber: formData.school.schoolNumber,
 				complement: formData.school.complement || ""
 			},
 			phone: {

@@ -190,7 +190,7 @@ export default function SchoolInfoSection({
 						id="numero-escola"
 						label="Número:"
 						placeholder="Número da Escola"
-						type="number"
+						type="text"
 						name="school.schoolNumber"
 						register={register}
 						error={errors.school?.schoolNumber?.message}
