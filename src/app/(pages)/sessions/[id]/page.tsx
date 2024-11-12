@@ -4,7 +4,20 @@ import Link from "next/link";
 import psiImage from '/public/img/avatar.svg';
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { ListComponent } from "../../patients/[id]/listComponent";
 
+const data = [
+  {
+    id: '0',
+    docLink: 'teste.com',
+    title: 'Sessão Roberto.pdf'
+  },
+  {
+    id: '0',
+    docLink: 'teste2.com',
+    title: 'Sessão Roberto2.pdf'
+  },
+]
 export default async function SpecificSessions() {
   return (
     <div className="container mx-auto p-4">
@@ -79,14 +92,25 @@ export default async function SpecificSessions() {
         {/* Arquivos da sessão */}
         <Square className="md:col-span-1">
           <SquareHeader titulo="Arquivos desta sessão:" />
-          <ul className="space-y-2">
-            <li className="flex items-center justify-between">
-              Sessão_Roberto.pdf <button className="text-primary-600">⬇️</button>
-            </li>
-            <li className="flex items-center justify-between">
-              whatsapp.img-2202-07-0 <button className="text-primary-600">⬇️</button>
-            </li>
-          </ul>
+          <ul>
+						{data.length > 0 ? (
+							data.map((followUp, index) => (
+								<ListComponent
+									link = {followUp.docLink}
+									content={followUp.title}
+									id={followUp.id}
+									key={followUp.id}
+									variant={
+										index === 0 ? "IsFirst" : "NotFirst"
+									}
+								/>
+							))
+						) : (
+							<p className="text-center">
+								Nenhum Acompanhamento anterior
+							</p>
+						)}
+					</ul>
           <button className="mt-4 bg-primary-600 text-white py-2 px-4 rounded w-full">
             Adicionar Arquivos
           </button>
