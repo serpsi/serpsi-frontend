@@ -28,7 +28,7 @@ export default async function SpecificSessions() {
         <Square variant="WithImage" className="md:col-span-1">
           <div className="flex flex-col items-center">
 
-            <SquareHeader titulo="Roberto Santos" />
+            {/* <SquareHeader titulo="Roberto Santos" /> */}
             <Image
               className="mb-4 h-24 w-24 rounded-full"
               src={psiImage}
@@ -36,8 +36,8 @@ export default async function SpecificSessions() {
               width={100}
               height={100}
             />
+            <span className="text-gray-900 mb-2 text-lg">Roberto Santos</span>
             <div className="flex flex-col gap-2 md:flex-row md:space-x-14 md:justify-center">
-
               <button className="flex-1 bg-primary-600 text-white py-2 
                 hover: px-4 rounded hover:bg-primary-600/70">
                 Confirmar<br />Sessão
@@ -52,9 +52,9 @@ export default async function SpecificSessions() {
         </Square>
 
         {/* Informações do paciente */}
-        <Square className="md:col-span-2">
+        <Square >
           <SquareHeader titulo="Informações do paciente:" />
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 overflow-x-auto">
             <p>Nascimento: 31/12/2000</p>
             <p>Responsável: Roberta Mãe</p>
             <p>CPF: 000.000.000-00</p>
@@ -65,21 +65,36 @@ export default async function SpecificSessions() {
         </Square>
 
         {/* Forma de pagamento e valor */}
-        <Square className="md:col-span-1">
-          <SquareHeader titulo="Forma de pagamento:" />
-          <select className="border rounded p-2 w-full 
+        <Square className="md:col-span-1 p-4">
+          <div className="flex flex-col space-y-2">
+            <div className="flex flex-col">
+              <label
+                className="text-gray-900 mb-2"
+                htmlFor="forma-pagamento">
+                Forma de pagamento:
+              </label>
+              <select className="border rounded p-2 w-full 
             border-r-8 border-transparent  outline outline-primary-400 ">
-            <option>Pendente</option>
-            <option>Pago</option>
-          </select>
-          <input
-            type="text"
-            value="R$ 100,00"
-            className="border border-gray-300 rounded p-2 w-full mt-4"
-            disabled
-          />
+                <option>Pendente</option>
+                <option>Pago</option>
+              </select>
+            </div>
+            <div className="flex flex-col">
+              <label
+                className="text-gray-900 mb-2"
+                htmlFor="valor-sessao">
+                Valor da sessão:
+              </label>
+              <input
+                id="valor-sessao"
+                type="text"
+                value="R$ 100,00"
+                className="border border-gray-300 rounded p-2 w-full bg-gray-100 text-gray-500"
+                disabled
+              />
+            </div>
+          </div>
         </Square>
-
 
 
         {/* Relato da sessão */}
@@ -91,7 +106,7 @@ export default async function SpecificSessions() {
             placeholder="Text"
           ></textarea>
           <div className="flex justify-end">
-            <Button className="bg-primary-600 text-white py-2 px-4 rounded">
+            <Button className="bg-primary-600 text-white py-2 px-8 rounded hover:bg-primary-600/70">
               Salvar
             </Button>
           </div>
@@ -120,14 +135,14 @@ export default async function SpecificSessions() {
           </ul>
 
           <div className="flex justify-end mt-2">
-            <label htmlFor="foto-paciente" className="
+            <label htmlFor="arquivos" className="
             rounded-md cursor-pointer bg-transparent text-primary-600 
             p-2 border border-primary-600 hover:bg-primary-100/70 hover:text-primary-600">
               Adicionar Arquivos
             </label>
             <input
               type="file"
-              id="foto-paciente"
+              id="arquivos"
               accept="application/pdf"
               className="hidden"
               multiple={true}
