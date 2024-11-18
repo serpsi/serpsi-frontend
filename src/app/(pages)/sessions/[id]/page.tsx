@@ -1,3 +1,4 @@
+"use client"
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { Square, SquareHeader } from "../../patients/[id]/Square";
 import Link from "next/link";
@@ -7,19 +8,41 @@ import Image from "next/image";
 import { ListComponent } from "../../patients/[id]/listComponent";
 import { InputText } from "@/components/form/InputText";
 import { PencilAltIcon } from "@heroicons/react/outline"
-const data = [
+import { useState } from "react";
+
+type FileData = {
+  id: string;
+  docLink: string;
+  title: string;
+};
+
+const initialData: FileData[] = [
   {
-    id: '0',
-    docLink: 'teste.com',
-    title: 'Sessão Roberto.pdf'
+    id: "1",
+    docLink: "https://teste.com",
+    title: "Sessão Roberto.pdf",
   },
   {
-    id: '0',
-    docLink: 'teste2.com',
-    title: 'Sessão Roberto2.pdf'
+    id: "2",
+    docLink: "https://teste2.com",
+    title: "Sessão Roberto2.pdf",
   },
-]
-export default async function SpecificSessions() {
+];
+export default function SpecificSessions() {
+  const [data, setData] = useState<FileData[]>(initialData);
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+
+    const files = Array.from(event.target.files);
+    const newFiles: FileData[] = files.map((file, index) => ({
+      id: `new-${Date.now()}-${index}`, // Gera um ID único baseado no timestamp
+      docLink: URL.createObjectURL(file), // Cria um link temporário para download
+      title: file.name, // Usa o nome do arquivo como título
+    }));
+
+    setData((prevData) => [...prevData, ...newFiles]); // Atualiza a lista de arquivos
+  };
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-x-4 gap-4">
@@ -121,7 +144,7 @@ export default async function SpecificSessions() {
         {/* Arquivos da sessão */}
         <Square className="md:col-span-1">
           <SquareHeader titulo="Arquivos desta sessão:" />
-          <ul>
+          <ul className="max-h-40 md:max-h-20 overflow-auto">
             {data.length > 0 ? (
               data.map((followUp, index) => (
                 <ListComponent
@@ -153,6 +176,7 @@ export default async function SpecificSessions() {
               accept="application/pdf"
               className="hidden"
               multiple={true}
+              onChange={handleFileUpload} 
             />
           </div>
         </Square>
