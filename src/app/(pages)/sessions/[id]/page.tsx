@@ -36,13 +36,17 @@ export default async function SpecificSessions() {
               width={100}
               height={100}
             />
-            <div className="flex space-x-2">
-              <Button className="bg-primary-600 text-white py-2 px-4 rounded">
-                Confirmar Sessão
-              </Button>
-              <Button className="bg-primary-600 text-white py-2 px-4 rounded">
-                Cancelar Sessão
-              </Button>
+            <div className="flex flex-col gap-2 md:flex-row md:space-x-14 md:justify-center">
+
+              <button className="flex-1 bg-primary-600 text-white py-2 
+                hover: px-4 rounded hover:bg-primary-600/70">
+                Confirmar<br />Sessão
+              </button>
+
+              <button className=" flex-1 rounded bg-transparent  text-primary-600 
+            p-2 border border-primary-600 hover:bg-primary-100/70 hover:text-primary-600">
+                Cancelar<br />Sessão
+              </button>
             </div>
           </div>
         </Square>
