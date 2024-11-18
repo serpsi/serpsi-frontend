@@ -5,6 +5,7 @@ import psiImage from '/public/img/avatar.svg';
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { ListComponent } from "../../patients/[id]/listComponent";
+import { InputText } from "@/components/form/InputText";
 
 const data = [
   {
@@ -29,12 +30,12 @@ export default async function SpecificSessions() {
 
             <SquareHeader titulo="Roberto Santos" />
             <Image
-                    className="mb-4 h-24 w-24 rounded-full"
-                    src={ psiImage}
-                    alt="Profile"
-                    width={100}
-                    height={100}
-                  />
+              className="mb-4 h-24 w-24 rounded-full"
+              src={psiImage}
+              alt="Profile"
+              width={100}
+              height={100}
+            />
             <div className="flex space-x-2">
               <Button className="bg-primary-600 text-white py-2 px-4 rounded">
                 Confirmar Sessão
@@ -62,7 +63,8 @@ export default async function SpecificSessions() {
         {/* Forma de pagamento e valor */}
         <Square className="md:col-span-1">
           <SquareHeader titulo="Forma de pagamento:" />
-          <select className="border border-gray-300 rounded p-2 w-full">
+          <select className="border rounded p-2 w-full 
+            border-r-8 border-transparent  outline outline-primary-400 ">
             <option>Pendente</option>
             <option>Pago</option>
           </select>
@@ -80,7 +82,8 @@ export default async function SpecificSessions() {
         <Square variant="ThreeRows" className="md:col-span-3">
           <SquareHeader titulo="Relato da sessão:" />
           <textarea
-            className="border border-gray-300 rounded p-2 w-full h-[30vh] md:h-[40vh]"
+            className="border border-primary-200 rounded p-2 w-full h-[30vh] md:h-[40vh] 
+              text-primary-300 placeholder-primary-300"
             placeholder="Text"
           ></textarea>
           <div className="flex justify-end">
@@ -93,27 +96,39 @@ export default async function SpecificSessions() {
         <Square className="md:col-span-1">
           <SquareHeader titulo="Arquivos desta sessão:" />
           <ul>
-						{data.length > 0 ? (
-							data.map((followUp, index) => (
-								<ListComponent
-									link = {followUp.docLink}
-									content={followUp.title}
-									id={followUp.id}
-									key={followUp.id}
-									variant={
-										index === 0 ? "IsFirst" : "NotFirst"
-									}
-								/>
-							))
-						) : (
-							<p className="text-center">
-								Nenhum Acompanhamento anterior
-							</p>
-						)}
-					</ul>
-          <button className="mt-4 bg-primary-600 text-white py-2 px-4 rounded w-full">
-            Adicionar Arquivos
-          </button>
+            {data.length > 0 ? (
+              data.map((followUp, index) => (
+                <ListComponent
+                  link={followUp.docLink}
+                  content={followUp.title}
+                  id={followUp.id}
+                  key={followUp.id}
+                  variant={
+                    index === 0 ? "IsFirst" : "NotFirst"
+                  }
+                />
+              ))
+            ) : (
+              <p className="text-center">
+                Nenhum Acompanhamento anterior
+              </p>
+            )}
+          </ul>
+
+          <div className="flex justify-end mt-2">
+            <label htmlFor="foto-paciente" className="
+            rounded-md cursor-pointer bg-transparent text-primary-600 
+            p-2 border border-primary-600 hover:bg-primary-100/70 hover:text-primary-600">
+              Adicionar Arquivos
+            </label>
+            <input
+              type="file"
+              id="foto-paciente"
+              accept="application/pdf"
+              className="hidden"
+              multiple={true}
+            />
+          </div>
         </Square>
 
         {/* Botão para ver histórico de sessões */}
