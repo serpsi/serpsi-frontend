@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { ListComponent } from "../../patients/[id]/listComponent";
 import { InputText } from "@/components/form/InputText";
-
+import { PencilAltIcon } from "@heroicons/react/outline"
 const data = [
   {
     id: '0',
@@ -36,7 +36,14 @@ export default async function SpecificSessions() {
               width={100}
               height={100}
             />
-            <span className="text-gray-900 mb-2 text-lg">Roberto Santos</span>
+            <div className="flex flex-row items-center justify-center gap-2 mb-2">
+              <span className="text-gray-900 text-lg">Roberto Santos</span>
+              <PencilAltIcon
+                width={24}
+                height={24}
+                className="text-primary-600 cursor-pointer"
+              />
+            </div>
             <div className="flex flex-col gap-2 md:flex-row md:space-x-14 md:justify-center">
               <button className="flex-1 bg-primary-600 text-white py-2 
                 hover: px-4 rounded hover:bg-primary-600/70">
@@ -152,7 +159,7 @@ export default async function SpecificSessions() {
 
         {/* Botão para ver histórico de sessões */}
         <Square className="md:col-span-1 flex items-center justify-center">
-          <button className="bg-primary-600 text-white py-2 px-4 rounded w-full">
+          <button className="bg-primary-600 text-white py-2 px-4 rounded w-full hover:bg-primary-600/70">
             Ver Histórico de Sessões
           </button>
         </Square>
