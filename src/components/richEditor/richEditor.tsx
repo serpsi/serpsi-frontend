@@ -18,8 +18,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
       value={value}
       placeholder='Text'
       onChange={onChange}
-      // className=" border !border-primary-200 rounded p-2 w-full md:h-[40vh] 
-      //         text-gray-900 placeholder-primary-300"
     />
   );
 };

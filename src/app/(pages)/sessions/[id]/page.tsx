@@ -10,6 +10,8 @@ import { InputText } from "@/components/form/InputText";
 import { PencilAltIcon } from "@heroicons/react/outline"
 import { useState } from "react";
 import RichTextEditor from "@/components/richEditor/richEditor";
+import TurndownService from 'turndown';
+
 
 type FileData = {
   id: string;
@@ -32,9 +34,20 @@ const initialData: FileData[] = [
 export default function SpecificSessions() {
   const [data, setData] = useState<FileData[]>(initialData);
   const [content, setContent] = useState<string>('');
+  const turndownService = new TurndownService();
 
   const handleSubmit = () => {
-    console.log('Conteúdo enviado:', content); // O conteúdo do editor já está no estado
+    console.log('Conteúdo enviado:', content);
+    const markdownContent = turndownService.turndown(content);
+
+    console.log('Conteúdo em Markdown:', markdownContent);
+
+    const blob = new Blob([markdownContent], { type: 'text/markdown' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'document.md';
+    console.log(link);
+    link.click();
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,8 +69,6 @@ export default function SpecificSessions() {
         {/* Sessão do paciente com a foto e botões */}
         <Square variant="WithImage" className="md:col-span-1">
           <div className="flex flex-col items-center">
-
-            {/* <SquareHeader titulo="Roberto Santos" /> */}
             <Image
               className="mb-4 h-24 w-24 rounded-full"
               src={psiImage}
@@ -132,15 +143,9 @@ export default function SpecificSessions() {
           </div>
         </Square>
 
-
         {/* Relato da sessão */}
         <Square variant="ThreeRows" className="md:col-span-3">
           <SquareHeader titulo="Relato da sessão:" />
-          {/* <textarea
-            className="border border-primary-200 rounded p-2 w-full h-[30vh] md:h-[40vh] 
-              text-primary-300 placeholder-primary-300"
-            placeholder="Text"
-          ></textarea> */}
           <RichTextEditor value={content} onChange={setContent} />
           <div className="mt-3 flex justify-end">
             <Button
@@ -150,6 +155,7 @@ export default function SpecificSessions() {
             </Button>
           </div>
         </Square>
+
         {/* Arquivos da sessão */}
         <Square className="md:col-span-1">
           <SquareHeader titulo="Arquivos desta sessão:" />
