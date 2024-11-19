@@ -9,6 +9,17 @@ import { PencilAltIcon } from "@heroicons/react/outline"
 import { useState } from "react";
 import RichTextEditor from "@/components/richEditor/richEditor";
 import TurndownService from 'turndown';
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { ConfirmSessionDialog } from "./confirmSessionDialog";
 
 
 type FileData = {
@@ -32,6 +43,7 @@ const initialData: FileData[] = [
 export default function SpecificSessions() {
   const [data, setData] = useState<FileData[]>(initialData);
   const [content, setContent] = useState<string>('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const turndownService = new TurndownService();
 
   const handleSubmit = () => {
@@ -48,13 +60,19 @@ export default function SpecificSessions() {
     link.click();
   };
 
+  const handleConfirmSession = () => {
+    // Lógica para confirmar a sessão
+    // Por exemplo, enviar dados ao servidor
+    console.log("Sessão confirmada!");
+  };
+  
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
 
     const files = Array.from(event.target.files);
     const newFiles: FileData[] = files.map((file, index) => ({
-      id: `new-${Date.now()}-${index}`, 
-      docLink: URL.createObjectURL(file), 
+      id: `new-${Date.now()}-${index}`,
+      docLink: URL.createObjectURL(file),
       title: file.name,
     }));
 
@@ -81,18 +99,23 @@ export default function SpecificSessions() {
                   width={24}
                   height={24}
                   className="text-primary-600 cursor-pointer"
-                
+
                 />
               </Link>
             </div>
             <div className="flex flex-col gap-2 md:flex-row md:space-x-14 md:justify-center">
-              <button className="flex-1 bg-primary-600 text-white py-2 
-                hover: px-4 rounded hover:bg-primary-600/70">
-                Confirmar<br />Sessão
-              </button>
+              <ConfirmSessionDialog
+                onConfirm={handleConfirmSession}
+                triggerButton={
+                  <button
+                    className="flex-1 bg-primary-600 text-white py-2 px-4 rounded hover:bg-primary-600/70"
+                  >
+                    Confirmar<br />Sessão
+                  </button>
+                }
+              />
 
-              <button className=" flex-1 md:w-48 rounded bg-transparent  text-primary-600 
-            p-2 border border-primary-600 hover:bg-primary-100/70 hover:text-primary-600">
+              <button className="flex-1 md:w-48 rounded bg-transparent text-primary-600 p-2 border border-primary-600 hover:bg-primary-100/70 hover:text-primary-600">
                 Cancelar<br />Sessão
               </button>
             </div>
