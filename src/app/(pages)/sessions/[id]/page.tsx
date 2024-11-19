@@ -1,12 +1,10 @@
 "use client"
-import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { Square, SquareHeader } from "../../patients/[id]/Square";
 import Link from "next/link";
 import psiImage from '/public/img/avatar.svg';
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { ListComponent } from "../../patients/[id]/listComponent";
-import { InputText } from "@/components/form/InputText";
 import { PencilAltIcon } from "@heroicons/react/outline"
 import { useState } from "react";
 import RichTextEditor from "@/components/richEditor/richEditor";
@@ -55,9 +53,9 @@ export default function SpecificSessions() {
 
     const files = Array.from(event.target.files);
     const newFiles: FileData[] = files.map((file, index) => ({
-      id: `new-${Date.now()}-${index}`, // Gera um ID único baseado no timestamp
-      docLink: URL.createObjectURL(file), // Cria um link temporário para download
-      title: file.name, // Usa o nome do arquivo como título
+      id: `new-${Date.now()}-${index}`, 
+      docLink: URL.createObjectURL(file), 
+      title: file.name,
     }));
 
     setData((prevData) => [...prevData, ...newFiles]); // Atualiza a lista de arquivos
@@ -78,11 +76,14 @@ export default function SpecificSessions() {
             />
             <div className="flex flex-row items-center justify-center gap-2 mb-2">
               <span className="text-gray-900 text-lg">Roberto Santos</span>
-              <PencilAltIcon
-                width={24}
-                height={24}
-                className="text-primary-600 cursor-pointer"
-              />
+              <Link href={"/patients/"}>
+                <PencilAltIcon
+                  width={24}
+                  height={24}
+                  className="text-primary-600 cursor-pointer"
+                
+                />
+              </Link>
             </div>
             <div className="flex flex-col gap-2 md:flex-row md:space-x-14 md:justify-center">
               <button className="flex-1 bg-primary-600 text-white py-2 
@@ -90,7 +91,7 @@ export default function SpecificSessions() {
                 Confirmar<br />Sessão
               </button>
 
-              <button className=" flex-1 rounded bg-transparent  text-primary-600 
+              <button className=" flex-1 md:w-48 rounded bg-transparent  text-primary-600 
             p-2 border border-primary-600 hover:bg-primary-100/70 hover:text-primary-600">
                 Cancelar<br />Sessão
               </button>
