@@ -14,7 +14,10 @@ const fileListType =
 export const createPatientFormSchema = z
 	.object({
 		// PatientPictureSection
-		profilePicture: fileListType.optional(),
+		profilePicture: fileListType.refine((val) => val && val.length > 0, {
+			message: "A foto de perfil é obrigatória.",
+			path: ["profilePicture"]
+		}),
 
 		// PatientInfoSection
 		person: z.object({
@@ -85,32 +88,35 @@ export const createPatientFormSchema = z
 		),
 
 		// SchoolInfoSection
-		school: z.object({
-			name: z.string().min(1, "Nome é um campo obrigatório."),
-			cnpj: z
-				.string()
-				.regex(
-					cnpjRegex,
-					"O CNPJ deve seguir o padrão 00.000.000/0000-00."
-				),
-			phone: z
-				.string()
-				.regex(
-					phoneRegex,
-					"O telefone deve seguir o padrão (00) 00000-0000."
-				),
-			state: z.string().min(2, "Estado é um campo obrigatório."),
-			zipCode: z
-				.string()
-				.regex(cepRegex, "O CEP deve seguir o padrão 00000-000."),
-			street: z.string().min(1, "Rua é um campo obrigatório."),
-			district: z.string().min(1, "Bairro é um campo obrigatório."),
-			city: z.string().min(1, "Cidade é um campo obrigatório."),
-			schoolNumber: z
-				.string()
-				.min(1, "Número da escola é um campo obrigatório."),
-			complement: z.string().optional()
-		}),
+		checkSchool: z.boolean(),
+		school: z
+			.object({
+				name: z.string().min(1, "Nome é um campo obrigatório."),
+				cnpj: z
+					.string()
+					.regex(
+						cnpjRegex,
+						"O CNPJ deve seguir o padrão 00.000.000/0000-00."
+					),
+				phone: z
+					.string()
+					.regex(
+						phoneRegex,
+						"O telefone deve seguir o padrão (00) 00000-0000."
+					),
+				state: z.string().min(2, "Estado é um campo obrigatório."),
+				zipCode: z
+					.string()
+					.regex(cepRegex, "O CEP deve seguir o padrão 00000-000."),
+				street: z.string().min(1, "Rua é um campo obrigatório."),
+				district: z.string().min(1, "Bairro é um campo obrigatório."),
+				city: z.string().min(1, "Cidade é um campo obrigatório."),
+				schoolNumber: z
+					.string()
+					.min(1, "Número da escola é um campo obrigatório."),
+				complement: z.string().optional()
+			})
+			.optional(),
 
 		// ExtraInfoSection
 		comorbidities: z.string().optional(),
@@ -155,6 +161,18 @@ export const createPatientFormSchema = z
 			message: "Preencha os campos de medicamento.",
 			path: ["medicines"]
 		}
+	)
+	.refine(
+		(data) =>
+			!data.checkSchool ||
+			(data.school &&
+				Object.values(data.school).some(
+					(field) => field !== undefined
+				)),
+		{
+			message: "Preencha os campos da escola.",
+			path: ["school"]
+		}
 	);
 
 export type CreatePatientForm = z.infer<typeof createPatientFormSchema>;
@@ -197,24 +215,26 @@ export function formatPatientData(formData: CreatePatientForm): FormData {
 				cpf: parent.cpf
 			}
 		})),
-		school: {
-			name: formData.school.name,
-			CNPJ: formData.school.cnpj,
-			address: {
-				state: formData.school.state,
-				zipCode: formData.school.zipCode.replace("-", ""),
-				street: formData.school.street,
-				district: formData.school.district,
-				city: formData.school.city,
-				homeNumber: formData.school.schoolNumber,
-				complement: formData.school.complement || ""
-			},
-			phone: {
-				ddi: "+55",
-				ddd: formData.school.phone.slice(1, 3),
-				number: formData.school.phone.slice(4).replace("-", "")
-			}
-		},
+		school: formData.checkSchool
+			? {
+					name: formData.school?.name,
+					CNPJ: formData.school?.cnpj,
+					address: {
+						state: formData.school?.state,
+						zipCode: formData.school?.zipCode.replace("-", ""),
+						street: formData.school?.street,
+						district: formData.school?.district,
+						city: formData.school?.city,
+						homeNumber: formData.school?.schoolNumber,
+						complement: formData.school?.complement || ""
+					},
+					phone: {
+						ddi: "+55",
+						ddd: formData.school?.phone.slice(1, 3),
+						number: formData.school?.phone.slice(4).replace("-", "")
+					}
+				}
+			: null,
 		comorbidities: formData.comorbidities
 			? formData.comorbidities.split(",").map((name) => {
 					return {
@@ -245,7 +265,7 @@ export function formatPatientData(formData: CreatePatientForm): FormData {
 	formDataObj.append("profilePicture", profPic[0]);
 
 	Array.from(prevDocs).forEach((file) => {
-		formDataObj.append("document", file);
+		formDataObj.append("documents", file);
 	});
 
 	return formDataObj;

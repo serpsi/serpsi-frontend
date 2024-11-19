@@ -1,5 +1,6 @@
 "use server";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function getPatientsData() {
 	const jwt = cookies().get("Authorization")?.value!;

@@ -18,23 +18,79 @@ import {
 	formatPatientData
 } from "./schema";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function RegisterNewPatientPage() {
 	const [progress, setProgress] = useState<number>(1);
+	const router = useRouter();
 
 	const maxProgress = 5;
+
+	// const methods = useForm<CreatePatientForm>({
+	// 	resolver: zodResolver(createPatientFormSchema),
+	// 	defaultValues: {
+	// 		parents: [
+	// 			{
+	// 				name: "",
+	// 				rg: "",
+	// 				phone: "",
+	// 				cpf: ""
+	// 			}
+	// 		]
+	// 	}
+	// });
 
 	const methods = useForm<CreatePatientForm>({
 		resolver: zodResolver(createPatientFormSchema),
 		defaultValues: {
+			// PatientPictureSection
+			profilePicture: undefined, // obrigatorio
+
+			// PatientInfoSection
+			person: {
+				name: "Fulano de Tal",
+				rg: "666666", // obrigatorio
+				// birthdate: new Date(),
+				phone: "(11) 91111-1123", // Edite para o número desejado
+				cpf: "111.111.111-04" // Edite para um CPF válido
+			},
+
+			// AddressInfoSection
+			address: {
+				state: "SP",
+				zipCode: "12345-678",
+				street: "Rua Exemplo",
+				district: "Bairro Exemplo",
+				city: "Cidade Exemplo",
+				homeNumber: "123",
+				complement: "Apto 101"
+			},
+
+			// ParentsInfoSection
 			parents: [
 				{
-					name: "",
-					rg: "",
-					phone: "",
-					cpf: ""
+					name: "Pai Genérico",
+					rg: "22222234", // RG genérico
+					// birthdate: new Date(),
+					phone: "(22) 92222-2234", // Telefone genérico
+					cpf: "222.222.222-34" // CPF genérico
 				}
-			]
+			],
+
+			// SchoolInfoSection
+			checkSchool: false
+			// school: {
+			// 	name: "Escola Exemplo",
+			// 	cnpj: "12.345.678/0001-00",
+			// 	phone: "(33) 97777-7777",
+			// 	state: "SP",
+			// 	zipCode: "12345-679",
+			// 	street: "Rua Escola",
+			// 	district: "Bairro Escola",
+			// 	city: "Cidade Escola",
+			// 	schoolNumber: "456",
+			// 	complement: "Bloco A"
+			// }
 		}
 	});
 
@@ -54,16 +110,20 @@ export default function RegisterNewPatientPage() {
 
 			toast.promise(createPatient(formattedData), {
 				loading: "Carregando...",
-				success: (response) => {
-					return `Paciente cadastrado com sucesso!`;
+				success: () => {
+					router.push("/patients");
+					return "Paciente cadastrado com sucesso! 😍";
 				},
-				error: "Houve um erro ao cadastrar paciente."
+				error: (err) => {
+					console.log(err);
+					return "Houve um erro ao cadastrar o paciente.";
+				}
 			});
 
 			// console.log("Paciente cadastrado com sucesso:", response);
 			// toast.success("Paciente cadastrado com sucesso!");
 		} catch (error) {
-			toast.error("Houve um erro ao cadastrar paciente.");
+			toast.error("Houve um erro ao tentar cadastrar paciente.");
 			console.error("Erro ao cadastrar paciente:", error);
 		}
 	};
@@ -73,6 +133,9 @@ export default function RegisterNewPatientPage() {
 			"Cadastro inválido! Por favor, verifique os campos preenchidos e tente novamente."
 		);
 		console.log("Erros de validação:", methods.formState.errors);
+		if (methods.formState.errors.profilePicture) {
+			toast.error("Por favor, adicione a foto do paciente!");
+		}
 		console.log("Estado atual do formulário:", methods.watch());
 	};
 
@@ -89,7 +152,8 @@ export default function RegisterNewPatientPage() {
 				isValid = await methods.trigger(["parents"]);
 				break;
 			case 4:
-				isValid = await methods.trigger(["school"]);
+				if (methods.watch("checkSchool"))
+					isValid = await methods.trigger(["school"]);
 				break;
 
 			default:
