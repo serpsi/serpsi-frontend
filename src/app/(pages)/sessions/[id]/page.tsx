@@ -61,11 +61,9 @@ export default function SpecificSessions() {
   };
 
   const handleConfirmSession = () => {
-    // Lógica para confirmar a sessão
-    // Por exemplo, enviar dados ao servidor
-    console.log("Sessão confirmada!");
+    console.log('Sessão confirmada');
   };
-  
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
 
