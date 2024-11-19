@@ -9,6 +9,7 @@ import { ListComponent } from "../../patients/[id]/listComponent";
 import { InputText } from "@/components/form/InputText";
 import { PencilAltIcon } from "@heroicons/react/outline"
 import { useState } from "react";
+import RichTextEditor from "@/components/richEditor/richEditor";
 
 type FileData = {
   id: string;
@@ -30,6 +31,11 @@ const initialData: FileData[] = [
 ];
 export default function SpecificSessions() {
   const [data, setData] = useState<FileData[]>(initialData);
+  const [content, setContent] = useState<string>('');
+
+  const handleSubmit = () => {
+    console.log('Conteúdo enviado:', content); // O conteúdo do editor já está no estado
+  };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
@@ -130,13 +136,16 @@ export default function SpecificSessions() {
         {/* Relato da sessão */}
         <Square variant="ThreeRows" className="md:col-span-3">
           <SquareHeader titulo="Relato da sessão:" />
-          <textarea
+          {/* <textarea
             className="border border-primary-200 rounded p-2 w-full h-[30vh] md:h-[40vh] 
               text-primary-300 placeholder-primary-300"
             placeholder="Text"
-          ></textarea>
-          <div className="flex justify-end">
-            <Button className="bg-primary-600 text-white py-2 px-8 rounded hover:bg-primary-600/70">
+          ></textarea> */}
+          <RichTextEditor value={content} onChange={setContent} />
+          <div className="mt-3 flex justify-end">
+            <Button
+              onClick={handleSubmit}
+              className="bg-primary-600 text-white py-2 px-8 rounded hover:bg-primary-600/70">
               Salvar
             </Button>
           </div>
@@ -176,7 +185,7 @@ export default function SpecificSessions() {
               accept="application/pdf"
               className="hidden"
               multiple={true}
-              onChange={handleFileUpload} 
+              onChange={handleFileUpload}
             />
           </div>
         </Square>
