@@ -28,9 +28,9 @@
 
 /* Personalização do editor de texto */
 .ql-editor {
-  min-height: 12rem; /* Altura mínima */
-  font-size: 1rem; /* Tamanho da fonte */
-  line-height: 1.6; /* Altura das linhas */
-  color: #374151; /* Cor do texto */
-  padding: 10px; /* Espaçamento interno */
+  min-height: 12rem; 
+  font-size: 1rem; 
+  line-height: 1.6; 
+  color: #374151;
+  padding: 10px; 
 }

@@ -18,6 +18,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
       value={value}
       placeholder='Text'
       onChange={onChange}
+      className='h-[45vh]'
     />
   );
 };
