@@ -224,6 +224,7 @@ export default function ScheduleDefinePage() {
 						})}
 						onReset={() => {
 							methods.reset();
+							router.push("/patients");
 						}}
 					>
 						<ScheduleDefiner
