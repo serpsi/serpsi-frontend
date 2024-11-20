@@ -49,7 +49,7 @@ export default function ScheduleDefinePage() {
 		resolver: zodResolver(scheduleSchema),
 		defaultValues: {
 			psychologistId: "",
-			meetValue: 120.5,
+			meetValue: 100.50,
 			meetDuration: 50,
 			agendas: [
 				{
@@ -59,6 +59,11 @@ export default function ScheduleDefinePage() {
 						{
 							key: 1,
 							_startTime: "08:00",
+							_endTime: "12:00"
+						},
+						{
+							key: 1,
+							_startTime: "14:00",
 							_endTime: "18:00"
 						}
 					]
@@ -70,6 +75,11 @@ export default function ScheduleDefinePage() {
 						{
 							key: 2,
 							_startTime: "08:00",
+							_endTime: "12:00"
+						},
+						{
+							key: 2,
+							_startTime: "14:00",
 							_endTime: "18:00"
 						}
 					]
@@ -81,6 +91,11 @@ export default function ScheduleDefinePage() {
 						{
 							key: 3,
 							_startTime: "08:00",
+							_endTime: "12:00"
+						},
+						{
+							key: 3,
+							_startTime: "14:00",
 							_endTime: "18:00"
 						}
 					]
@@ -92,6 +107,11 @@ export default function ScheduleDefinePage() {
 						{
 							key: 4,
 							_startTime: "08:00",
+							_endTime: "12:00"
+						},
+						{
+							key: 4,
+							_startTime: "14:00",
 							_endTime: "18:00"
 						}
 					]
@@ -103,6 +123,11 @@ export default function ScheduleDefinePage() {
 						{
 							key: 5,
 							_startTime: "08:00",
+							_endTime: "12:00"
+						},
+						{
+							key: 5,
+							_startTime: "14:00",
 							_endTime: "18:00"
 						}
 					]
@@ -151,7 +176,7 @@ export default function ScheduleDefinePage() {
 	};
 
 	const [checkboxes, setCheckboxes] = useState(settingWatchToCheckboxes());
-
+	const [meetValue, setMeetValue] = useState(Number);
 	useEffect(() => {
 		async function setDefaultAgendas() {
 			const data = await getAgenda();
@@ -169,6 +194,7 @@ export default function ScheduleDefinePage() {
 			
 			methods.reset({ ...data });
 			setCheckboxes(checks);
+			setMeetValue(data!.meetValue);
 		}
 		setDefaultAgendas();
 	}, [methods]);
@@ -203,6 +229,8 @@ export default function ScheduleDefinePage() {
 						<ScheduleDefiner
 							checkboxes={checkboxes}
 							setCheckboxes={setCheckboxes}
+							meetValue={meetValue}
+							setMeetValue={setMeetValue}
 						/>
 						<div className="mt-3 flex justify-around">
 							<Button

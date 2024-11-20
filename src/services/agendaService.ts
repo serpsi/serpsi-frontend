@@ -1,5 +1,6 @@
 "use server";
 import { ScheduleAgendas } from "@/app/(pages)/home/schedule-definer/dayTypes";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 export async function setAgenda(
@@ -24,7 +25,7 @@ export async function setAgenda(
 		});
 		return await response.json();
 	}
-	return undefined;
+	return redirect("/login");
 }
 
 export async function getAgenda(): Promise<ScheduleAgendas | undefined> {
