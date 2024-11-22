@@ -9,16 +9,6 @@ import { PencilAltIcon } from "@heroicons/react/outline"
 import { useState } from "react";
 import RichTextEditor from "@/components/richEditor/richEditor";
 import TurndownService from 'turndown';
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
 import { ConfirmSessionDialog } from "./confirmSessionDialog";
 
 
@@ -123,7 +113,7 @@ export default function SpecificSessions() {
         {/* Informações do paciente */}
         <Square >
           <SquareHeader titulo="Informações do paciente:" />
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 overflow-x-auto">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 overflow-x-auto text-gray-900">
             <p>Nascimento: 31/12/2000</p>
             <p>Responsável: Roberta Mãe</p>
             <p>CPF: 000.000.000-00</p>
@@ -181,7 +171,7 @@ export default function SpecificSessions() {
         {/* Arquivos da sessão */}
         <Square className="md:col-span-1">
           <SquareHeader titulo="Arquivos desta sessão:" />
-          <ul className="max-h-40 md:max-h-20 overflow-auto">
+          <ul className="max-h-40 md:max-h-30 overflow-auto">
             {data.length > 0 ? (
               data.map((followUp, index) => (
                 <ListComponent
