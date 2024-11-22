@@ -171,7 +171,7 @@ export default function SpecificSessions() {
         <Square variant="ThreeRows" className="md:col-span-3">
           <SquareHeader titulo="Relato da sessão:" />
           <RichTextEditor value={content} onChange={setContent} />
-          <div className="mt-9 md:mt-3 flex justify-end">
+          <div className="mt-3 flex justify-end">
             <Button
               onClick={handleSubmit}
               className="bg-primary-600 text-white py-2 px-8 rounded hover:bg-primary-600/70">
