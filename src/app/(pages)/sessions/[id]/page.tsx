@@ -10,6 +10,7 @@ import { useState } from "react";
 import RichTextEditor from "@/components/richEditor/richEditor";
 import TurndownService from 'turndown';
 import { ConfirmSessionDialog } from "./confirmSessionDialog";
+import { CancelSessionDialog } from "./cancelSessionDialog";
 
 
 type FileData = {
@@ -52,6 +53,10 @@ export default function SpecificSessions() {
 
   const handleConfirmSession = () => {
     console.log('Sessão confirmada');
+  };
+
+  const handleCancelSession = () => {
+    console.log('Sessão Cancelada');
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,10 +107,17 @@ export default function SpecificSessions() {
                   </button>
                 }
               />
+              <CancelSessionDialog
+                onCancel={handleCancelSession}
+                triggerButton={
+                  <button className="flex-1 md:w-48 rounded bg-transparent 
+                    text-primary-600 p-2 border border-primary-600 
+                    hover:bg-primary-100/70 hover:text-primary-600">
+                    Cancelar<br />Sessão
+                  </button>
+                }
+              />
 
-              <button className="flex-1 md:w-48 rounded bg-transparent text-primary-600 p-2 border border-primary-600 hover:bg-primary-100/70 hover:text-primary-600">
-                Cancelar<br />Sessão
-              </button>
             </div>
           </div>
         </Square>
@@ -159,7 +171,7 @@ export default function SpecificSessions() {
         <Square variant="ThreeRows" className="md:col-span-3">
           <SquareHeader titulo="Relato da sessão:" />
           <RichTextEditor value={content} onChange={setContent} />
-          <div className="mt-3 flex justify-end">
+          <div className="mt-9 md:mt-3 flex justify-end">
             <Button
               onClick={handleSubmit}
               className="bg-primary-600 text-white py-2 px-8 rounded hover:bg-primary-600/70">
