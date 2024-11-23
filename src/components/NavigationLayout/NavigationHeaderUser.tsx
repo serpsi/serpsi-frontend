@@ -15,6 +15,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import Link from "next/link";
+import { logout } from "@/services/authService";
 
 interface NavigationHeaderUserProps {
 	name: string;
@@ -41,8 +42,10 @@ export default function NavigationHeaderUser({
 						/>
 						&nbsp;
 						<Avatar>
-							<AvatarImage src={img} width={33}/>
-							<AvatarFallback><UserCircleIcon/></AvatarFallback>
+							<AvatarImage src={img} width={33} />
+							<AvatarFallback>
+								<UserCircleIcon />
+							</AvatarFallback>
 						</Avatar>
 					</div>
 				</DropdownMenuTrigger>
@@ -53,18 +56,23 @@ export default function NavigationHeaderUser({
 							&nbsp; Conta
 						</DropdownMenuItem>
 					</Link>
-					<Link href="/home/schedule_definer">
+					<Link href="/home/schedule-definer">
 						<DropdownMenuItem className="cursor-pointer">
 							<MailIcon width={16} height={16} />
 							&nbsp;
 							<span>Definir Horários</span>
 						</DropdownMenuItem>
 					</Link>
-					<DropdownMenuItem className="cursor-pointer">
-						<LogoutIcon width={16} height={16} />
-						&nbsp;
-						<span>Sair</span>
-					</DropdownMenuItem>
+					<Link href="/login">
+						<DropdownMenuItem
+							className="cursor-pointer"
+							onClick={() => logout()}
+						>
+							<LogoutIcon width={16} height={16} />
+							&nbsp;
+							<span>Sair</span>
+						</DropdownMenuItem>
+					</Link>
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</div>

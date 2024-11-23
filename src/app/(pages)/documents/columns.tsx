@@ -3,10 +3,17 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DocumentTextIcon } from "@heroicons/react/outline";
 import Viewer from "@/components/viewer/viewer";
-import { Document } from "@/models/Entities/Document";
+
+export type DocumentColumns = {
+	id: string;
+	title: string;
+	docLink: string;
+	name: string;
+	createDate: string;
+}
 
 
-export const columns: ColumnDef<Document>[] = [
+export const columns: ColumnDef<DocumentColumns>[] = [
 	{
 		id: "select",
 		header: ({ table }) => (
@@ -36,12 +43,12 @@ export const columns: ColumnDef<Document>[] = [
 		enableHiding: false
 	},
 	{
-		accessorKey: "editar",
+		accessorKey: "viewer",
 		header: "",
 		size: 70,
 		cell: ({ row }) => (
 				<Viewer
-					link={row.original.link}
+					link={row.original.docLink}
 					title={row.original.name + " - " + row.original.title}
 					className=""
 				>
@@ -67,85 +74,5 @@ export const columns: ColumnDef<Document>[] = [
 		accessorKey: "createDate",
 		header: "Data da sessão",
 		size: 250
-	}
-];
-
-export const data = [
-	{
-		id: "1",
-		createDate: "04/11/2024",
-		name: "Roberto Santos",
-		title: "Acompanhamento da psiquiatra",
-		link: "https://res.cloudinary.com/carabolasjoao/image/upload/v1729105086/samples/ecommerce/PDS_-_prova_1_maq3my.pdf"
-	},
-	{
-		id: "2",
-		createDate: "04/11/2024",
-		name: "Roberto Santos",
-		title: "Acompanhamento da psiquiatra 2",
-		link: "https://res.cloudinary.com/carabolasjoao/image/upload/v1729522482/samples/ecommerce/Insulinoterapia_rugyzb.pdf"
-	},
-	{
-		id: "3",
-		createDate: "04/11/2024",
-		name: "Roberto Santos",
-		title: "Acompanhamento da psiquiatra 3",
-		link: "https://res.cloudinary.com/carabolasjoao/image/upload/v1729105086/samples/ecommerce/PDS_-_prova_1_maq3my.pdf"
-	},
-	{
-		id: "4",
-		createDate: "04/11/2024",
-		name: "Roberto Santos",
-		title: "Acompanhamento da psiquiatra 4",
-		link: "https://res.cloudinary.com/carabolasjoao/image/upload/v1729522482/samples/ecommerce/Insulinoterapia_rugyzb.pdf"
-	},
-	{
-		id: "5",
-		createDate: "04/11/2024",
-		name: "camelô da sila",
-		title: "Acompanhamento da psiquiatra",
-		link: "https://res.cloudinary.com/carabolasjoao/image/upload/v1729105086/samples/ecommerce/PDS_-_prova_1_maq3my.pdf"
-	},
-	{
-		id: "6",
-		createDate: "04/11/2024",
-		name: "camelô da sila",
-		title: "Acompanhamento da psiquiatra 2",
-		link: "https://res.cloudinary.com/carabolasjoao/image/upload/v1729522482/samples/ecommerce/Insulinoterapia_rugyzb.pdf"
-	},
-	{
-		id: "7",
-		createDate: "04/11/2024",
-		name: "camelô da sila",
-		title: "Acompanhamento da psiquiatra 3",
-		link: "https://res.cloudinary.com/carabolasjoao/image/upload/v1729105086/samples/ecommerce/PDS_-_prova_1_maq3my.pdf"
-	},
-	{
-		id: "8",
-		createDate: "04/11/2024",
-		name: "camelô da sila",
-		title: "Acompanhamento da psiquiatra 4",
-		link: "https://res.cloudinary.com/carabolasjoao/image/upload/v1729522482/samples/ecommerce/Insulinoterapia_rugyzb.pdf"
-	},
-	{
-		id: "9",
-		createDate: "04/11/2024",
-		name: "camelô da sila",
-		title: "Acompanhamento da psiquiatra 5",
-		link: "https://res.cloudinary.com/carabolasjoao/image/upload/v1729105086/samples/ecommerce/PDS_-_prova_1_maq3my.pdf"
-	},
-	{
-		id: "10",
-		createDate: "04/11/2024",
-		name: "camelô da sila",
-		title: "Acompanhamento da psiquiatra 6",
-		link: "https://res.cloudinary.com/carabolasjoao/image/upload/v1729522482/samples/ecommerce/Insulinoterapia_rugyzb.pdf"
-	},
-	{
-		id: "11",
-		createDate: "04/11/2024",
-		name: "camelô da sila",
-		title: "Acompanhamento da psiquiatra 7",
-		link: "https://res.cloudinary.com/carabolasjoao/image/upload/v1729105086/samples/ecommerce/PDS_-_prova_1_maq3my.pdf"
 	}
 ];

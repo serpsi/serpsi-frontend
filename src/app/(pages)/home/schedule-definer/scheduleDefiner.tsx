@@ -1,21 +1,24 @@
 import { Input } from "@/components/ui/input";
 import { DefineLine } from "./defineLine";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { useCallback, useEffect, useState } from "react";
-import { dayTypes, dayTypesResolve, ScheduleAgendas, week } from "./dayTypes";
+import { useState } from "react";
+import { dayTypesResolve, ScheduleAgendas, week } from "./dayTypes";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export function ScheduleDefiner({
 	checkboxes,
-	setCheckboxes
+	setCheckboxes,
+	meetValue,
+	setMeetValue
 }: {
 	checkboxes: boolean[];
 	setCheckboxes: any;
+	meetValue: number;
+	setMeetValue: any;
 }) {
 	const {
 		register,
 		setValue,
-		watch,
 		formState: { errors }
 	} = useFormContext();
 	const { fields, insert, remove } = useFieldArray<ScheduleAgendas>({
@@ -80,8 +83,9 @@ export function ScheduleDefiner({
 
 	const changeMeetValue = (value: string) => {
 		let number = +value.slice(2).replaceAll(".", "").replaceAll(",", ".");
-		setValue("meetValue", number);
-		return number;
+		setMeetValue(number);
+		setValue("meetValue", +number);
+		return meetValue;
 	};
 	return (
 		<>
@@ -93,8 +97,9 @@ export function ScheduleDefiner({
 					type="numeric"
 					mask={"R$ 999.999.999,99"}
 					className="w-auto border border-primary-400 lg:w-fit"
-					defaultValue={120.5}
 					error={errors.meetValue?.message}
+					value={"" + meetValue}
+					
 					beforeMaskedStateChange={({ nextState }) => {
 						let number = nextState.value.replace("R$ ", "");
 						if (number.replaceAll(".", "").length < 9) {

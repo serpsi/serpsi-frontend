@@ -4,6 +4,7 @@ import { InputText } from "@/components/form/input";
 import { login } from "@/services/authService";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 interface IFormProps {
 	email: string;
@@ -19,13 +20,19 @@ export default function LoginPage() {
 		formData.set("email", data.email);
 		formData.set("password", data.password);
 		setLoading(true);
-		const result = await login(formData);
-		if (result) {
-			setErrors(result);
-			setLoading(false);
-		} else {
-			setErrors({});
-		}
+		toast.promise(login(formData), {
+			loading: "Carregando...",
+			success: (result) => {
+				setLoading(false);
+				console.log(result);
+				return "Login efetuado com sucesso! 🙂";
+			},
+			error: (result) => {
+				setErrors(result);
+				setLoading(false);
+				return "Erro ao efetuar Login: Email ou senha incorretos.";
+			}
+		});
 	};
 
 	return (
@@ -73,7 +80,7 @@ export default function LoginPage() {
 						/>
 						<br />
 						<Button
-							text={loading ? "carregando..." : "Entrar"}
+							text={loading ? "Carregando..." : "Entrar"}
 							variant="second"
 							disabled={loading}
 							className="pb-1 pt-1 text-xl"

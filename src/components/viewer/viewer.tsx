@@ -8,7 +8,7 @@ import {
 	DialogTitle,
 	DialogTrigger
 } from "@/components/ui/dialog";
-import { DownloadFile } from "@/services/downloadFile";
+import { DownloadFile } from "@/services/utils/downloadFile";
 import { DownloadIcon } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
 import { DocumentViewer } from "react-documents";
@@ -32,13 +32,12 @@ export default function Viewer({
 		getUrlFromDocument(link);
 	}, [link]);
 
-
 	return (
 		<Dialog>
 			<DialogTrigger className={className}>{children}</DialogTrigger>
 			<DialogContent className="">
 				<DialogHeader>
-					<DialogTitle>{title}</DialogTitle>
+					<DialogTitle className="font-medium">{title}</DialogTitle>
 					<DialogDescription></DialogDescription>
 				</DialogHeader>
 				<div className="flex h-[80vh] w-full flex-col items-end justify-center gap-2">
