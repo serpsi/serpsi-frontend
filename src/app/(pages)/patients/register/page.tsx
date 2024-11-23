@@ -43,54 +43,22 @@ export default function RegisterNewPatientPage() {
 	const methods = useForm<CreatePatientForm>({
 		resolver: zodResolver(createPatientFormSchema),
 		defaultValues: {
-			// PatientPictureSection
-			profilePicture: undefined, // obrigatorio
-
-			// PatientInfoSection
-			person: {
-				name: "Fulano de Tal",
-				rg: "666666", // obrigatorio
-				// birthdate: new Date(),
-				phone: "(11) 91111-1123", // Edite para o número desejado
-				cpf: "111.111.111-04" // Edite para um CPF válido
-			},
-
-			// AddressInfoSection
-			address: {
-				state: "SP",
-				zipCode: "12345-678",
-				street: "Rua Exemplo",
-				district: "Bairro Exemplo",
-				city: "Cidade Exemplo",
-				homeNumber: "123",
-				complement: "Apto 101"
-			},
-
 			// ParentsInfoSection
 			parents: [
 				{
-					name: "Pai Genérico",
-					rg: "22222234", // RG genérico
+					name: "",
+					rg: "", // RG genérico
 					// birthdate: new Date(),
-					phone: "(22) 92222-2234", // Telefone genérico
-					cpf: "222.222.222-34" // CPF genérico
+					phone: "", // Telefone genérico
+					cpf: "" // CPF genérico
 				}
 			],
 
-			// SchoolInfoSection
-			checkSchool: false
-			// school: {
-			// 	name: "Escola Exemplo",
-			// 	cnpj: "12.345.678/0001-00",
-			// 	phone: "(33) 97777-7777",
-			// 	state: "SP",
-			// 	zipCode: "12345-679",
-			// 	street: "Rua Escola",
-			// 	district: "Bairro Escola",
-			// 	city: "Cidade Escola",
-			// 	schoolNumber: "456",
-			// 	complement: "Bloco A"
-			// }
+			checkSchool: true,
+			school: {
+				zipCode: "",
+				phone: ""
+			}
 		}
 	});
 

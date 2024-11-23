@@ -9,7 +9,10 @@ import {
 	SelectValue
 } from "@/components/ui/select";
 import { CreatePatientForm } from "./schema";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getCEP } from "@/services/cepService";
+import { getSchool } from "@/services/schoolService";
+import { formatPhone } from "@/services/utils/formatPhone";
 
 interface SchoolInfoProps {
 	progress: number;
@@ -25,10 +28,12 @@ export default function SchoolInfoSection({
 		unregister,
 		register,
 		watch,
+		setValue,
 		formState: { errors }
 	} = useFormContext<CreatePatientForm>();
 
 	const checkSchool = watch("checkSchool");
+	const [zipCodeChanged, setZipCodeChanged] = useState(false);
 
 	useEffect(() => {
 		if (!checkSchool) {
@@ -37,6 +42,100 @@ export default function SchoolInfoSection({
 		}
 	}, [checkSchool, unregister]);
 
+	const cep = watch("school.zipCode");
+	const nome = watch("school.name");
+
+	useEffect(() => {
+		const fetchSchool = async (nome: string) => {
+			if (!nome) {
+				console.log("Nome inválido");
+				return;
+			}
+
+			try {
+				const response = await getSchool({ nome, cnpj: undefined });
+				if (response) {
+					setValue("school.name", response._name);
+					setValue("school.cnpj", response._CNPJ._code);
+					setValue(
+						"school.zipCode",
+						response._address._zipCode.slice(0, 5) +
+							"-" +
+							response._address._zipCode.slice(5)
+					);
+					setZipCodeChanged(true);
+					setValue("school.city", response._address._city);
+					setValue("school.street", response._address._street);
+					setValue("school.state", response._address._state);
+					setValue("school.district", response._address._district);
+					setValue(
+						"school.schoolNumber",
+						response._address._homeNumber
+					);
+					setValue(
+						"school.phone",
+						formatPhone(response._phone, false),
+						{ shouldValidate: false }
+					);
+					if (response._address._complement) {
+						setValue(
+							"school.complement",
+							response._address._complement
+						);
+					}
+				}
+			} catch (error) {
+				console.error("Error fetching school:", error);
+			}
+		};
+
+		// Create separate effects for nome/cnpj and cep
+		const debouncedSchoolSearch = setTimeout(() => {
+			if (nome) {
+				fetchSchool(nome);
+			}
+		}, 1500);
+
+		// Handle CEP search separately without debounce
+
+		// Cleanup function
+		return () => {
+			clearTimeout(debouncedSchoolSearch);
+		};
+	}, [nome, setValue]); // Only depend on nome and cnpj for school search
+
+	// Separate useEffect for CEP
+	useEffect(() => {
+		const fetchCEP = async (zipCode: string) => {
+			if (!zipCode || zipCode.length !== 9) {
+				console.log("CEP inválido");
+				return;
+			}
+
+			try {
+				const response = await getCEP(zipCode);
+				if (response) {
+					setValue("school.city", response.localidade);
+					setValue("school.street", response.logradouro);
+					setValue("school.state", response.uf);
+					setValue("school.district", response.bairro);
+					if (response.complemento) {
+						setValue("school.complement", response.complemento);
+					}
+				}
+			} catch (error) {
+				console.error("Error fetching CEP:", error);
+			}
+		};
+		const fetchCEPData = async () => {
+			if (!zipCodeChanged && cep) {
+				await fetchCEP(cep);
+			}
+		};
+
+		fetchCEPData();
+	}, [cep, zipCodeChanged, setValue]); // Separate dependencies for CEP
+
 	return (
 		<>
 			<FormSection
@@ -44,7 +143,7 @@ export default function SchoolInfoSection({
 				componentStep={componentIndex}
 				title="Escola:"
 			>
-				<div className="col-span-2 flex w-full items-center justify-start">
+				<div className="flex w-full items-center justify-start md:col-span-2">
 					<input
 						className="mr-2 h-4 w-4 accent-primary-600"
 						id="checkSchool"

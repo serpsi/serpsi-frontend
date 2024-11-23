@@ -9,6 +9,8 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/components/ui/select";
+import { useEffect } from "react";
+import { getCEP } from "@/services/cepService";
 
 interface AddressInfoProps {
 	progress: number;
@@ -22,8 +24,34 @@ export default function AddressInfoSection({
 	const {
 		register,
 		control,
+		watch,
+		setValue,
 		formState: { errors }
 	} = useFormContext<CreatePatientForm>();
+
+	const cep = watch("address.zipCode");
+
+	useEffect(() => {
+		const fetchCEP = async (zipCode: string) => {
+			if (!zipCode || zipCode.length !== 9) {
+				console.log("CEP inválido");
+				return;
+			} else {
+				const response = await getCEP(zipCode);
+				if (response) {
+					setValue("address.city", response.localidade);
+					setValue("address.street", response.logradouro);
+					setValue("address.state", response.uf);
+					setValue("address.district", response.bairro);
+					if (response.complemento) {
+						setValue("address.complement", response.complemento);
+					}
+				}
+			}
+		};
+		fetchCEP(cep);
+	}, [cep, setValue]);
+
 	return (
 		<FormSection
 			currentStep={progress}
