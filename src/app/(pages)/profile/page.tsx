@@ -264,6 +264,7 @@ export default function Profile() {
                     alt="Profile"
                     width={100}
                     height={100}
+                    unoptimized
                   />
                 ) : (
                   <div className="mb-3 flex w-full flex-col items-center justify-center">
