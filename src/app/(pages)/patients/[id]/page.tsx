@@ -25,7 +25,7 @@ export default async function MyPatient({
 						className="text-gray-500"
 					/>
 					&nbsp;
-					<span className="text-gray-900">Roberto Santos</span>
+					<span className="text-gray-900">{data._person._name}</span>
 				</Link>
 			</div>
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
