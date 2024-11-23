@@ -9,6 +9,7 @@ import {
 	SelectValue
 } from "@/components/ui/select";
 import { CreatePatientForm } from "./schema";
+import { useEffect } from "react";
 
 interface SchoolInfoProps {
 	progress: number;
@@ -21,12 +22,20 @@ export default function SchoolInfoSection({
 }: SchoolInfoProps) {
 	const {
 		control,
+		unregister,
 		register,
 		watch,
 		formState: { errors }
 	} = useFormContext<CreatePatientForm>();
 
 	const checkSchool = watch("checkSchool");
+
+	useEffect(() => {
+		if (!checkSchool) {
+			console.log("Removendo school do formulário");
+			unregister("school");
+		}
+	}, [checkSchool, unregister]);
 
 	return (
 		<>

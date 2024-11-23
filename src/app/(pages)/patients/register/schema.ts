@@ -178,7 +178,78 @@ export const createPatientFormSchema = z
 export type CreatePatientForm = z.infer<typeof createPatientFormSchema>;
 
 export function formatPatientData(formData: CreatePatientForm): FormData {
-	const formattedData = {
+	type FormattedDataType = {
+		paymentPlan: string;
+		person: {
+			name: string;
+			rg: string;
+			birthdate: string;
+			phone: {
+				ddi: string;
+				ddd: string;
+				number: string;
+			};
+			cpf: {
+				cpf: string;
+			};
+			address: {
+				state: string;
+				zipCode: string;
+				street: string;
+				district: string;
+				city: string;
+				homeNumber: string;
+				complement: string;
+			};
+		};
+		parents: {
+			name: string;
+			rg: string;
+			birthdate: string;
+			phone: {
+				ddi: string;
+				ddd: string;
+				number: string;
+			};
+			cpf: {
+				cpf: string;
+			};
+		}[];
+		comorbidities: {
+			name: string;
+		}[];
+		medicines: {
+			medicine: {
+				name: string;
+			};
+			dosage: number;
+			dosageUnity: string;
+			frequency: number;
+			firstTimeOfTheDay: string | null;
+			startDate: string;
+			observation: string;
+		}[];
+		school?: {
+			name: string | undefined;
+			CNPJ: string | undefined;
+			address: {
+				state: string | undefined;
+				zipCode: string | undefined;
+				street: string | undefined;
+				district: string | undefined;
+				city: string | undefined;
+				homeNumber: string | undefined;
+				complement: string | undefined;
+			};
+			phone: {
+				ddi: string;
+				ddd: string | undefined;
+				number: string | undefined;
+			};
+		};
+	};
+
+	let formattedData: FormattedDataType = {
 		paymentPlan: formData.paymentPlan,
 		person: {
 			name: formData.person.name,
@@ -215,26 +286,7 @@ export function formatPatientData(formData: CreatePatientForm): FormData {
 				cpf: parent.cpf
 			}
 		})),
-		school: formData.checkSchool
-			? {
-					name: formData.school?.name,
-					CNPJ: formData.school?.cnpj,
-					address: {
-						state: formData.school?.state,
-						zipCode: formData.school?.zipCode.replace("-", ""),
-						street: formData.school?.street,
-						district: formData.school?.district,
-						city: formData.school?.city,
-						homeNumber: formData.school?.schoolNumber,
-						complement: formData.school?.complement || ""
-					},
-					phone: {
-						ddi: "+55",
-						ddd: formData.school?.phone.slice(1, 3),
-						number: formData.school?.phone.slice(4).replace("-", "")
-					}
-				}
-			: null,
+
 		comorbidities: formData.comorbidities
 			? formData.comorbidities.split(",").map((name) => {
 					return {
@@ -261,6 +313,26 @@ export function formatPatientData(formData: CreatePatientForm): FormData {
 	const profPic: FileList = formData.profilePicture;
 	const prevDocs: FileList = formData.previousDocuments;
 
+	if (formData.checkSchool === true) {
+		formattedData.school = {
+			name: formData.school?.name,
+			CNPJ: formData.school?.cnpj,
+			address: {
+				state: formData.school?.state,
+				zipCode: formData.school?.zipCode.replace("-", ""),
+				street: formData.school?.street,
+				district: formData.school?.district,
+				city: formData.school?.city,
+				homeNumber: formData.school?.schoolNumber,
+				complement: formData.school?.complement || ""
+			},
+			phone: {
+				ddi: "+55",
+				ddd: formData.school?.phone.slice(1, 3),
+				number: formData.school?.phone.slice(4).replace("-", "")
+			}
+		};
+	}
 	formDataObj.append("patientData", JSON.stringify(formattedData));
 	formDataObj.append("profilePicture", profPic[0]);
 
