@@ -73,4 +73,6 @@ export async function logout() {
 	cookies().delete("Authorization");
 	cookies().delete("sub");
 	cookies().delete("role");
+	cookies().delete("name");
+	cookies().delete("profilePic");
 }
