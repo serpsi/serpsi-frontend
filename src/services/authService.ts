@@ -36,7 +36,6 @@ export async function login(form: FormData): Promise<Record<string, string>> {
 		if (!response.ok) {
 			throw new Error("e-mail ou senha incorretos");
 		}
-		await setUserCookies();
 		cookies().set({
 			name: "Authorization",
 			value: "Bearer " + payload.access_token,
@@ -58,6 +57,7 @@ export async function login(form: FormData): Promise<Record<string, string>> {
 			httpOnly: true,
 			expires: new Date(jwtDecode(payload.access_token).exp! * 1000)
 		});
+		await setUserCookies();
 
 		return redirect("/patients");
 	} else {
