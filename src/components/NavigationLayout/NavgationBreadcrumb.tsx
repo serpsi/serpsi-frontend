@@ -23,7 +23,8 @@ const routeTitles: { [key: string]: string } = {
 	register: "Cadastro",
 	documents: "Documentos",
 	bills: "Financeiro",
-	schedule_definer: "Minha agenda"
+	schedule_definer: "Minha agenda",
+	past_sessions: "Histórico de Sessões"
 };
 
 export default function NavigationBreadcrumb() {

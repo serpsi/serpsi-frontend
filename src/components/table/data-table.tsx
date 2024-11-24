@@ -25,12 +25,14 @@ interface DataTableProps<TData, TValue> {
 	data: TData[];
 	linkTop?: boolean;
 	filteringColumn: string;
+	filteringPlaceHolder: string,
 }
 export function DataTable<TData, TValue>({
 	columns,
 	data,
 	linkTop,
-	filteringColumn
+	filteringColumn,
+	filteringPlaceHolder
 }: DataTableProps<TData, TValue>) {
 	const [rowSelection, setRowSelection] = useState({});
 	const table = useReactTable({
@@ -54,7 +56,7 @@ export function DataTable<TData, TValue>({
 					<Input
 						id="busca"
 						className="border-0 text-start focus-visible:ring-0"
-						placeholder="Procurar por nome..."
+						placeholder={`Procurar por ${filteringPlaceHolder}...`}
 						value={
 							(table
 								.getColumn(filteringColumn)
