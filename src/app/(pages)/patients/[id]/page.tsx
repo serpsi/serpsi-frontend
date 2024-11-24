@@ -14,7 +14,7 @@ export default async function MyPatient({
 }: {
 	params: { id: string };
 }) {
-	const data = await getData(params.id)
+	const data = await getData(params.id);
 	return (
 		<main className="flex flex-col items-center justify-center bg-cover px-10 py-5">
 			<div className="mb-2 flex w-full">
@@ -28,7 +28,7 @@ export default async function MyPatient({
 					<span className="text-gray-900">{data._person._name}</span>
 				</Link>
 			</div>
-			<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+			<div className="grid w-full grid-cols-1 gap-4 md:w-3/4 md:grid-cols-2">
 				{/* Card do Perfil */}
 				<Square variant="WithImage">
 					<Image
@@ -206,7 +206,8 @@ export default async function MyPatient({
 				<Square variant="DoubleColumn">
 					<SquareHeader titulo="Arquivos de acompanhamentos anteriores" />
 					<ul>
-						{data._previewFollowUps && data._previewFollowUps.length > 0 ? (
+						{data._previewFollowUps &&
+						data._previewFollowUps.length > 0 ? (
 							data._previewFollowUps.map((followUp, index) => (
 								<ListComponent
 									link={followUp._docLink}
