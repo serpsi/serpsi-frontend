@@ -3,7 +3,7 @@ import { toast } from "sonner";
 export const DownloadFile = async (image: string, title: string) => {
   const response = await fetch(image);
   if (response.status !== 200) {
-    toast.error("problemas em baixar o arquivo");
+    toast.error("Houve um problema ao baixar o Arquivo. Por favor, tente mais tarde.");
     return;
   }
   const blob = await response.blob();
