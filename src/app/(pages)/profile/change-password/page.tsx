@@ -51,13 +51,11 @@ export default function ChangePass() {
 		toast.promise(changePassword(data), {
 			loading: "Carregando...",
 			success: (response) => {
-				console.log(response);
 				setLoading(false);
 				router.push("/profile/");
 				return "Senha atualizada com sucesso!";
 			},
 			error: (error) => {
-				console.log(error);
 				setLoading(false);
 				return "Algo inesperado aconteceu.";
 			}

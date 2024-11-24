@@ -37,7 +37,6 @@ export default function SchoolInfoSection({
 
 	useEffect(() => {
 		if (!checkSchool) {
-			console.log("Removendo school do formulário");
 			unregister("school");
 		}
 	}, [checkSchool, unregister]);
@@ -48,7 +47,6 @@ export default function SchoolInfoSection({
 	useEffect(() => {
 		const fetchSchool = async (nome: string) => {
 			if (!nome) {
-				console.log("Nome inválido");
 				return;
 			}
 
@@ -108,7 +106,6 @@ export default function SchoolInfoSection({
 	useEffect(() => {
 		const fetchCEP = async (zipCode: string) => {
 			if (!zipCode || zipCode.length !== 9) {
-				console.log("CEP inválido");
 				return;
 			}
 

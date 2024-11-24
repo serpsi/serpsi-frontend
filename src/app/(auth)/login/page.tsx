@@ -24,7 +24,6 @@ export default function LoginPage() {
 			loading: "Carregando...",
 			success: (result) => {
 				setLoading(false);
-				console.log(result);
 				return "Login efetuado com sucesso! 🙂";
 			},
 			error: (result) => {

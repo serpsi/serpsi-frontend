@@ -11,10 +11,8 @@ export type TypeCEP = {
 
 export async function getCEP(cep: string): Promise<TypeCEP | undefined> {
 	cep = cep.replace(/\D/g, "");
-	console.log("CEP: ", cep);
 
 	if (cep.length !== 8) {
-		console.log("CEP inválido");
 		return;
 	}
 

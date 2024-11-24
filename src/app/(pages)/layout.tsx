@@ -46,15 +46,13 @@ export default function RootLayout({
 							src={"/logo-teste.jpg"}
 							width={33}
 							height={33}
-							className="mr-3 rounded-full"
+							className="mr-3 w-auto rounded-full"
+							loading="eager"
 						/>
 						<Navigation.Breadcrumb />
 					</div>
 					{/* User Profile */}
-					<Navigation.User
-						name={user?.name}
-						img={user?.profilePic}
-					/>
+					<Navigation.User name={user?.name} img={user?.profilePic} />
 				</Navigation.Header>
 
 				<Navigation.SideBar isHidden={collapsedLink}>

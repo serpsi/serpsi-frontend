@@ -34,7 +34,6 @@ export default function AddressInfoSection({
 	useEffect(() => {
 		const fetchCEP = async (zipCode: string) => {
 			if (!zipCode || zipCode.length !== 9) {
-				console.log("CEP inválido");
 				return;
 			} else {
 				const response = await getCEP(zipCode);
