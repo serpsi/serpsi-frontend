@@ -86,7 +86,7 @@ export default async function MyPatient({
 							<Square
 								variant={
 									data._parents.length % 2 > 0 &&
-									index === data._parents.length - 1
+										index === data._parents.length - 1
 										? "DoubleColumn"
 										: "primary"
 								}
@@ -108,31 +108,34 @@ export default async function MyPatient({
 				)}
 
 				{/* Escola */}
-				<Square variant="DoubleColumn">
-					<SquareHeader titulo="Escola" />
-					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-						<div className="flex-col space-y-3">
-							<p>Nome: {data._school._name}</p>
-							<p>Tel: {formatPhone(data._school._phone)}</p>
-							<p>CNPJ: {data._school._CNPJ._code}</p>
-							<p>CEP: {data._school._address._zipCode}</p>
+				{data._school &&
+					<Square variant="DoubleColumn">
+						<SquareHeader titulo="Escola" />
+						<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+							<div className="flex-col space-y-3">
+								<p>Nome: {data._school._name}</p>
+								<p>Tel: {formatPhone(data._school._phone)}</p>
+								<p>CNPJ: {data._school._CNPJ._code}</p>
+								<p>CEP: {data._school._address._zipCode}</p>
+							</div>
+							<div className="flex-col space-y-3">
+								<p>
+									Cidade: {data._school._address._city},&nbsp;
+									{data._school._address._state}
+								</p>
+								<p>Bairro: {data._school._address._district}</p>
+								<p>
+									Rua: {data._school._address._street},&nbsp;
+									{data._school._address._homeNumber}
+								</p>
+								<p>
+									Complemento: {data._school._address._complement}
+								</p>
+							</div>
 						</div>
-						<div className="flex-col space-y-3">
-							<p>
-								Cidade: {data._school._address._city},&nbsp;
-								{data._school._address._state}
-							</p>
-							<p>Bairro: {data._school._address._district}</p>
-							<p>
-								Rua: {data._school._address._street},&nbsp;
-								{data._school._address._homeNumber}
-							</p>
-							<p>
-								Complemento: {data._school._address._complement}
-							</p>
-						</div>
-					</div>
-				</Square>
+					</Square>
+				}
+
 
 				{/* Medicamento */}
 				{data._medicines.length > 0 && (
@@ -142,7 +145,7 @@ export default async function MyPatient({
 								<Square
 									variant={
 										data._medicines.length % 2 > 0 &&
-										index === data._medicines.length - 1
+											index === data._medicines.length - 1
 											? "DoubleColumn"
 											: "primary"
 									}
@@ -199,14 +202,14 @@ export default async function MyPatient({
 				</Square>
 
 				{/* Arquivos */}
-				
+
 				<Square variant="DoubleColumn">
 					<SquareHeader titulo="Arquivos de acompanhamentos anteriores" />
 					<ul>
 						{data._previewFollowUps && data._previewFollowUps.length > 0 ? (
 							data._previewFollowUps.map((followUp, index) => (
 								<ListComponent
-									link = {followUp._docLink}
+									link={followUp._docLink}
 									content={followUp._title}
 									id={followUp._id._id}
 									key={followUp._id._id}
@@ -222,7 +225,7 @@ export default async function MyPatient({
 						)}
 					</ul>
 				</Square>
-       
+
 				{/* Histórico de Sessões */}
 				{/*         
 				<Square variant="WithButton">
