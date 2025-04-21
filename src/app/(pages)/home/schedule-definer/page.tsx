@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ScheduleDefiner } from "./scheduleDefiner";
 import { FormProvider, useForm } from "react-hook-form";
 import {
@@ -17,13 +17,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { getAgenda, setAgenda } from "@/services/agendaService";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import Cookies from 'js-cookie'
+
 
 export default function ScheduleDefinePage() {
 	const horarioRegex =
 		/^(([0-1][0-9]|2[0-3]):[0-5][0-9])|([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
 	const scheduleSchema = z.object({
 		psychologistId: z.string(),
-		meetValue: z.number().positive("O valor deve ser maior que 0"),
+		meetValue: z.coerce.number().positive("O valor deve ser maior que 0"),
 		meetDuration: z.number().positive("a duração deve ser maior que 0"),
 		agendas: z.array(
 			z.object({
@@ -49,8 +52,8 @@ export default function ScheduleDefinePage() {
 		resolver: zodResolver(scheduleSchema),
 		defaultValues: {
 			psychologistId: "",
-			meetValue: 100.5,
-			meetDuration: 50,
+			meetValue: 0,
+			meetDuration: 0,
 			agendas: [
 				{
 					key: 1,
@@ -176,10 +179,18 @@ export default function ScheduleDefinePage() {
 	};
 
 	const [checkboxes, setCheckboxes] = useState(settingWatchToCheckboxes());
-	const [meetValue, setMeetValue] = useState(Number);
+	const [meetValue, setMeetValue] = useState<number>(0);
+	const [isFirstLogin, setIsFirstLogin] = useState<boolean>(false);
+
+
 	useEffect(() => {
-		async function setDefaultAgendas() {
+		async function SetDefaultAgendas() {
 			const data = await getAgenda();
+	
+
+			const firstLogin = Cookies.get('firstLogin') === 'true' ? true : false;
+			setIsFirstLogin(firstLogin);
+
 			let checks: boolean[] = Array.from({ length: 7 }, () => false);
 			if (data?.agendas && data.agendas.length > 0) {
 				data?.agendas.map((value) => {
@@ -194,11 +205,34 @@ export default function ScheduleDefinePage() {
 				data?.agendas.sort((a, b) => a.key - b.key);
 				methods.reset({ ...data });
 				setCheckboxes(checks);
-				setMeetValue(data!.meetValue);
 			}
+
+			methods.setValue('meetDuration', data!.meetDuration);
+			methods.setValue('meetValue', data!.meetValue);
+			setMeetValue(data!.meetValue);
 		}
-		setDefaultAgendas();
+
+		SetDefaultAgendas();
 	}, [methods]);
+
+	const searchParams = useSearchParams()
+
+	const hasShown = useRef(false)
+
+	useEffect(() => {
+		const isFirst = searchParams.get('first');
+
+		if (isFirst && !hasShown.current) {
+			hasShown.current = true
+
+			toast.success('Bem vindo!! Agora selecione os seus horários disponíveis');
+
+			const newParams = new URLSearchParams(searchParams.toString())
+			newParams.delete('first')
+
+			router.replace(`?${newParams.toString()}`, { scroll: false })
+		}
+	}, [searchParams, router])
 
 	const onSubmit = async (data: ScheduleAgendas) => {
 		const validation = validateData(data.agendas);
@@ -211,6 +245,8 @@ export default function ScheduleDefinePage() {
 			toast.error("Algo de errado aconteceu.");
 		} else {
 			toast.success("Lista de horários atualizados com sucesso.");
+			setIsFirstLogin(false);
+			Cookies.set('firstLogin', 'false')
 			router.push("/patients");
 		}
 	};
@@ -238,6 +274,7 @@ export default function ScheduleDefinePage() {
 							<Button
 								type="reset"
 								variant="ghost"
+								disabled={isFirstLogin as boolean}
 								className="text-primary-600 hover:bg-primary-100/70 hover:text-primary-600"
 							>
 								Descartar
